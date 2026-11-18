@@ -1,0 +1,6 @@
+/* Print stylesheet. Phase 8 fills this in. */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
