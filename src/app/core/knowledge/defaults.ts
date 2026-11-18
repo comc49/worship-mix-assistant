@@ -26,10 +26,8 @@ export const DEFAULT_ROOMS: Room[] = [
   },
 ];
 
-export type ConsoleId = 'x32' | 'wingCompact';
-
 /** ASSUMED: X32 in Room A, WING Compact in Room B. */
-export const DEFAULT_CONSOLE_BY_ROOM: Record<string, ConsoleId> = {
+export const DEFAULT_CONSOLE_BY_ROOM: Record<string, 'x32' | 'wingCompact'> = {
   'room-a': 'x32',
   'room-b': 'wingCompact',
 };
