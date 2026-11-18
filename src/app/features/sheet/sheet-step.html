@@ -1,0 +1,53 @@
+<div class="sheet-step" [class.sheet-step--done]="checked()" data-testid="sheet-step" [attr.data-step-id]="step().id">
+  <label class="sheet-step__check">
+    <input
+      type="checkbox"
+      class="sheet-step__box"
+      data-testid="step-checkbox"
+      [checked]="checked()"
+      (change)="onCheckboxChange()"
+    />
+    <span class="sheet-step__instruction">{{ step().instruction }}</span>
+  </label>
+
+  <div class="sheet-step__body">
+    @if (isRehearsalOnly() || step().optional || step().checkOnConsole !== null) {
+      <div class="row sheet-step__badges">
+        @if (isRehearsalOnly()) {
+          <span class="badge badge--warn" data-testid="badge-rehearsal">Rehearsal only</span>
+        }
+        @if (step().optional) {
+          <span class="badge" data-testid="badge-optional">Optional</span>
+        }
+        @if (step().checkOnConsole !== null) {
+          <span class="badge badge--accent" data-testid="badge-check">Check on your console</span>
+        }
+      </div>
+    }
+
+    @if (step().value; as value) {
+      <app-value-detail
+        [buttonText]="value"
+        [accessibleLabel]="'Value to set'"
+        [detail]="step().detail"
+        [note]="step().checkOnConsole"
+      />
+    } @else if (hasDetailWithoutValue()) {
+      <app-value-detail
+        [buttonText]="'Why?'"
+        [prominent]="false"
+        [accessibleLabel]="'About this step'"
+        [detail]="step().detail"
+        [note]="step().checkOnConsole"
+      />
+    }
+
+    @if (step().subSteps.length > 0) {
+      <ol class="sheet-step__substeps">
+        @for (subStep of step().subSteps; track $index) {
+          <li>{{ subStep }}</li>
+        }
+      </ol>
+    }
+  </div>
+</div>

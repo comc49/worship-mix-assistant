@@ -1,0 +1,61 @@
+legend {
+  margin-bottom: var(--space-2);
+}
+
+/* Fields sit side by side on a tablet and stack on a phone. */
+.setup__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-3);
+  align-items: start;
+}
+
+.setup__hint {
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.setup__add-room {
+  border-style: dashed;
+}
+
+/* A choice button with a bold label and a one-line explanation under it. */
+.setup__choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-2);
+}
+
+.setup__choice {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  text-align: left;
+  height: 100%;
+}
+
+.setup__choice-text {
+  font-weight: 400;
+  font-size: 0.9rem;
+}
+
+.setup__yes-no {
+  min-width: 96px;
+}
+
+.setup__stepper {
+  flex-wrap: nowrap;
+}
+
+.setup__stepper-button {
+  min-width: var(--tap);
+  padding: 0;
+  font-size: 1.3rem;
+}
+
+.setup__stepper-value {
+  width: 88px;
+  text-align: center;
+}

@@ -1,0 +1,102 @@
+<div class="page">
+  <h1>Mix overview</h1>
+
+  @if (!hasBand()) {
+    <div class="card" data-testid="overview-empty">
+      <p><strong>No band yet.</strong> Add who is playing this service to see the starting mix for every channel.</p>
+      <a class="btn btn--primary overview__link-button" routerLink="/band">Add the band</a>
+    </div>
+  } @else {
+    <p class="lead">Every channel's starting point on one page. These are typical starting values: set them, then listen. Tap a value to see its usable range and why.</p>
+
+    @if (store.mixPlan().ensembleAdvice.length > 0) {
+      <section class="card" data-testid="overview-ensemble-advice" aria-labelledby="overview-ensemble-title">
+        <h2 id="overview-ensemble-title">Before you reach for EQ</h2>
+        <p class="dim">Most clashes are fixed faster by asking someone to play differently than by turning a knob.</p>
+        <ul class="overview__list">
+          @for (advice of store.mixPlan().ensembleAdvice; track $index) {
+            <li>{{ advice }}</li>
+          }
+        </ul>
+      </section>
+    }
+
+    <h2>Channels</h2>
+    @for (card of cards(); track card.channelId) {
+      <article class="card overview-card" data-testid="overview-card" [attr.data-channel-id]="card.channelId">
+        <div class="overview-card__header">
+          <h3 class="overview-card__title">{{ card.title }}</h3>
+          @if (card.consoleChannelText !== null) {
+            <span class="badge badge--accent" data-testid="overview-channel-number">{{ card.consoleChannelText }}</span>
+          }
+        </div>
+
+        <ul class="overview-card__settings">
+          @for (setting of card.settings; track setting.label) {
+            <li class="overview-setting" data-testid="overview-setting">
+              <span class="overview-setting__label">{{ setting.label }}</span>
+              @if (setting.detail !== null) {
+                <app-value-detail [buttonText]="setting.valueText" [accessibleLabel]="setting.label" [detail]="setting.detail" />
+              } @else {
+                <span class="overview-setting__plain">{{ setting.valueText }}</span>
+              }
+            </li>
+          }
+        </ul>
+
+        <h4 class="overview-card__group-title">Effect sends</h4>
+        @if (card.fxSends.length === 0) {
+          <p class="dim">None.</p>
+        } @else {
+          <ul class="overview-card__settings">
+            @for (send of card.fxSends; track send.label) {
+              <li class="overview-setting" data-testid="overview-fx-send">
+                <span class="overview-setting__label">{{ send.label }}</span>
+                <app-value-detail [buttonText]="send.valueText" [accessibleLabel]="send.label" [detail]="send.detail" />
+              </li>
+            }
+          </ul>
+        }
+
+        <h4 class="overview-card__group-title">Monitor sends</h4>
+        @if (card.monitorSends.length === 0) {
+          <p class="dim">None.</p>
+        } @else {
+          <ul class="overview-card__settings">
+            @for (send of card.monitorSends; track send.label) {
+              <li class="overview-setting" data-testid="overview-monitor-send">
+                <span class="overview-setting__label">{{ send.label }}</span>
+                <app-value-detail [buttonText]="send.valueText" [accessibleLabel]="send.label" [detail]="send.detail" />
+              </li>
+            }
+          </ul>
+        }
+
+        <h4 class="overview-card__group-title">DCAs</h4>
+        @if (card.dcaLabels.length === 0) {
+          <p class="dim">None.</p>
+        } @else {
+          <div class="row" data-testid="overview-dcas">
+            @for (dcaLabel of card.dcaLabels; track dcaLabel) {
+              <span class="badge">{{ dcaLabel }}</span>
+            }
+          </div>
+          @if (card.inMultipleDcas) {
+            <p class="dim overview-card__dca-note">This channel is in two DCAs, so moving both moves it twice.</p>
+          }
+        }
+      </article>
+    }
+
+    @if (store.mixPlan().housePrinciples.length > 0) {
+      <section class="card" data-testid="overview-house-principles" aria-labelledby="overview-principles-title">
+        <h2 id="overview-principles-title">How we mix here</h2>
+        <ul class="overview__list">
+          @for (principle of store.mixPlan().housePrinciples; track $index) {
+            <li>{{ principle }}</li>
+          }
+        </ul>
+      </section>
+    }
+  }
+</div>

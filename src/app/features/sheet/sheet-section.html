@@ -1,0 +1,29 @@
+<section
+  class="sheet-section card"
+  data-testid="sheet-section"
+  [attr.data-section-id]="section().id"
+  [attr.aria-labelledby]="headingId()"
+>
+  <div class="sheet-section__header">
+    <h2 class="sheet-section__title" [id]="headingId()">{{ section().title }}</h2>
+    <span
+      class="badge"
+      [class.badge--ok]="doneCount() === totalCount()"
+      data-testid="section-progress"
+    >{{ doneCount() }} of {{ totalCount() }} done</span>
+  </div>
+  <p class="dim">{{ section().intro }}</p>
+
+  @for (group of subjectGroups(); track group.subject) {
+    <div class="sheet-subject" data-testid="sheet-subject">
+      <h3 class="sheet-subject__title">{{ group.subject }}</h3>
+      <ul class="sheet-subject__steps">
+        @for (step of group.steps; track step.id) {
+          <li>
+            <app-sheet-step [step]="step" [checked]="checkedStepIds().has(step.id)" (toggled)="onStepToggled($event)" />
+          </li>
+        }
+      </ul>
+    </div>
+  }
+</section>

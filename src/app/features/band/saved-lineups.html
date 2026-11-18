@@ -1,0 +1,52 @@
+<section class="card" aria-labelledby="saved-lineups-heading">
+  <h2 id="saved-lineups-heading">Saved lineups</h2>
+  <p class="dim">Loading a lineup replaces the band above. Then change only what is different this week.</p>
+
+  @if (store.templates().length === 0) {
+    <p class="dim" data-testid="no-templates">No saved lineups yet.</p>
+  } @else {
+    <ul class="lineups">
+      @for (template of store.templates(); track template.id) {
+        <li class="lineups__row" data-testid="template-row">
+          <div class="lineups__text">
+            <span class="lineups__name">{{ template.name }}</span>
+            <span class="dim">{{ template.band.length }} {{ template.band.length === 1 ? 'member' : 'members' }}</span>
+          </div>
+          <div class="row">
+            <button type="button" class="btn btn--primary" data-testid="load-template" [attr.aria-label]="'Load lineup ' + template.name" (click)="load(template.id)">
+              Load
+            </button>
+            <button type="button" class="btn btn--danger" data-testid="delete-template" [attr.aria-label]="'Delete lineup ' + template.name" (click)="remove(template.id)">
+              Delete
+            </button>
+          </div>
+        </li>
+      }
+    </ul>
+  }
+
+  <form class="lineups__save" novalidate (submit)="save($event)">
+    <div class="field lineups__save-field">
+      <label for="template-name">Save current band as a lineup</label>
+      <input
+        id="template-name"
+        class="input"
+        type="text"
+        autocomplete="off"
+        placeholder="For example: Sunday morning"
+        data-testid="template-name"
+        aria-describedby="template-name-hint"
+        [value]="newName()"
+        (input)="onNameInput($event)"
+      />
+    </div>
+    <button type="submit" class="btn" data-testid="save-template" [disabled]="!canSave()">Save lineup</button>
+    <p id="template-name-hint" class="dim lineups__hint">
+      @if (bandIsEmpty()) {
+        Add at least one member first.
+      } @else {
+        Give it a name, then save.
+      }
+    </p>
+  </form>
+</section>

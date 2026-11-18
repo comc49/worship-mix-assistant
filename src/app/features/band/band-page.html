@@ -1,0 +1,75 @@
+<div class="page">
+  <h1>Band</h1>
+  <p class="lead">Who is on stage this service, in the order you want them on the console.</p>
+
+  @for (error of store.validationErrors(); track error) {
+    <div class="notice notice--error" role="alert" data-testid="validation-error">{{ error }}</div>
+  }
+
+  <section class="card" aria-labelledby="roster-heading">
+    <h2 id="roster-heading">This service's band</h2>
+
+    @if (rosterRows().length === 0) {
+      <p class="dim" data-testid="empty-band">Nobody yet. Add a member, or load a saved lineup below.</p>
+    } @else {
+      <ol class="roster">
+        @for (row of rosterRows(); track row.member.id) {
+          <li class="roster__item">
+            @if (editingMemberId() === row.member.id) {
+              <app-member-editor [member]="row.member" (saved)="onExistingMemberSaved($event)" (cancelled)="closeEditor()" />
+            } @else {
+              <div class="roster__row" data-testid="member-row">
+                <div class="roster__text">
+                  <span class="roster__name" data-testid="member-row-name">{{ row.member.name }}</span>
+                  <span class="dim" data-testid="member-row-roles">{{ row.roleSummaries.join(', ') }}</span>
+                </div>
+                <div class="row roster__actions">
+                  <button
+                    type="button"
+                    class="btn roster__icon-button"
+                    data-testid="move-up"
+                    [disabled]="row.isFirst"
+                    [attr.aria-label]="'Move ' + row.member.name + ' up'"
+                    (click)="moveUp(row.member.id)"
+                  >
+                    <span aria-hidden="true">&uarr;</span>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn roster__icon-button"
+                    data-testid="move-down"
+                    [disabled]="row.isLast"
+                    [attr.aria-label]="'Move ' + row.member.name + ' down'"
+                    (click)="moveDown(row.member.id)"
+                  >
+                    <span aria-hidden="true">&darr;</span>
+                  </button>
+                  <button type="button" class="btn" data-testid="edit-member" [attr.aria-label]="'Edit ' + row.member.name" (click)="startEditing(row.member.id)">
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn--danger"
+                    data-testid="remove-member"
+                    [attr.aria-label]="'Remove ' + row.member.name"
+                    (click)="removeMember(row.member.id)"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            }
+          </li>
+        }
+      </ol>
+    }
+
+    @if (isAdding()) {
+      <app-member-editor [member]="null" (saved)="onNewMemberSaved($event)" (cancelled)="closeEditor()" />
+    } @else {
+      <button type="button" class="btn btn--primary" data-testid="add-member" (click)="startAdding()">Add a member</button>
+    }
+  </section>
+
+  <app-saved-lineups (lineupLoaded)="closeEditor()" />
+</div>

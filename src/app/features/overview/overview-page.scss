@@ -1,0 +1,70 @@
+.overview__link-button {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.overview__list {
+  margin: 0;
+  padding-left: var(--space-5);
+}
+
+.overview__list li {
+  margin-bottom: var(--space-2);
+}
+
+.overview-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.overview-card__title {
+  font-size: 1.2rem;
+}
+
+.overview-card__group-title {
+  margin: var(--space-4) 0 var(--space-1);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+}
+
+.overview-card__settings {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/*
+ * Label on the left, value on the right. The detail panel of app-value-detail
+ * asks for the full width, so it wraps onto its own line under both.
+ */
+.overview-setting {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  min-height: var(--tap);
+  padding: var(--space-1) 0;
+  border-top: 1px solid var(--border);
+}
+
+.overview-setting__label {
+  flex: 1 1 10ch;
+}
+
+.overview-setting__plain {
+  padding: 0 var(--space-3);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-dim);
+}
+
+.overview-card__dca-note {
+  margin: var(--space-2) 0 0;
+}

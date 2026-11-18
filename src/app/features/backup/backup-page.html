@@ -1,0 +1,69 @@
+<div class="page">
+  <h1>Backup</h1>
+  <p class="lead">Your band, rooms and saved lineups live only in this browser on this device. A backup file is how you keep a copy or move them to another device.</p>
+
+  @if (message(); as text) {
+    <div class="notice notice--info" role="status" data-testid="backup-message">{{ text }}</div>
+  }
+  @if (errorMessage(); as text) {
+    <div class="notice notice--error" role="alert" data-testid="backup-error">{{ text }}</div>
+  }
+
+  <section class="card">
+    <h2>Save a backup file</h2>
+    <p class="dim">
+      @if (lastBackup(); as iso) {
+        Last backup from this device: {{ iso | date: 'mediumDate' }}.
+      } @else {
+        No backup has been saved from this device yet.
+      }
+    </p>
+    @if (!exportWarningShown()) {
+      <button type="button" class="btn btn--primary" data-testid="export-start" (click)="showExportWarning()">Save backup file</button>
+    } @else {
+      <div class="notice" role="alertdialog" aria-labelledby="export-warning-title" data-testid="export-warning">
+        <p id="export-warning-title"><strong>This file is not for sharing.</strong></p>
+        <p>The backup is complete. It contains every member's name and the ratings you chose for them. Keep it private: do not send it to the band or post it anywhere. To give a mixer this week's settings, print the sheet or save it as a PDF instead.</p>
+        <div class="row">
+          <button type="button" class="btn btn--primary" data-testid="export-confirm" (click)="confirmExport()">I understand, save the file</button>
+          <button type="button" class="btn" (click)="cancelExport()">Cancel</button>
+        </div>
+      </div>
+    }
+  </section>
+
+  <section class="card">
+    <h2>Restore from a backup file</h2>
+    <p class="dim">This replaces everything on this device with what is in the file.</p>
+    <div class="field">
+      <label for="backup-file">Backup file (.json)</label>
+      <input id="backup-file" class="input" type="file" accept="application/json,.json" data-testid="import-file" (change)="onFileChosen($event)" />
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Install on this tablet</h2>
+    <p>Installing the app to the home screen makes it work without wifi, and it protects your data: Safari can clear a website's saved data after about a week without use, but not an installed app's.</p>
+    <ol>
+      <li>Open this page in Safari.</li>
+      <li>Tap the Share button.</li>
+      <li>Choose "Add to Home Screen".</li>
+    </ol>
+    <p class="dim">Save a backup file now and then anyway, for example after you change the regular lineup.</p>
+  </section>
+
+  <section class="card">
+    <h2>Erase everything on this device</h2>
+    @if (!resetConfirmShown()) {
+      <button type="button" class="btn btn--danger" data-testid="reset-start" (click)="askReset()">Erase everything</button>
+    } @else {
+      <div class="notice notice--error" role="alertdialog" aria-labelledby="reset-warning-title">
+        <p id="reset-warning-title"><strong>This cannot be undone.</strong> The band, rooms, saved lineups and checkmarks on this device will be erased.</p>
+        <div class="row">
+          <button type="button" class="btn btn--danger" data-testid="reset-confirm" (click)="confirmReset()">Erase everything</button>
+          <button type="button" class="btn" (click)="cancelReset()">Cancel</button>
+        </div>
+      </div>
+    }
+  </section>
+</div>

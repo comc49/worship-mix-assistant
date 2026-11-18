@@ -1,0 +1,59 @@
+<div class="page">
+  <h1>Soundcheck</h1>
+
+  @if (!hasBand()) {
+    <div class="card" data-testid="soundcheck-empty">
+      <p><strong>No band yet.</strong> Add who is playing this service to get the soundcheck order.</p>
+      <a class="btn btn--primary soundcheck__link-button" routerLink="/band">Add the band</a>
+    </div>
+  } @else {
+    <p class="lead">Work through these in order. Each step builds on the one before it.</p>
+
+    @if (store.mixPlan().loudnessTargetDba; as loudnessTarget) {
+      <p class="notice notice--info" data-testid="soundcheck-loudness">
+        <strong>Loudness target for {{ store.room().name }}: {{ loudnessTarget }} dBA.</strong>
+        Check the meter at the loudest moment of the loudest song.
+      </p>
+    }
+
+    <ol class="soundcheck__steps">
+      @for (step of store.mixPlan().soundcheck; track $index) {
+        <li class="card soundcheck-step" data-testid="soundcheck-step">
+          <span class="soundcheck-step__number" aria-hidden="true">{{ $index + 1 }}</span>
+          <div class="soundcheck-step__text">
+            <h2 class="soundcheck-step__title">{{ step.title }}</h2>
+            <p class="soundcheck-step__detail">{{ step.detail }}</p>
+          </div>
+        </li>
+      }
+    </ol>
+
+    @if (store.mixPlan().monitorMixes.length > 0) {
+      <section class="card" data-testid="soundcheck-monitors" aria-labelledby="soundcheck-monitors-title">
+        <h2 id="soundcheck-monitors-title">Monitor mixes</h2>
+        <ul class="soundcheck__list">
+          @for (mix of store.mixPlan().monitorMixes; track mix.id) {
+            <li data-testid="soundcheck-monitor-mix">
+              <strong>{{ mix.label }}</strong>
+              @if (mix.forMemberNames.length > 0) {
+                <span class="dim"> · for {{ namesText(mix.forMemberNames) }}</span>
+              }
+            </li>
+          }
+        </ul>
+        <p class="dim soundcheck__note">{{ store.mixPlan().monitorGuidance.compressionNote }}</p>
+      </section>
+    }
+
+    @if (store.mixPlan().housePrinciples.length > 0) {
+      <section class="card" data-testid="soundcheck-house-principles" aria-labelledby="soundcheck-principles-title">
+        <h2 id="soundcheck-principles-title">How we mix here</h2>
+        <ul class="soundcheck__list">
+          @for (principle of store.mixPlan().housePrinciples; track $index) {
+            <li>{{ principle }}</li>
+          }
+        </ul>
+      </section>
+    }
+  }
+</div>

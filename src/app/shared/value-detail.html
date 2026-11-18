@@ -1,0 +1,47 @@
+<button
+  type="button"
+  class="value-detail__button"
+  [class.value-detail__button--prominent]="prominent()"
+  [attr.aria-expanded]="isOpen()"
+  [attr.aria-controls]="panelId"
+  [attr.aria-label]="ariaLabel()"
+  [attr.data-testid]="prominent() ? 'step-value' : 'step-why'"
+  (click)="toggle()"
+>
+  <span class="value-detail__text">{{ buttonText() }}</span>
+  <span class="value-detail__chevron no-print" aria-hidden="true">{{ isOpen() ? '▴' : '▾' }}</span>
+</button>
+
+<div class="sheet-step__detail value-detail__panel" [id]="panelId" [hidden]="!isOpen()" data-testid="step-detail">
+  @if (note(); as noteText) {
+    <p class="value-detail__note" data-testid="step-check-note"><strong>Check on your console:</strong> {{ noteText }}</p>
+  }
+
+  @if (detail(); as content) {
+    <dl class="value-detail__list">
+      @if (content.range !== null) {
+        <div class="value-detail__item">
+          <dt>Usable range</dt>
+          <dd data-testid="step-range">{{ content.range }}</dd>
+        </div>
+      }
+      <div class="value-detail__item">
+        <dt>Why</dt>
+        <dd data-testid="step-why-text">{{ content.why }}</dd>
+      </div>
+      <div class="value-detail__item">
+        <dt>Listen for</dt>
+        <dd data-testid="step-listen-for">{{ content.listenFor }}</dd>
+      </div>
+    </dl>
+
+    @if (content.provenance.length > 0) {
+      <p class="value-detail__trail-title">How we got to this value</p>
+      <ol class="value-detail__trail" data-testid="step-provenance">
+        @for (line of content.provenance; track $index) {
+          <li><strong>{{ line.source }}:</strong> {{ line.description }}</li>
+        }
+      </ol>
+    }
+  }
+</div>

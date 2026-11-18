@@ -20,6 +20,23 @@
   </div>
 }
 
+@if (showInstallPrompt()) {
+  <div class="page no-print">
+    <div class="notice notice--info" role="status" data-testid="install-prompt">
+      <p><strong>Install this app on your home screen.</strong> It then works without wifi, and Safari will not clear your saved band after a week without use. Tap Share, then "Add to Home Screen".</p>
+      <button type="button" class="btn btn--small" (click)="dismissInstallPrompt()">Got it</button>
+    </div>
+  </div>
+}
+
+@if (showBackupReminder()) {
+  <div class="page no-print">
+    <div class="notice" role="status" data-testid="backup-reminder">
+      <p>It has been more than a month since the last backup. <a routerLink="/backup">Save a backup file</a>.</p>
+    </div>
+  </div>
+}
+
 <main id="main">
   <router-outlet />
 </main>

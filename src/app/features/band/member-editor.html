@@ -1,0 +1,129 @@
+<form class="member-editor stack" novalidate data-testid="member-editor" (submit)="save($event)">
+  <h3>{{ isNewMember() ? 'New member' : 'Edit member' }}</h3>
+
+  <div class="field">
+    <label for="member-name">Name</label>
+    <input
+      #nameInput
+      id="member-name"
+      class="input"
+      type="text"
+      autocomplete="off"
+      data-testid="member-name"
+      [value]="draft().name"
+      [attr.aria-invalid]="nameError() !== null ? 'true' : null"
+      [attr.aria-describedby]="nameError() !== null ? 'member-name-error' : null"
+      (input)="onNameInput($event)"
+    />
+    @if (nameError(); as message) {
+      <p id="member-name-error" class="member-editor__error" role="alert" data-testid="member-name-error">{{ message }}</p>
+    }
+  </div>
+
+  @for (view of roleViews(); track $index; let roleIndex = $index) {
+    <fieldset class="role-block stack" data-testid="role-editor">
+      <legend class="role-block__legend">
+        {{ roleViews().length > 1 ? 'Role ' + (roleIndex + 1) : 'Role' }}
+      </legend>
+
+      <div class="role-block__grid">
+        <div class="field">
+          <label [attr.for]="'role-' + roleIndex">Sings or plays</label>
+          <select class="input" [id]="'role-' + roleIndex" data-testid="role-select" (change)="onRoleChange(roleIndex, $event)">
+            @for (role of roles; track role) {
+              <option [value]="role" [selected]="role === view.memberRole.role">{{ roleLabels[role] }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label [attr.for]="'connection-' + roleIndex">How it reaches the console</label>
+          <select class="input" [id]="'connection-' + roleIndex" data-testid="connection-select" (change)="onConnectionChange(roleIndex, $event)">
+            @for (connection of view.connections; track connection) {
+              <option [value]="connection" [selected]="connection === view.memberRole.connection">{{ connectionLabels[connection] }}</option>
+            }
+          </select>
+        </div>
+
+        @if (view.vocal; as vocal) {
+          <div class="field">
+            <label [attr.for]="'voice-range-' + roleIndex">Voice range</label>
+            <select class="input" [id]="'voice-range-' + roleIndex" data-testid="voice-range" (change)="onVoiceRangeChange(roleIndex, $event)">
+              @for (voiceRange of voiceRanges; track voiceRange) {
+                <option [value]="voiceRange" [selected]="voiceRange === vocal.voiceRange">{{ voiceRangeLabels[voiceRange] }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="field">
+            <label [attr.for]="'mic-model-' + roleIndex">Microphone</label>
+            <select class="input" [id]="'mic-model-' + roleIndex" data-testid="mic-model" (change)="onMicModelChange(roleIndex, $event)">
+              @for (micModel of micModels; track micModel.id) {
+                <option [value]="micModel.id" [selected]="micModel.id === vocal.micModel">{{ micModel.label }}</option>
+              }
+            </select>
+          </div>
+
+          @if (view.showMicFreeText) {
+            <div class="field">
+              <label [attr.for]="'mic-free-text-' + roleIndex">Which microphone?</label>
+              <input
+                class="input"
+                type="text"
+                autocomplete="off"
+                [id]="'mic-free-text-' + roleIndex"
+                data-testid="mic-model-other"
+                [value]="vocal.micModelFreeText"
+                (input)="onMicFreeTextInput(roleIndex, $event)"
+              />
+            </div>
+          }
+        }
+      </div>
+
+      <fieldset class="behavior">
+        <legend>Which sounds most like them?</legend>
+        <div class="behavior__options">
+          @for (option of view.behaviorOptions; track option.level; let optionIndex = $index) {
+            <label class="behavior__option" [class.is-selected]="option.level === view.memberRole.skill">
+              <input
+                type="radio"
+                class="behavior__radio"
+                [name]="'behavior-' + roleIndex"
+                [value]="optionIndex"
+                [checked]="option.level === view.memberRole.skill"
+                [attr.data-testid]="'skill-option-' + optionIndex"
+                (change)="onBehaviorChosen(roleIndex, option.level)"
+              />
+              <span>{{ option.description }}</span>
+            </label>
+          }
+        </div>
+      </fieldset>
+
+      @if (roleViews().length > 1) {
+        <div>
+          <button
+            type="button"
+            class="btn btn--small btn--danger"
+            data-testid="remove-role"
+            [attr.aria-label]="'Remove role ' + (roleIndex + 1) + ': ' + roleLabels[view.memberRole.role]"
+            (click)="removeRole(roleIndex)"
+          >
+            Remove this role
+          </button>
+        </div>
+      }
+    </fieldset>
+  }
+
+  <div>
+    <button type="button" class="btn" data-testid="add-role" (click)="addRole()">Add another role</button>
+    <p class="dim member-editor__hint">For someone who sings and plays. Each role gets its own channel.</p>
+  </div>
+
+  <div class="row">
+    <button type="submit" class="btn btn--primary" data-testid="save-member">Save member</button>
+    <button type="button" class="btn" data-testid="cancel-member" (click)="cancel()">Cancel</button>
+  </div>
+</form>

@@ -1,0 +1,72 @@
+.sheet-page__console {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+/* A link that looks like a button needs its text centered by hand. */
+.sheet-page__link-button {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.sheet-page__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.sheet-page__progress {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.sheet-page__warning-kind {
+  margin: var(--space-3) 0 var(--space-1);
+  color: var(--warn);
+}
+
+.sheet-page__list {
+  margin: 0;
+  padding-left: var(--space-5);
+}
+
+.sheet-page__list li {
+  margin-bottom: var(--space-1);
+}
+
+.sheet-page__maps-summary {
+  padding: var(--space-3) 0;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.sheet-page__maps-title {
+  margin-top: var(--space-4);
+  font-size: 1.05rem;
+}
+
+.sheet-page__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.sheet-page__table th,
+.sheet-page__table td {
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.sheet-page__table th {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}

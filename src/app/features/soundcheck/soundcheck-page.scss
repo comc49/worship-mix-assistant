@@ -1,0 +1,55 @@
+.soundcheck__link-button {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.soundcheck__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.soundcheck-step {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+/* The big number is decoration: the list itself is ordered, so screen readers already count the steps. */
+.soundcheck-step__number {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap);
+  height: var(--tap);
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.soundcheck-step__title {
+  font-size: 1.35rem;
+  margin-bottom: var(--space-2);
+}
+
+.soundcheck-step__detail {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.soundcheck__list {
+  margin: 0;
+  padding-left: var(--space-5);
+}
+
+.soundcheck__list li {
+  margin-bottom: var(--space-2);
+}
+
+.soundcheck__note {
+  margin: var(--space-3) 0 0;
+}

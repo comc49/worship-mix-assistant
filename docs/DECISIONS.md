@@ -23,3 +23,18 @@ Append-only. Each entry: the decision, the reason, the date. Later sessions do n
 ## 2026-11-18: decisions made while building (not yet reviewed by Brian)
 
 These were needed to proceed and are flagged for review.
+
+13. **Combination rule for modifiers:** all offsets add onto the baseline in pipeline order (mic, player, room, service, band); then context limits clamp (the room's reverb ceilings, the wedge cap on vocal gain reduction); then the musical limit clamps last and is reported as a warning. Reason: one rule everywhere, and the provenance trail reads in the same order.
+14. **Rounding:** Hz to the nearest 5, dB and ratios to the nearest 0.5, ms to whole numbers, seconds to 0.1. Reason: a volunteer cannot set 137 Hz.
+15. **Added a `synthBass` role.** The brief's role list omits it, but its subwoofer and ensemble rules name it.
+16. **Musical limits are keyed by profile, not role,** with vocal low cut limits by voice range. Where no explicit limit is listed, the limit is the setting's usable range. Reason: electronic drums as a stereo pair and as separate outputs need different limits.
+17. **DCA members (assumed, brackets were unfilled).** Low End: kick, bass guitar, synth bass, cajon, and the kick output of an electronic kit. Energy: snare, toms, hi-hat, overheads, electric guitar, and electronic drums (the stereo pair, or its snare, toms and cymbals outputs). A stereo electronic kit is in Drums and Energy but not Low End, because riding Low End would lift the cymbals too.
+18. **Group buses only for two or more channels.** A group of one does nothing its own fader cannot do. Wish order: vocals, drums, guitars, keys. On a console with mono buses, vocals and guitars take a mono group; drums and keys need a linked pair or fall back to their DCA.
+19. **Bus priority in the adapters:** monitor mixes, send effects, stream mix, subwoofer bus, then group buses. The brief fixed monitors, effects, groups; stream and sub were placed between because they are needed for the service to work at all.
+20. **Monitor mix assignment is a starting guess.** With fewer mixes than musicians: lead vocal, harmony vocals, keys, then everyone else shares the last mix. Monitor mixes are mono on the X32.
+21. **No gate on snare or vocals by default.** The conservative option; a snare gate is offered only under "if you hear".
+22. **Console facts not in the manuals are UNVERIFIED with no value,** not filled from memory: X32 low cut range, gate and compressor ranges and exact on-screen labels, X32 ratio steps, X32 solo-in-place, whether a mute cuts pre-fader sends, the default send tap on both consoles, WING low cut range, how to feed a sub on the WING. The sheet flags the affected steps "check on your console" and does not clamp to ranges it does not know.
+23. **The X32 manual on Behringer's site is the 75-page "preliminary" manual for the full-size X32.** It does not mention the Compact, Producer or Rack.
+24. **Main bus limiter is an FX insert on both consoles** (Precision Limiter), because neither manual documents a built-in main limiter. It takes an FX slot after the de-esser.
+25. **Initial state:** the band starts empty and an "Example lineup (placeholder names)" template is seeded. No real names are ever committed.
+26. **Sass, print:** the print stylesheet lives in `src/_print.scss`. One sheet section per page; the "if you hear" appendix starts a new page.

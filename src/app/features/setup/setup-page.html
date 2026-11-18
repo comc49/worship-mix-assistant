@@ -1,0 +1,215 @@
+<div class="page">
+  <h1>Setup</h1>
+  <p class="lead">Where you are mixing today and what you are mixing on. Changes are saved as you make them.</p>
+
+  @for (error of store.validationErrors(); track error) {
+    <div class="notice notice--error" role="alert" data-testid="validation-error">{{ error }}</div>
+  }
+
+  <!-- Room -->
+  <section class="card stack" aria-labelledby="room-heading">
+    <h2 id="room-heading">Room</h2>
+
+    <div class="row" role="group" aria-labelledby="room-heading">
+      @for (roomOption of store.rooms(); track roomOption.id) {
+        <button
+          type="button"
+          class="btn"
+          data-testid="room-button"
+          [attr.aria-pressed]="roomOption.id === room().id"
+          (click)="selectRoom(roomOption.id)"
+        >
+          {{ roomOption.name }}
+        </button>
+      }
+      <button type="button" class="btn setup__add-room" data-testid="add-room" (click)="addRoom()">+ Add a room</button>
+    </div>
+
+    <div class="setup__grid">
+      <div class="field">
+        <label for="room-name">Room name</label>
+        <input #roomNameInput id="room-name" class="input" type="text" autocomplete="off" data-testid="room-name" [value]="room().name" (input)="onRoomNameInput($event)" />
+      </div>
+
+      <div class="field">
+        <label for="audience-size">Usual number of people</label>
+        <input
+          id="audience-size"
+          class="input"
+          type="number"
+          inputmode="numeric"
+          min="0"
+          step="1"
+          data-testid="audience-size"
+          [value]="room().audienceSize"
+          (change)="onAudienceSizeChange($event)"
+        />
+      </div>
+
+      <div class="field">
+        <label for="loudness-target">Loudness target in dBA (optional)</label>
+        <input
+          id="loudness-target"
+          class="input"
+          type="number"
+          inputmode="decimal"
+          min="0"
+          step="1"
+          placeholder="No target"
+          aria-describedby="loudness-target-hint"
+          data-testid="loudness-target"
+          [value]="loudnessTargetText()"
+          (change)="onLoudnessTargetChange($event)"
+        />
+        <span id="loudness-target-hint" class="dim setup__hint">Leave empty if your church has not agreed on one.</span>
+      </div>
+    </div>
+
+    <fieldset>
+      <legend>How does the room sound?</legend>
+      <div class="setup__choices" data-testid="reverberance">
+        @for (option of reverberanceOptions; track option.value) {
+          <button
+            type="button"
+            class="btn setup__choice"
+            [attr.data-testid]="'reverberance-' + option.value"
+            [attr.aria-pressed]="option.value === room().reverberance"
+            (click)="setReverberance(option.value)"
+          >
+            <span class="setup__choice-label">{{ option.label }}</span>
+            <span class="setup__choice-text">{{ option.explanation }}</span>
+          </button>
+        }
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Is there a constant low hum or rumble (fans, air conditioning)?</legend>
+      <div class="row" data-testid="constant-noise">
+        <button type="button" class="btn setup__yes-no" data-testid="constant-noise-yes" [attr.aria-pressed]="room().constantLowFrequencyNoise" (click)="setConstantNoise(true)">
+          Yes
+        </button>
+        <button type="button" class="btn setup__yes-no" data-testid="constant-noise-no" [attr.aria-pressed]="!room().constantLowFrequencyNoise" (click)="setConstantNoise(false)">
+          No
+        </button>
+      </div>
+    </fieldset>
+  </section>
+
+  <!-- Console -->
+  <section class="card stack" aria-labelledby="console-heading">
+    <h2 id="console-heading">Console</h2>
+    <div class="row" role="group" aria-labelledby="console-heading">
+      @for (consoleOption of consoleOptions; track consoleOption.id) {
+        <button
+          type="button"
+          class="btn"
+          data-testid="console-button"
+          [attr.data-console-id]="consoleOption.id"
+          [attr.aria-pressed]="consoleOption.id === store.consoleId()"
+          (click)="selectConsole(consoleOption.id)"
+        >
+          {{ consoleOption.name }}
+        </button>
+      }
+    </div>
+    <p class="dim setup__hint">Choosing one of the built-in rooms also selects the console that lives there.</p>
+  </section>
+
+  <!-- Monitors -->
+  <section class="card stack" aria-labelledby="monitors-heading">
+    <h2 id="monitors-heading">Monitors</h2>
+
+    <fieldset>
+      <legend>What do the musicians listen on?</legend>
+      <div class="row" data-testid="monitor-type">
+        @for (option of monitorTypeOptions; track option.value) {
+          <button
+            type="button"
+            class="btn"
+            [attr.data-testid]="'monitor-type-' + option.value"
+            [attr.aria-pressed]="option.value === serviceSetup().monitorType"
+            (click)="setMonitorType(option.value)"
+          >
+            {{ option.label }}
+          </button>
+        }
+      </div>
+    </fieldset>
+
+    <div class="field">
+      <label for="monitor-count">Number of separate monitor mixes</label>
+      <div class="row setup__stepper">
+        <button
+          type="button"
+          class="btn setup__stepper-button"
+          data-testid="monitor-count-decrease"
+          aria-label="One monitor mix fewer"
+          [disabled]="!canDecreaseMonitorMixes()"
+          (click)="changeMonitorMixCount(-1)"
+        >
+          <span aria-hidden="true">&minus;</span>
+        </button>
+        <input
+          id="monitor-count"
+          class="input setup__stepper-value"
+          type="number"
+          inputmode="numeric"
+          step="1"
+          data-testid="monitor-count"
+          aria-describedby="monitor-count-hint"
+          [min]="minMonitorMixes"
+          [max]="maxMonitorMixes"
+          [value]="serviceSetup().monitorMixCount"
+          (change)="onMonitorMixCountChange($event)"
+        />
+        <button
+          type="button"
+          class="btn setup__stepper-button"
+          data-testid="monitor-count-increase"
+          aria-label="One monitor mix more"
+          [disabled]="!canIncreaseMonitorMixes()"
+          (click)="changeMonitorMixCount(1)"
+        >
+          <span aria-hidden="true">+</span>
+        </button>
+      </div>
+      <span id="monitor-count-hint" class="dim setup__hint">From {{ minMonitorMixes }} to {{ maxMonitorMixes }}. Count each wedge or in-ear pack that gets its own mix.</span>
+    </div>
+  </section>
+
+  <!-- Stream and subwoofer -->
+  <section class="card stack" aria-labelledby="outputs-heading">
+    <h2 id="outputs-heading">Livestream and subwoofer</h2>
+
+    <fieldset>
+      <legend>Does the livestream get its own separate mix?</legend>
+      <div class="row" data-testid="stream-mix">
+        <button type="button" class="btn setup__yes-no" data-testid="stream-mix-yes" [attr.aria-pressed]="serviceSetup().separateStreamMix" (click)="setSeparateStreamMix(true)">
+          Yes
+        </button>
+        <button type="button" class="btn setup__yes-no" data-testid="stream-mix-no" [attr.aria-pressed]="!serviceSetup().separateStreamMix" (click)="setSeparateStreamMix(false)">
+          No
+        </button>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>How is the subwoofer fed?</legend>
+      <div class="setup__choices" data-testid="subwoofer-feed">
+        @for (option of subwooferFeedOptions; track option.value) {
+          <button
+            type="button"
+            class="btn setup__choice"
+            [attr.data-testid]="'subwoofer-feed-' + option.value"
+            [attr.aria-pressed]="option.value === serviceSetup().subwooferFeed"
+            (click)="setSubwooferFeed(option.value)"
+          >
+            <span class="setup__choice-label">{{ option.label }}</span>
+            <span class="setup__choice-text">{{ option.explanation }}</span>
+          </button>
+        }
+      </div>
+    </fieldset>
+  </section>
+</div>

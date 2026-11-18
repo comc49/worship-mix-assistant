@@ -1,0 +1,36 @@
+<section class="sheet-reference card" data-testid="sheet-reference" aria-labelledby="sheet-reference-title">
+  <h2 id="sheet-reference-title">If something sounds wrong</h2>
+  <p class="dim">Nothing to tick off here. Look a channel up when you hear a problem on it, and change one thing at a time.</p>
+
+  @for (channel of channelsWithContent(); track channel.channelId) {
+    <div class="sheet-reference__channel" data-testid="reference-channel">
+      <h3 class="sheet-reference__subject">{{ channel.subject }}</h3>
+
+      @if (channel.ifYouHear.length > 0) {
+        <ul class="sheet-reference__list">
+          @for (entry of channel.ifYouHear; track $index) {
+            <li data-testid="reference-entry"><strong>If you hear: {{ entry.hear }}.</strong> Try: {{ entry.tryThis }}</li>
+          }
+        </ul>
+      }
+
+      @if (channel.mixerNotes.length > 0) {
+        <h4 class="sheet-reference__label">Good to know</h4>
+        <ul class="sheet-reference__list" data-testid="reference-mixer-notes">
+          @for (note of channel.mixerNotes; track $index) {
+            <li>{{ note }}</li>
+          }
+        </ul>
+      }
+
+      @if (channel.coachingNotes.length > 0) {
+        <h4 class="sheet-reference__label">Something to pass on to the player</h4>
+        <ul class="sheet-reference__list" data-testid="reference-coaching-notes">
+          @for (note of channel.coachingNotes; track $index) {
+            <li>{{ note }}</li>
+          }
+        </ul>
+      }
+    </div>
+  }
+</section>

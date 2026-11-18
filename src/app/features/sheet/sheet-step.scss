@@ -1,0 +1,56 @@
+:host {
+  display: block;
+}
+
+.sheet-step {
+  padding: var(--space-2) 0;
+  border-top: 1px solid var(--border);
+}
+
+/* The whole label is the tap target: the box plus the instruction, at least 48px high. */
+.sheet-step__check {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  min-height: var(--tap);
+  padding: var(--space-2) 0;
+  cursor: pointer;
+}
+
+.sheet-step__box {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  margin: 2px 0 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.sheet-step__instruction {
+  font-weight: 600;
+}
+
+.sheet-step--done .sheet-step__instruction {
+  color: var(--text-dim);
+  text-decoration: line-through;
+}
+
+/* Lines up with the instruction text, to the right of the checkbox. */
+.sheet-step__body {
+  padding-left: calc(28px + var(--space-3));
+}
+
+.sheet-step__badges {
+  margin-bottom: var(--space-2);
+}
+
+.sheet-step__substeps {
+  margin: var(--space-2) 0 0;
+  padding-left: var(--space-5);
+  color: var(--text-dim);
+  font-size: 0.95rem;
+}
+
+.sheet-step__substeps li {
+  margin-bottom: var(--space-1);
+}

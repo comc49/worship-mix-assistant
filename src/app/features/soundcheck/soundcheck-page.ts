@@ -1,7 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { MixStore } from '../../state/mix-store';
 
+/** The soundcheck order for this band, as big steps readable from a step back. */
 @Component({
   selector: 'app-soundcheck-page',
-  template: '<div class="page"><h1>Soundcheck</h1><p class="lead">Not built yet.</p></div>',
+  imports: [RouterLink],
+  templateUrl: './soundcheck-page.html',
+  styleUrl: './soundcheck-page.scss',
 })
-export class SoundcheckPage {}
+export class SoundcheckPage {
+  protected readonly store = inject(MixStore);
+
+  protected readonly hasBand = computed(() => this.store.band().length > 0);
+
+  protected namesText(names: string[]): string {
+    return names.join(', ');
+  }
+}

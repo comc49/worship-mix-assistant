@@ -1,4 +1,4 @@
-import { computed, effect, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { AdapterResult, CONSOLE_PROFILES, ConsoleId, ConsoleProfile, ConsoleSheet, toConsole, validateForConsole } from '../core/consoles';
 import { buildMixPlan } from '../core/engine';
 import { DEFAULT_CONSOLE_BY_ROOM } from '../core/knowledge';
@@ -49,12 +49,6 @@ export class MixStore {
   });
 
   readonly checkedStepIds = computed<string[]>(() => this.state().checkedStepIds[this.consoleId()] ?? []);
-
-  constructor() {
-    effect(() => {
-      this.storage.save(this.state());
-    });
-  }
 
   // --- Service setup -------------------------------------------------------
 
@@ -173,6 +167,7 @@ export class MixStore {
       return result.error;
     }
     this.state.set(result.state);
+    this.storage.save(result.state);
     return null;
   }
 
@@ -181,7 +176,12 @@ export class MixStore {
     this.state.set(createDefaultState());
   }
 
+  /**
+   * Every change goes through here and is saved at once, not on a later tick,
+   * so closing or reloading the page right after a change cannot lose it.
+   */
   private patch(partial: Partial<StoredState>): void {
     this.state.update((current) => ({ ...current, ...partial }));
+    this.storage.save(this.state());
   }
 }

@@ -1,0 +1,128 @@
+<div class="page sheet-page">
+  @if (!hasBand()) {
+    <h1>Console sheet</h1>
+    <div class="card" data-testid="sheet-empty">
+      <p><strong>No band yet.</strong> Tell the app who is playing this service and it will write the step-by-step sheet for your console.</p>
+      <a class="btn btn--primary sheet-page__link-button" routerLink="/band">Add the band</a>
+    </div>
+  } @else {
+    <div class="sheet-page__console no-print">
+      <span id="console-switch-label" class="dim">Console</span>
+      <div class="row" role="group" aria-labelledby="console-switch-label">
+        @for (option of consoleOptions; track option.id) {
+          <button
+            type="button"
+            class="btn"
+            [attr.aria-pressed]="store.consoleId() === option.id"
+            [attr.data-testid]="'console-switch-' + option.id"
+            (click)="selectConsole(option.id)"
+          >{{ option.label }}</button>
+        }
+      </div>
+    </div>
+
+    @if (store.sheet(); as sheet) {
+      <h1>{{ sheet.consoleName }} setup sheet</h1>
+
+      <p class="notice notice--info" data-testid="sheet-disclaimer">{{ sheet.disclaimer }}</p>
+
+      @if (isServiceSituation()) {
+        <p class="notice" data-testid="sheet-service-notice">
+          <strong>A service is running.</strong> Leave every step marked "Rehearsal only" alone until the service is over.
+        </p>
+      }
+
+      <div class="sheet-page__toolbar card">
+        <p class="sheet-page__progress" role="status" data-testid="sheet-progress">{{ doneStepCount() }} of {{ totalStepCount() }} done</p>
+        <div class="row no-print">
+          <button type="button" class="btn btn--small" data-testid="clear-progress" [disabled]="doneStepCount() === 0" (click)="clearCheckmarks()">
+            Clear checkmarks
+          </button>
+          <button type="button" class="btn btn--small btn--primary" data-testid="print-button" (click)="print()">Print / save as PDF</button>
+        </div>
+      </div>
+
+      @if (warningGroups().length > 0) {
+        <section class="card" data-testid="sheet-warnings" aria-labelledby="sheet-warnings-title">
+          <h2 id="sheet-warnings-title">Read this first</h2>
+          @for (group of warningGroups(); track group.kind) {
+            <h3 class="sheet-page__warning-kind">{{ group.label }}</h3>
+            <ul class="sheet-page__list">
+              @for (message of group.messages; track $index) {
+                <li data-testid="sheet-warning" [attr.data-warning-kind]="group.kind">{{ message }}</li>
+              }
+            </ul>
+          }
+        </section>
+      }
+
+      <section class="card" data-testid="sheet-do-not-touch" aria-labelledby="sheet-do-not-touch-title">
+        <h2 id="sheet-do-not-touch-title">Do not touch</h2>
+        <ul class="sheet-page__list">
+          @for (item of sheet.doNotTouch; track $index) {
+            <li>{{ item }}</li>
+          }
+        </ul>
+      </section>
+
+      <details class="card sheet-page__maps" data-testid="sheet-maps">
+        <summary class="sheet-page__maps-summary">Which bus and which effect slot is used for what</summary>
+
+        <h2 class="sheet-page__maps-title">Buses</h2>
+        <table class="sheet-page__table" data-testid="bus-map">
+          <thead>
+            <tr>
+              <th scope="col">Bus</th>
+              <th scope="col">Used as</th>
+              <th scope="col">Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (bus of sheet.busMap; track $index) {
+              <tr>
+                <td>{{ busNumbersText(bus.busNumbers) }}</td>
+                <td>{{ busPurposeLabel(bus.purpose) }}</td>
+                <td>{{ bus.label }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+
+        <h2 class="sheet-page__maps-title">Effect slots</h2>
+        <table class="sheet-page__table" data-testid="fx-map">
+          <thead>
+            <tr>
+              <th scope="col">Slot</th>
+              <th scope="col">Effect</th>
+              <th scope="col">Used as</th>
+              <th scope="col">For</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (fx of sheet.fxMap; track fx.slot) {
+              <tr>
+                <td>{{ fx.slot }}</td>
+                <td>{{ fx.effectName }}</td>
+                <td>{{ fxRoleLabel(fx.role) }}</td>
+                <td>{{ fx.label }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </details>
+
+      @for (section of sheet.sections; track section.id) {
+        <app-sheet-section [section]="section" [checkedStepIds]="checkedStepIds()" (stepToggled)="toggleStep($event)" />
+      }
+
+      <app-sheet-reference [reference]="sheet.reference" />
+    } @else {
+      <h1>Console sheet</h1>
+      <p class="lead">This band does not fit on this console as it is. Nothing is lost: fix the points below, or try the other console.</p>
+      @for (error of errors(); track $index) {
+        <p class="notice notice--error" role="alert" data-testid="sheet-error">{{ error }}</p>
+      }
+      <a class="btn sheet-page__link-button no-print" routerLink="/band">Change the band</a>
+    }
+  }
+</div>
