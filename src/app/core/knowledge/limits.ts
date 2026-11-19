@@ -41,11 +41,11 @@ export const EXPLICIT_LIMITS: Record<string, Partial<Record<ParamKey, Limit>>> =
   },
   'electricGuitar.modeler': {
     lowCutHz: { floor: 70, ceiling: 150, why: 'Above 150 Hz an electric guitar loses the weight of its chords.' },
-    compRatio: { floor: 1.5, ceiling: 10, why: 'A limiter-style ratio is allowed here, because it only acts on loud patches.' },
+    compRatio: { floor: 1.5, ceiling: 6, why: 'Above 6:1 a guitar that is already compressed by its own sound goes flat.' },
   },
   'electricGuitar.amp': {
     lowCutHz: { floor: 80, ceiling: 150, why: 'Above 150 Hz an electric guitar loses the weight of its chords.' },
-    compRatio: { floor: 1.5, ceiling: 10, why: 'A limiter-style ratio is allowed here, because it only acts on loud patches.' },
+    compRatio: { floor: 1.5, ceiling: 6, why: 'Above 6:1 a guitar that is already compressed by its own sound goes flat.' },
   },
   'electronicDrums.stereo': {
     lowCutHz: { floor: 20, ceiling: 40, why: 'The kick is inside this pair. A higher cut would thin the foundation.' },

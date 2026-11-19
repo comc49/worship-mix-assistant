@@ -374,7 +374,7 @@ Connections: modelerDirect, monoDi, stereoDi. DCAs: guitars, energy. Group bus: 
 | Setting | Default | Usable range | Musical limit | Why |
 | --- | --- | --- | --- | --- |
 | lowCutHz | 90 Hz | 70 to 120 | 70 to 150 (Above 150 Hz an electric guitar loses the weight of its chords.) | Electric guitar has nothing useful below the low E string's body. Lows here only crowd the bass. |
-| compRatio | 2 :1 | 1.5 to 4 | 1.5 to 10 (A limiter-style ratio is allowed here, because it only acts on loud patches.) | Distorted and modeled guitar is already compressed. This only catches peaks. |
+| compRatio | 2 :1 | 1.5 to 4 | 1.5 to 6 (Above 6:1 a guitar that is already compressed by its own sound goes flat.) | Distorted and modeled guitar is already compressed. This only catches peaks. |
 | compAttackMs | 20 ms | 5 to 30 | usable range | Keeps the pick attack. |
 | compReleaseMs | 150 ms | 100 to 250 | usable range | Recovers between chords. |
 | compGainReductionDb | 2 dB | 1 to 6 | usable range | Light control only. |
@@ -398,7 +398,7 @@ Connections: dynamicMic, condenserMic. DCAs: guitars, energy. Group bus: guitars
 | Setting | Default | Usable range | Musical limit | Why |
 | --- | --- | --- | --- | --- |
 | lowCutHz | 100 Hz | 80 to 130 | 80 to 150 (Above 150 Hz an electric guitar loses the weight of its chords.) | A close amp mic adds low thump that crowds the bass. |
-| compRatio | 2 :1 | 1.5 to 4 | 1.5 to 10 (A limiter-style ratio is allowed here, because it only acts on loud patches.) | Distorted and modeled guitar is already compressed. This only catches peaks. |
+| compRatio | 2 :1 | 1.5 to 4 | 1.5 to 6 (Above 6:1 a guitar that is already compressed by its own sound goes flat.) | Distorted and modeled guitar is already compressed. This only catches peaks. |
 | compAttackMs | 20 ms | 5 to 30 | usable range | Keeps the pick attack. |
 | compReleaseMs | 150 ms | 100 to 250 | usable range | Recovers between chords. |
 | compGainReductionDb | 2 dB | 1 to 6 | usable range | Light control only. |
@@ -593,7 +593,7 @@ Intermediate is the baseline. Skill never chooses tonal EQ.
 | synthBass | advanced | compGainReductionDb -1 | Patches are levelled and played evenly. | (same tip as every player of this role) |
 | acousticGuitar | beginner | compRatio +1; compGainReductionDb +2; levelDb -1 | Strumming strength varies a lot between sections. | Strum lighter than feels natural. The PA makes it big. |
 | acousticGuitar | advanced | compGainReductionDb -1 | They control their own dynamics with their right hand. | (same tip as every player of this role) |
-| electricGuitar | beginner | compRatio +6; compAttackMs -15; compGainReductionDb +2; levelDb -1 | Volume jumps between patches, so the compressor acts like a limiter that only catches the loud ones. | Set every patch to the same volume at home, with the lead patch only a little louder. |
+| electricGuitar | beginner | compRatio +2; compAttackMs -10; compGainReductionDb +2; levelDb -1 | Volume jumps between patches, so the compressor is set firmer to hold back the loud ones. | Set every patch to the same volume at home, with the lead patch only a little louder. |
 | electricGuitar | advanced | compGainReductionDb -1 | Patches are levelled and dynamics are deliberate. | (same tip as every player of this role) |
 | keys | beginner | lowCutHz +30 [only with bassGuitar in the band]; levelDb -2 [only with bassGuitar in the band]; compRatio +0.5; compGainReductionDb +1 | A busy left hand collides with the bass guitar, and big chords jump out. | When the bass guitar is playing, leave the low notes to them: play your left hand higher, or leave it out. |
 | keys | advanced | compGainReductionDb -1 | They leave space for the bass and control their own dynamics. | (same tip as every player of this role) |
@@ -660,7 +660,7 @@ Live, boomy room: higher low cuts on everything except kick and bass, shorter an
 | kick | fxSend.vocalPlate -4; fxSend.hall -4; fxSend.drumRoom -4; fxSend.tempoDelay -3; fxSend.vocalPlate ceiling -15; fxSend.hall ceiling -18; fxSend.drumRoom ceiling -18; fxSend.tempoDelay ceiling -20 | Kick and bass are the foundation. Their low cut is not raised for the room. |
 | snare | lowCutHz +20; fxSend.vocalPlate -4; fxSend.hall -4; fxSend.drumRoom -4; fxSend.tempoDelay -3; fxSend.vocalPlate ceiling -15; fxSend.hall ceiling -18; fxSend.drumRoom ceiling -18; fxSend.tempoDelay ceiling -20 | The room builds up low-mids, so this source sends less of them into it and uses less reverb. |
 | hiHat | lowCutHz +20; fxSend.vocalPlate -4; fxSend.hall -4; fxSend.drumRoom -4; fxSend.tempoDelay -3; fxSend.vocalPlate ceiling -15; fxSend.hall ceiling -18; fxSend.drumRoom ceiling -18; fxSend.tempoDelay ceiling -20 | The room builds up low-mids, so this source sends less of them into it and uses less reverb. |
-| toms | lowCutHz +20; fxSend.vocalPlate -4; fxSend.hall -4; fxSend.drumRoom -4; fxSend.tempoDelay -3; fxSend.vocalPlate ceiling -15; fxSend.hall ceiling -18; fxSend.drumRoom ceiling -18; fxSend.tempoDelay ceiling -20 | The room builds up low-mids, so this source sends less of them into it and uses less reverb. |
+| toms | lowCutHz +10; fxSend.vocalPlate -4; fxSend.hall -4; fxSend.drumRoom -4; fxSend.tempoDelay -3; fxSend.vocalPlate ceiling -15; fxSend.hall ceiling -18; fxSend.drumRoom ceiling -18; fxSend.tempoDelay ceiling -20 | A floor tom's weight sits around 80 Hz, so its low cut is raised less than other sources. |
 | overheads | lowCutHz +20; fxSend.vocalPlate -4; fxSend.hall -4; fxSend.drumRoom -4; fxSend.tempoDelay -3; fxSend.vocalPlate ceiling -15; fxSend.hall ceiling -18; fxSend.drumRoom ceiling -18; fxSend.tempoDelay ceiling -20 | The room builds up low-mids, so this source sends less of them into it and uses less reverb. |
 | cajon | fxSend.vocalPlate -4; fxSend.hall -4; fxSend.drumRoom -4; fxSend.tempoDelay -3; fxSend.vocalPlate ceiling -15; fxSend.hall ceiling -18; fxSend.drumRoom ceiling -18; fxSend.tempoDelay ceiling -20 | The cajon is the kick of a stripped set. Its low cut is not raised. |
 | backingTracks | fxSend.vocalPlate -4; fxSend.hall -4; fxSend.drumRoom -4; fxSend.tempoDelay -3; fxSend.vocalPlate ceiling -15; fxSend.hall ceiling -18; fxSend.drumRoom ceiling -18; fxSend.tempoDelay ceiling -20 | Tracks are already mixed; their low end is handled by level. |
@@ -678,26 +678,26 @@ Dry, thin room: conservative low cuts, longer and louder reverb, pads used as at
 
 | Role | Changes | Why |
 | --- | --- | --- |
-| leadVocal | lowCutHz -10; fxSend.vocalPlate +3; fxSend.hall +3; fxSend.drumRoom +3 | The room is thin and adds nothing, so this source keeps more low end and gets more reverb. |
-| harmonyVocal | lowCutHz -10; fxSend.vocalPlate +3; fxSend.hall +3; fxSend.drumRoom +3 | The room is thin and adds nothing, so this source keeps more low end and gets more reverb. |
-| acousticGuitar | lowCutHz -10; fxSend.vocalPlate +3; fxSend.hall +3; fxSend.drumRoom +3 | The room is thin and adds nothing, so this source keeps more low end and gets more reverb. |
-| electricGuitar | lowCutHz -10; fxSend.vocalPlate +3; fxSend.hall +3; fxSend.drumRoom +3 | The room is thin and adds nothing, so this source keeps more low end and gets more reverb. |
-| bassGuitar | fxSend.vocalPlate +3; fxSend.hall +3; fxSend.drumRoom +3 | The foundation is already at its lowest sensible cut. |
-| synthBass | fxSend.vocalPlate +3; fxSend.hall +3; fxSend.drumRoom +3 | The foundation is already at its lowest sensible cut. |
-| keys | lowCutHz -10; fxSend.vocalPlate +3; fxSend.hall +3; fxSend.drumRoom +3 | The room is thin and adds nothing, so this source keeps more low end and gets more reverb. |
-| padSynth | lowCutHz -10; levelDb +2; fxSend.vocalPlate +3; fxSend.hall +3; fxSend.drumRoom +3 | In a dry room the pad is the atmosphere the room does not provide. |
-| electronicDrums | fxSend.vocalPlate +3; fxSend.hall +3; fxSend.drumRoom +3 | The foundation is already at its lowest sensible cut. |
-| kick | fxSend.vocalPlate +3; fxSend.hall +3; fxSend.drumRoom +3 | The foundation is already at its lowest sensible cut. |
-| snare | lowCutHz -10; fxSend.vocalPlate +3; fxSend.hall +3; fxSend.drumRoom +3 | The room is thin and adds nothing, so this source keeps more low end and gets more reverb. |
-| hiHat | fxSend.vocalPlate +3; fxSend.hall +3; fxSend.drumRoom +3 | A hi-hat has no low end to keep. |
-| toms | lowCutHz -10; fxSend.vocalPlate +3; fxSend.hall +3; fxSend.drumRoom +3 | The room is thin and adds nothing, so this source keeps more low end and gets more reverb. |
-| overheads | lowCutHz -10; fxSend.vocalPlate +3; fxSend.hall +3; fxSend.drumRoom +3 | The room is thin and adds nothing, so this source keeps more low end and gets more reverb. |
-| cajon | fxSend.vocalPlate +3; fxSend.hall +3; fxSend.drumRoom +3 | The foundation is already at its lowest sensible cut. |
-| backingTracks | fxSend.vocalPlate +3; fxSend.hall +3; fxSend.drumRoom +3 | Tracks are already mixed. |
-| click | fxSend.vocalPlate +3; fxSend.hall +3; fxSend.drumRoom +3 | The click never reaches the room. |
+| leadVocal | fxSend.vocalPlate +3; fxSend.vocalPlate ceiling -8; fxSend.hall +3; fxSend.drumRoom +3 | A handheld vocal mic has the same handling noise, plosives and monitor spill in any room, so its low cut is not lowered. It gets more reverb. |
+| harmonyVocal | fxSend.vocalPlate +3; fxSend.vocalPlate ceiling -8; fxSend.hall +3; fxSend.drumRoom +3 | A handheld vocal mic has the same handling noise, plosives and monitor spill in any room, so its low cut is not lowered. It gets more reverb. |
+| acousticGuitar | lowCutHz -10; fxSend.vocalPlate +3; fxSend.vocalPlate ceiling -8; fxSend.hall +3; fxSend.drumRoom +3 | The room is thin and adds nothing, so this source keeps more low end and gets more reverb. |
+| electricGuitar | lowCutHz -10; fxSend.vocalPlate +3; fxSend.vocalPlate ceiling -8; fxSend.hall +3; fxSend.drumRoom +3 | The room is thin and adds nothing, so this source keeps more low end and gets more reverb. |
+| bassGuitar | fxSend.vocalPlate +3; fxSend.vocalPlate ceiling -8; fxSend.hall +3; fxSend.drumRoom +3 | The foundation is already at its lowest sensible cut. |
+| synthBass | fxSend.vocalPlate +3; fxSend.vocalPlate ceiling -8; fxSend.hall +3; fxSend.drumRoom +3 | The foundation is already at its lowest sensible cut. |
+| keys | lowCutHz -10; fxSend.vocalPlate +3; fxSend.vocalPlate ceiling -8; fxSend.hall +3; fxSend.drumRoom +3 | The room is thin and adds nothing, so this source keeps more low end and gets more reverb. |
+| padSynth | lowCutHz -10; levelDb +2; fxSend.vocalPlate +3; fxSend.vocalPlate ceiling -8; fxSend.hall +3; fxSend.drumRoom +3 | In a dry room the pad is the atmosphere the room does not provide. |
+| electronicDrums | fxSend.vocalPlate +3; fxSend.vocalPlate ceiling -8; fxSend.hall +3; fxSend.drumRoom +3 | The foundation is already at its lowest sensible cut. |
+| kick | fxSend.vocalPlate +3; fxSend.vocalPlate ceiling -8; fxSend.hall +3; fxSend.drumRoom +3 | The foundation is already at its lowest sensible cut. |
+| snare | lowCutHz -10; fxSend.vocalPlate +3; fxSend.vocalPlate ceiling -8; fxSend.hall +3; fxSend.drumRoom +3 | The room is thin and adds nothing, so this source keeps more low end and gets more reverb. |
+| hiHat | fxSend.vocalPlate +3; fxSend.vocalPlate ceiling -8; fxSend.hall +3; fxSend.drumRoom +3 | A hi-hat has no low end to keep. |
+| toms | lowCutHz -10; fxSend.vocalPlate +3; fxSend.vocalPlate ceiling -8; fxSend.hall +3; fxSend.drumRoom +3 | The room is thin and adds nothing, so this source keeps more low end and gets more reverb. |
+| overheads | lowCutHz -10; fxSend.vocalPlate +3; fxSend.vocalPlate ceiling -8; fxSend.hall +3; fxSend.drumRoom +3 | The room is thin and adds nothing, so this source keeps more low end and gets more reverb. |
+| cajon | fxSend.vocalPlate +3; fxSend.vocalPlate ceiling -8; fxSend.hall +3; fxSend.drumRoom +3 | The foundation is already at its lowest sensible cut. |
+| backingTracks | fxSend.vocalPlate +3; fxSend.vocalPlate ceiling -8; fxSend.hall +3; fxSend.drumRoom +3 | Tracks are already mixed. |
+| click | fxSend.vocalPlate +3; fxSend.vocalPlate ceiling -8; fxSend.hall +3; fxSend.drumRoom +3 | The click never reaches the room. |
 
 Effect times:
-- vocalPlate: +0.4 s. A dry room gives no tail, so the plate provides it.
+- vocalPlate: +0.2 s. A dry room gives no tail, so the plate provides a little more of it.
 - hall: +0.4 s. A longer hall replaces the space the room lacks.
 - drumRoom: +0.2 s. Drums sound small in a dry room.
 - tempoDelay: +0 s. Delay time follows the song tempo, not the room.
@@ -711,7 +711,7 @@ Precedence: offsets add in order (mic, player, room, band), then context limits 
 | Priority | Effect | Time | Limit | Why |
 | --- | --- | --- | --- | --- |
 | 1 | Vocal plate | 1.6 s (1 to 2.4) | 0.8 to 2.6 s | The one reverb every band needs: it gives the vocals sustain and blends harmonies. |
-| 2 | Tempo delay | Tap the tempo of each song so the repeats land on the quarter note. Keep feedback low: two or three repeats. | - | A quiet delay on the lead vocal fills gaps without the wash of more reverb. |
+| 2 | Tempo delay | Tap the tempo of each song so the repeats land on the quarter note. Keep the number of repeats low: two or three. | - | A quiet delay on the lead vocal fills gaps without the wash of more reverb. |
 | 3 | Hall | 2.2 s (1.4 to 3) | 1 to 3.2 s | Instruments that are plugged in directly have no room sound of their own. |
 | 4 | Drum room | 0.8 s (0.4 to 1.2) | 0.3 to 1.2 s | Sampled or close-miked drums can sound small and dry. |
 

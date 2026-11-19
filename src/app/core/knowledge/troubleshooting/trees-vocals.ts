@@ -1,4 +1,5 @@
 import { DE_ESSER, MONITOR_RULES } from '../rules';
+import { BAND_HAS_GUITARS, BAND_HAS_KEYS, BAND_HAS_KEYS_OR_PAD, VOCAL_ROLES } from './band-conditions';
 import { ensembleAdvice } from './rule-text';
 import { TroubleshootingTree } from './types';
 
@@ -13,10 +14,12 @@ export const VOCALS_BURIED_TREE: TroubleshootingTree = {
   symptom: 'Vocals buried',
   group: 'vocals',
   targetPicker: 'none',
+  needsOneOfEach: [VOCAL_ROLES],
   entryNodeId: 'keysDown',
   nodes: {
     keysDown: {
       kind: 'check',
+      when: { condition: BAND_HAS_KEYS_OR_PAD, otherwise: 'guitarsDown' },
       action: 'Pull the Keys and Pads DCA down 3 dB.',
       question: 'Can you hear the words now?',
       yes: 'fixKeysLower',
@@ -25,14 +28,18 @@ export const VOCALS_BURIED_TREE: TroubleshootingTree = {
     },
     fixKeysLower: {
       kind: 'fix',
-      arrangementAdvice: 'Ask {member:keys} to play fewer notes, and higher or lower than the melody, while {member:leadVocal} sings.',
+      arrangementAdvice: [
+        { text: 'Ask {member:keys} to play fewer notes, and higher or lower than the melody, while {member:leadVocal} sings.', when: BAND_HAS_KEYS },
+        { text: 'A sung line needs space around it: whoever plays under it should play less.' },
+      ],
       text: 'Leave the Keys and Pads DCA where it is now. Making room under a vocal works better than turning the vocal up.',
       safety: 'safeDuringService',
       controlRefs: [],
     },
     guitarsDown: {
       kind: 'check',
-      action: 'Put the keys back. Pull the Guitars DCA down 3 dB.',
+      when: { condition: BAND_HAS_GUITARS, otherwise: 'vocalUp' },
+      action: 'Put everything back the way it was. Pull the Guitars DCA down 3 dB.',
       question: 'Can you hear the words now?',
       yes: 'fixGuitarsLower',
       no: 'vocalUp',
@@ -47,7 +54,7 @@ export const VOCALS_BURIED_TREE: TroubleshootingTree = {
     },
     vocalUp: {
       kind: 'check',
-      action: 'Put the guitars back. Push the Lead Vocal DCA up 2 dB, and listen for the first hint of ringing.',
+      action: 'Put everything back the way it was. Push the Lead Vocal DCA up 2 dB, and listen for the first hint of ringing.',
       question: 'Are the words clear now, with no ringing?',
       yes: 'fixRideVocal',
       no: 'micDistance',
@@ -70,13 +77,14 @@ export const VOCALS_BURIED_TREE: TroubleshootingTree = {
     fixMicCloser: {
       kind: 'fix',
       arrangementAdvice: 'Between songs, ask {member:leadVocal} to hold the mic closer, pointing straight at the mouth. A closer mic gives much more voice before feedback starts.',
-      text: 'Until then, push the Lead Vocal DCA only as far as it goes without ringing, and pull the Keys and Pads DCA and the Guitars DCA down 2 dB each.',
+      text: 'Until then, push the Lead Vocal DCA only as far as it goes without ringing, and pull the instrument DCAs down 2 dB each.',
       safety: 'safeDuringService',
       controlRefs: [],
     },
     eqCarve: {
       kind: 'check',
-      action: 'Make room where the words are. On the keys and on the electric guitar, cut 2 dB, wide, around 3 kHz ({control:eqScreen}).',
+      when: { condition: { kind: 'anyRoleInBand', roles: ['keys', 'electricGuitar', 'acousticGuitar'] }, otherwise: 'fixVocalCompressor' },
+      action: 'Make room where the words are. On each instrument that plays chords under the voice, cut 2 dB, wide, around 3 kHz ({control:eqScreen}).',
       question: 'Are the words clearer?',
       yes: 'fixKeepCarve',
       no: 'fixVocalCompressor',
@@ -90,7 +98,7 @@ export const VOCALS_BURIED_TREE: TroubleshootingTree = {
     },
     fixVocalCompressor: {
       kind: 'fix',
-      text: 'Take the cuts out again, and look at the lead vocal compressor ({control:compScreen}). If it shows much more than {compReduction:leadVocal} of reduction on loud lines, the voice is being flattened: bring the threshold ({control:compParamNames.threshold}) back up until it shows about that much. If it shows none at all, quiet lines get lost: lower the threshold until loud lines show about that much.',
+      text: 'Take out any cut you just made, and look at the lead vocal compressor ({control:compScreen}). If it shows much more than {compReduction:leadVocal} of reduction on loud lines, the voice is being flattened: bring the compressor\'s {control:compParamNames.threshold} back up until it shows about that much. If it shows none at all, quiet lines get lost: bring it down until loud lines show about that much.',
       safety: 'safeDuringService',
       controlRefs: ['compScreen', 'compParamNames'],
     },
@@ -102,6 +110,7 @@ export const VOCALS_HARSH_TREE: TroubleshootingTree = {
   symptom: 'Vocals harsh or sibilant',
   group: 'vocals',
   targetPicker: 'none',
+  needsOneOfEach: [VOCAL_ROLES],
   entryNodeId: 'sibilanceListen',
   nodes: {
     sibilanceListen: {
@@ -171,7 +180,7 @@ export const VOCALS_HARSH_TREE: TroubleshootingTree = {
     },
     fixCompressorHarsh: {
       kind: 'fix',
-      text: `Take the cut out, and look at the compressor on that vocal ({control:compScreen}). Heavy compression makes a voice hard and brings the "s" sounds forward. Bring the threshold ({control:compParamNames.threshold}) back up until loud lines show about {compReduction:leadVocal} of reduction. ${MONITOR_RULES.wedgeCompressionNote}`,
+      text: `Take the cut out, and look at the compressor on that vocal ({control:compScreen}). Heavy compression makes a voice hard and brings the "s" sounds forward. Bring the compressor's {control:compParamNames.threshold} back up until loud lines show about {compReduction:leadVocal} of reduction. ${MONITOR_RULES.wedgeCompressionNote}`,
       safety: 'safeDuringService',
       controlRefs: ['compScreen', 'compParamNames'],
     },
@@ -183,6 +192,7 @@ export const LEAD_VOCAL_POPS_TREE: TroubleshootingTree = {
   symptom: 'Lead vocal pops or booms',
   group: 'vocals',
   targetPicker: 'none',
+  needsOneOfEach: [['leadVocal']],
   entryNodeId: 'lowCutLook',
   nodes: {
     lowCutLook: {

@@ -230,24 +230,24 @@ Starts at step 1.
 
 **6. Check** (safe during a service)
 
-- Do: Open the gate for that channel (Home screen, gate tab) and watch it while the musician plays.
+- Do (look only): Open the gate for that channel (Home screen, gate tab) and watch it while the musician plays.
 - Ask: Is a gate switched on and staying closed while they play?
 - Yes: go to step 7. No: go to step 8.
 
 **7. Fix** (safe during a service)
 
-- Then: Lower the gate threshold (threshold (1st encoder)) until the gate opens on every note, also the soft ones. If it still chops notes off, switch the gate off: an open channel is better than a missing one.
+- Then: Lower the gate's threshold (1st encoder) until the gate opens on every note, also the soft ones. If it still chops notes off, switch the gate off: an open channel is better than a missing one.
 - Console facts listed with the fix: gateScreen, gateParamNames
 
 **8. Check** (safe during a service)
 
-- Do: Look at whether the channel is assigned to the main mix.
+- Do (look only): Look at whether the channel is assigned to the main mix. Only look: do not press anything in this step. So you know where to look, this is how the Behringer X32 manual describes the control that takes a channel OUT of the main mix: Select the channel, open the Home screen main tab, and tap the 1st encoder so the channel is no longer assigned to the main stereo output (or turn off the "Stereo Bus" button on the channel strip).
 - Ask: Is it assigned to the main mix?
 - Yes: go to step 11. No: go to step 9.
 
 **9. Fix** (REHEARSAL ONLY)
 
-- Then: Pull the channel fader down, assign the channel to the main mix, then bring the fader up slowly. This is the place where that assignment lives on the Behringer X32: Select the channel, open the Home screen main tab, and tap the 1st encoder so the channel is no longer assigned to the main stereo output (or turn off the "Stereo Bus" button on the channel strip).
+- Then: Pull the channel fader down, assign the channel to the main mix with the control you just looked at, then bring the fader up slowly.
 - Console facts listed with the fix: removeChannelFromMain
 - During a service, shown instead: step 10.
 
@@ -257,55 +257,61 @@ Starts at step 1.
 
 **11. Ask for help** (safe during a service)
 
-- The console receives the signal and sends it on, so the problem is after this channel: an output, an amplifier or a speaker. Ask the tech lead.
+- The channel has signal, is unmuted, has its fader up and is assigned to the main mix, yet it is not heard while the other channels are. So it is something on this channel's own path that this list does not cover, such as a group bus it goes through, an insert, or its pan. Ask the tech lead.
 
 **12. Check** (safe during a service)
 
-- Do: No signal reaches the console. Check the source on stage: the mic switch, the instrument volume, the battery or wireless receiver, and the cable at both ends.
+- Do: Mute the channel first. No signal reaches the console, so check the source on stage: the mic switch, the instrument volume, the battery or wireless receiver, and the cable at both ends.
 - Ask: Did you find something switched off, flat or unplugged?
 - Yes: go to step 13. No: go to step 14.
 
 **13. Fix** (safe during a service)
 
-- Then: Mute the channel before you touch any plug, so nobody hears a bang. Fix what you found, unmute, and bring the fader up slowly.
+- Then: Keep the channel muted while you touch any plug, so nobody hears a bang. Fix what you found, unmute, and bring the fader up slowly.
 
-**14. Check** (REHEARSAL ONLY)
+**14. Check** (safe during a service)
 
-- Do: Find out whether the source needs phantom power: a condenser mic or an active DI box does. Then look at the phantom power for that input (48 V button in the channel strip Config/Preamp section).
+- Do (look only): Find out whether the source needs phantom power: a condenser mic or an active DI box does. Then look at the phantom power for that input (48 V button in the channel strip Config/Preamp section).
 - Ask: Does the source need phantom power while it is switched off?
-- Yes: go to step 15. No: go to step 16.
-- During a service this check is skipped: go to step 16.
+- Yes: go to step 15. No: go to step 17.
 
 **15. Fix** (REHEARSAL ONLY)
 
 - Then: Mute the channel, switch phantom power on for that input, wait a few seconds, then unmute and bring the fader up slowly.
 - Console facts listed with the fix: phantomPower
-- During a service, shown instead: "The fix for this needs a change that is not safe while people are listening. For now, get through the service with small fader moves only. Afterwards, switch to Rehearsal and work through this problem again to see the full fix."
+- During a service, shown instead: step 16.
 
-**16. Check** (REHEARSAL ONLY)
+**16. Ask for help** (safe during a service)
 
-- Do: Look at the preamp gain of that input (Gain knob in the channel strip Config/Preamp section).
+- Phantom power is off on an input that needs it. Tell the tech lead now. Do not change it yourself during the service.
+
+**17. Check** (safe during a service)
+
+- Do (look only): Look at the preamp gain of that input (Gain knob in the channel strip Config/Preamp section).
 - Ask: Is the gain turned all the way down?
-- Yes: go to step 17. No: go to step 18.
-- During a service this check is skipped: go to step 18.
+- Yes: go to step 18. No: go to step 20.
 
-**17. Fix** (REHEARSAL ONLY)
+**18. Fix** (REHEARSAL ONLY)
 
-- Then: Pull the fader down, then set the gain the way the gain staging step on your console sheet describes, while the musician plays their loudest. Bring the fader back up slowly.
+- Then: Pull the fader down, then set the gain the way the gain staging step on your console sheet describes, while the musician plays their loudest. Raise it slowly: wedges and in-ears follow the gain, not the fader, so the musician hears every step. Bring the fader back up slowly.
 - Console facts listed with the fix: preampGain
-- During a service, shown instead: "The fix for this needs a change that is not safe while people are listening. For now, get through the service with small fader moves only. Afterwards, switch to Rehearsal and work through this problem again to see the full fix."
+- During a service, shown instead: step 19.
 
-**18. Check** (safe during a service)
+**19. Ask for help** (safe during a service)
 
-- Do: Mute the channel, swap the cable for one you know works, and unmute.
+- The gain is all the way down on this input. Tell the tech lead now. Do not change it yourself during the service.
+
+**20. Check** (safe during a service)
+
+- Do: With the channel still muted, swap the cable for one you know works, then unmute.
 - Ask: Does the meter move now?
-- Yes: go to step 19. No: go to step 20.
+- Yes: go to step 21. No: go to step 22.
 
-**19. Fix** (safe during a service)
+**21. Fix** (safe during a service)
 
 - Then: The old cable is faulty. Put a label on it and take it off the stage, so it does not come back next week. Bring the fader up slowly.
 
-**20. Ask for help** (safe during a service)
+**22. Ask for help** (safe during a service)
 
 - A good cable and a working source still give no signal, so the fault is in the mic, the DI box or the input itself. Ask the tech lead. If a spare mic or DI box is at hand, swap it in with the channel muted. Otherwise carry on without this channel for now.
 
@@ -384,7 +390,7 @@ Starts at step 1.
 
 **3. Check** (safe during a service)
 
-- Do: Listen to the channel alone on headphones with its solo button. Solo is only for judging the source: it does not change what the room hears.
+- Do: Listen to the channel alone on headphones with its solo button. Solo is only for judging the source, never for testing what the room hears. Before you press solo, make sure the console is not in a solo-in-place mode (some consoles show an "SIP" indicator): in that mode, solo mutes everything else in the room. On the Behringer X32: Solo goes to a separate solo bus and does not change what the audience hears. Options are on the Monitor screen (View button in the Monitor section).
 - Ask: Is it distorted in the headphones too?
 - Yes: go to step 4. No: go to step 5.
 
@@ -400,7 +406,7 @@ Starts at step 1.
 
 **6. Fix** (safe during a service)
 
-- Then: The compressor is working too hard. Bring the threshold (threshold (1st encoder)) back up until the loudest moments show only a few dB of reduction, as on your console sheet.
+- Then: The compressor is working too hard. Bring the compressor's threshold (1st encoder) back up until the loudest moments show only a few dB of reduction, as on your console sheet.
 - Console facts listed with the fix: compScreen, compParamNames
 
 **7. Check** (safe during a service)
@@ -425,19 +431,22 @@ Starts at step 1.
 
 **1. Check** (safe during a service)
 
-- Only when the room is live. Otherwise go to step 5.
+- Only when the room is live, and the band has one of these roles: keys, padSynth. Otherwise go to step 3.
 - Do: This room builds up low-mids by itself, so count what is playing at once. Pull the Keys and Pads DCA down 5 dB for a moment.
 - Ask: Does the mix clear up?
 - Yes: go to step 2. No: go to step 3.
 
 **2. Fix** (safe during a service)
 
-- With the band first: In a reverberant room, fewer simultaneous sources beats lower faders. Ask the pad player to hold fewer notes, and higher, while the keys are playing chords. Ask the keys player to play the left hand higher, or leave it out, while the bass guitar is playing.
+- With the band first: In a reverberant room, fewer simultaneous sources beats lower faders.
+- With the band first (only when the band has this role: padSynth, and the band has this role: keys): Ask the pad player to hold fewer notes, and higher, while the keys are playing chords.
+- With the band first (only when the band has this role: keys, and the band has one of these roles: bassGuitar, synthBass): Ask the keys player to play the left hand higher, or leave it out, while the bass guitar is playing.
 - Then: Until the band can change the arrangement, leave the Keys and Pads DCA 2 to 3 dB lower than it was.
 
 **3. Check** (safe during a service)
 
-- Do: Put the DCA back. Open the EQ (Home screen, eq tab) of the keys, then the pad, then the acoustic guitar, and on each one try the optional low-mid cut from your console sheet: 2 to 3 dB, wide, around 250 to 300 Hz. Listen after each one.
+- Only when the room is live. Otherwise go to step 5.
+- Do: Put everything back the way it was. This room builds up low-mids, so try the optional low-mid cuts from your console sheet. Open the EQ (Home screen, eq tab) of each instrument that has one listed, and try it: 2 to 3 dB, wide, around 250 to 300 Hz. Listen after each one.
 - Ask: Is the mix clearer?
 - Yes: go to step 4. No: go to step 5.
 
@@ -448,7 +457,7 @@ Starts at step 1.
 
 **5. Check** (safe during a service)
 
-- Do: Look at the low cut (Low Cut) on every channel except the kick and the bass, and compare with your console sheet.
+- Do (look only): Look at the low cut (Low Cut) on every voice and instrument except the lowest ones, and compare with your console sheet.
 - Ask: Is a low cut switched off, or set clearly lower than the sheet says?
 - Yes: go to step 6. No: go to step 7.
 
@@ -459,6 +468,7 @@ Starts at step 1.
 
 **7. Check** (safe during a service)
 
+- Only when the band has one of these roles: bassGuitar, synthBass. Otherwise go to step 9.
 - Do: Pull the bass fader down 5 dB for a moment.
 - Ask: Does the mud clear?
 - Yes: go to step 8. No: go to step 9.
@@ -466,24 +476,26 @@ Starts at step 1.
 **8. Fix** (safe during a service)
 
 - With the band first: Ask the bassist to lock their notes to the kick pattern. Two parts playing together sound like one strong low end.
-- Then: The bass is the cause. Leave it 2 dB lower for now, then work through "Bass is boomy".
+- Then: The bass is the cause. Leave it 2 dB lower for now, then work through "Bass boomy".
 
 **9. Check** (safe during a service)
 
-- Only when the band has this role: keys. Otherwise go to step 11.
-- Do: Put the bass back. Pull the Keys and Pads DCA down 5 dB for a moment.
+- Only when the band has one of these roles: keys, padSynth. Otherwise go to step 11.
+- Do: Put everything back the way it was. Pull the Keys and Pads DCA down 5 dB for a moment.
 - Ask: Does the mud clear?
 - Yes: go to step 10. No: go to step 11.
 
 **10. Fix** (safe during a service)
 
-- With the band first: Ask the keys player to play the left hand higher, or leave it out, while the bass guitar is playing.
-- Then: Leave the Keys and Pads DCA 2 dB lower, and try the optional low-mid cut from your console sheet on the keys: 2 dB, wide, around 300 Hz (Home screen, eq tab).
+- With the band first (only when the band has this role: keys, and the band has one of these roles: bassGuitar, synthBass): Ask the keys player to play the left hand higher, or leave it out, while the bass guitar is playing.
+- With the band first (only when the band has this role: keys, and it is not true that the band has one of these roles: bassGuitar, synthBass): Ask Player D to play fewer low notes with the left hand.
+- With the band first (only when the band has this role: padSynth, and the band has this role: keys): Ask the pad player to hold fewer notes, and higher, while the keys are playing chords.
+- Then: Leave the Keys and Pads DCA 2 dB lower, and try the optional low-mid cut from your console sheet on those channels: 2 dB, wide, around 300 Hz (Home screen, eq tab).
 - Console facts listed with the fix: eqScreen
 
 **11. Check** (safe during a service)
 
-- Do: Put everything back. Pull the FX Returns DCA all the way down for a moment.
+- Do: Put everything back the way it was. Pull the FX Returns DCA all the way down for a moment.
 - Ask: Does the mix clear up?
 - Yes: go to step 12. No: go to step 13.
 
@@ -494,7 +506,7 @@ Starts at step 1.
 **13. Fix** (safe during a service)
 
 - With the band first: Arrangement beats EQ. If two sources fight, first ask who should play less, before any fader or EQ move.
-- Then: Open the EQ (Home screen, eq tab) and try the optional low-mid cuts from your console sheet, one channel at a time: 2 to 3 dB, wide, around 250 to 300 Hz, on keys, pad and acoustic guitar. Keep only the cuts you can hear helping.
+- Then: Bring the FX Returns DCA back. Open the EQ (Home screen, eq tab) and try the optional low-mid cuts from your console sheet, one channel at a time: 2 to 3 dB, wide, around 250 to 300 Hz. Keep only the cuts you can hear helping.
 - Console facts listed with the fix: eqScreen
 
 ### Mix is harsh or painful
@@ -503,18 +515,20 @@ Starts at step 1.
 
 **1. Check** (safe during a service)
 
-- Do: Pull the Energy DCA down 3 dB. It holds the cymbals, the snare and the electric guitar.
+- Only when the band has one of these roles: electronicDrums, snare, toms, hiHat, overheads, electricGuitar. Otherwise go to step 3.
+- Do: Pull the Energy DCA down 3 dB. It holds the bright, loud sources, such as cymbals, snare and electric guitar.
 - Ask: Is the pain gone?
 - Yes: go to step 2. No: go to step 3.
 
 **2. Fix** (safe during a service)
 
-- With the band first: If the cymbals or the electric guitar are loud on stage as well, ask the player to play them more gently. The console cannot turn down what the room hears directly.
+- With the band first: If those sources are loud on stage as well, ask the players to play them more gently. The console cannot turn down what the room hears directly.
 - Then: Leave the Energy DCA where it is now. Ride it up only for the big moments, and bring it back afterwards.
 
 **3. Check** (safe during a service)
 
-- Do: Put the Energy DCA back. Pull the Lead Vocal and Harmony Vocals DCAs down 3 dB for a moment.
+- Only when the band has one of these roles: leadVocal, harmonyVocal. Otherwise go to step 5.
+- Do: Put everything back the way it was. Pull the Lead Vocal and Harmony Vocals DCAs down 3 dB for a moment.
 - Ask: Is the pain gone?
 - Yes: go to step 4. No: go to step 5.
 
@@ -526,19 +540,19 @@ Starts at step 1.
 **5. Check** (safe during a service)
 
 - Only when the band has this role: keys. Otherwise go to step 7.
-- Do: Put the vocals back. Pull the Keys and Pads DCA down 3 dB for a moment.
+- Do: Put everything back the way it was. Pull the Keys and Pads DCA down 3 dB for a moment.
 - Ask: Is the pain gone?
 - Yes: go to step 6. No: go to step 7.
 
 **6. Fix** (safe during a service)
 
-- With the band first: Ask Keys to choose a softer piano sound, or to play the right hand an octave lower.
+- With the band first: Ask Player D to choose a softer piano sound, or to play the right hand an octave lower.
 - Then: Leave the Keys and Pads DCA 2 dB lower, and on the keys cut 2 dB, wide, around 2 to 3 kHz (Home screen, eq tab).
 - Console facts listed with the fix: eqScreen
 
 **7. Fix** (safe during a service)
 
-- Then: No single group is the cause, so it is the overall level: ears hear a mix that is too loud as harsh. Pull every DCA down by the same 2 to 3 dB, slowly. Flat. Do not touch the system EQ: The system EQ was set for the room and the speakers. Mix problems are fixed on channels.
+- Then: No single group is the cause, so it is the overall level: ears hear a mix that is too loud as harsh. Put everything back, then pull every DCA down by the same 2 to 3 dB, slowly. Leave the EQ on the main bus flat: the system EQ was set for the room and the speakers, and mix problems are fixed on the channels.
 
 ### Mix is thin
 
@@ -547,7 +561,7 @@ Starts at step 1.
 **1. Check** (safe during a service)
 
 - Only when the room is dry. Otherwise go to step 5.
-- Do: This room adds no warmth of its own, so look at the low cuts first. Compare the low cut (Low Cut) on the vocals, guitars and keys with your console sheet.
+- Do (look only): This room adds no warmth of its own, so look at the low cuts first. Compare the low cut (Low Cut) on every voice and instrument with your console sheet.
 - Ask: Is a low cut set higher than the sheet says?
 - Yes: go to step 2. No: go to step 3.
 
@@ -558,7 +572,7 @@ Starts at step 1.
 
 **3. Check** (safe during a service)
 
-- Do: Look at the FX Returns DCA and the All FX mute group.
+- Do (look only): Look at the FX Returns DCA and the All FX mute group.
 - Ask: Is the FX Returns DCA down, or is All FX muted?
 - Yes: go to step 4. No: go to step 5.
 
@@ -569,50 +583,60 @@ Starts at step 1.
 
 **5. Check** (safe during a service)
 
-- Do: Push the Low End DCA up 3 dB for a moment. It holds the kick and the bass.
+- Only when the band has one of these roles: kick, cajon, bassGuitar, synthBass. Otherwise go to step 7.
+- Do: Push the Low End DCA up 3 dB for a moment. It holds the lowest instruments.
 - Ask: Does the mix fill out?
 - Yes: go to step 6. No: go to step 7.
 
 **6. Fix** (safe during a service)
 
-- Then: Leave the Low End DCA 2 to 3 dB higher. Establish kick and bass first. Do not high-pass and thin everything out before the low-end foundation is solid.
+- Then: Leave the Low End DCA 2 to 3 dB higher. A mix sounds full when its lowest instruments are solid, so get those right before you thin anything else out.
 
 **7. Check** (safe during a service)
 
 - Only when the subwoofer has its own feed. Otherwise go to step 9.
-- Do: Put the DCA back. The subwoofer has its own feed, so look at the master fader and the mute of that feed.
+- Do (look only): Put everything back the way it was. The subwoofer has its own feed, so look at the master fader and the mute of that feed.
 - Ask: Is the subwoofer feed down or muted?
 - Yes: go to step 8. No: go to step 9.
 
 **8. Fix** (safe during a service)
 
-- Then: Unmute the subwoofer feed and bring its master up slowly while the kick and bass play, until the low end is felt but not booming.
+- Then: Unmute the subwoofer feed and bring its master up slowly while the band plays, until the low end is felt but not booming.
 
 **9. Check** (safe during a service)
 
-- Do: Walk to the subwoofer while the kick and the bass play.
+- Do: Put everything back the way it was. Walk to the subwoofer while the lowest instruments play.
 - Ask: Is sound coming out of the subwoofer?
 - Yes: go to step 11. No: go to step 10.
 
 **10. Ask for help** (safe during a service)
 
-- The subwoofer is silent while the kick and bass play. That is a problem with its power, its amplifier or its feed, not with your mix. Ask the tech lead.
+- The subwoofer is silent while the band plays. That is a problem with its power, its amplifier or its feed, not with your mix. Ask the tech lead.
 
 **11. Check** (safe during a service)
 
-- Do: Open the EQ (Home screen, eq tab) of the kick and of the bass and look below 200 Hz. Look at their low cuts too.
+- Only when the band has one of these roles: kick, cajon, bassGuitar, synthBass. Otherwise go to step 13.
+- Do (look only): Open the EQ (Home screen, eq tab) of each instrument in the Low End DCA and look below 200 Hz. Look at their low cuts too.
 - Ask: Is there a deep cut below 200 Hz, or a low cut above the sheet value?
 - Yes: go to step 12. No: go to step 13.
 
 **12. Fix** (safe during a service)
 
-- Then: Take those cuts out and set the low cuts back to the sheet values. The bass low cut on your sheet is 35 Hz.
+- Then: Take those cuts out, and set the low cuts back to the values on your console sheet (Home screen, config tab (2nd encoder)).
 - Console facts listed with the fix: eqScreen, lowCutScreen
 
 **13. Fix** (safe during a service)
 
-- With the band first: Ask Keys or Pad to hold fuller chords in the quiet sections. A thin arrangement cannot be mixed full.
+- Only when the band has one of these roles: keys, padSynth. Otherwise go to step 14.
+- With the band first (only when the band has this role: keys): Ask Player D to play fuller chords in the quiet sections.
+- With the band first (only when the band has this role: padSynth): Ask Player E to hold fuller chords under the band.
+- With the band first: A thin arrangement cannot be mixed full.
 - Then: The low end is working, so the middle is empty. Push the Keys and Pads DCA up 2 dB, and add a little reverb with the FX Returns DCA.
+
+**14. Fix** (safe during a service)
+
+- With the band first: Ask the band to play fuller parts in the quiet sections. A thin arrangement cannot be mixed full.
+- Then: The low end is working, so the middle is empty. Push the Guitars DCA up 2 dB if the band has guitars, and add a little reverb with the FX Returns DCA.
 
 ### Mix is too loud overall
 
@@ -649,13 +673,13 @@ Starts at step 1.
 
 **1. Check** (safe during a service)
 
-- Do: Watch the main bus during a chorus: its compressor and its limiter meter. On the Behringer X32 the main bus has: Insert point, 6-band parametric EQ, compressor/expander, sends to 6 matrices. No built-in limiter is documented.
+- Do (look only): Watch the main bus during a chorus: its compressor and its limiter meter.
 - Ask: Is the main bus compressor on, or does the limiter show more than 2 dB of reduction in the chorus?
 - Yes: go to step 2. No: go to step 4.
 
 **2. Fix** (REHEARSAL ONLY)
 
-- Then: Main bus compressor: Off. Over-compressing the main bus flattens builds: the chorus cannot get bigger than the verse. Limiter: On, set so it only catches accidents. It should show no reduction in normal playing, and only 1 to 2 dB at the very loudest moment.
+- Then: Switch the main bus compressor off. A compressed main bus flattens builds: the chorus cannot get bigger than the verse. Keep the limiter on, but set it so it only catches accidents: it should show no reduction in normal playing, and only 1 to 2 dB at the very loudest moment.
 - Console facts listed with the fix: mainBusProcessing
 - During a service, shown instead: step 3.
 
@@ -665,14 +689,14 @@ Starts at step 1.
 
 **4. Check** (safe during a service)
 
-- Do: Look at your faders and DCAs during a verse.
+- Do (look only): Look at your faders and DCAs during a verse.
 - Ask: Is the verse already almost as loud as the chorus?
 - Yes: go to step 5. No: go to step 6.
 
 **5. Fix** (safe during a service)
 
 - With the band first: Ask the band to play less in the verse: a chorus only lifts when the verse leaves room for it.
-- Then: The faders started too high. In the verse, pull the Energy DCA and the Keys and Pads DCA down 3 dB, and keep the vocal where it is. Set the ceiling first: set fader positions at the loudest moment of the loudest song, then work backward.
+- Then: The faders started too high. In the verse, pull the instrument DCAs down 3 dB, and keep the vocal where it is. Set the ceiling first: set fader positions at the loudest moment of the loudest song, then work backward.
 
 **6. Check** (safe during a service)
 
@@ -686,29 +710,37 @@ Starts at step 1.
 
 **8. Fix** (safe during a service)
 
-- With the band first: The lift has to come from the band. Ask the drummer to open up to the cymbals in the chorus, Electric guitar to play fuller chords, and everyone to hold back in the verse.
+- With the band first: The lift has to come from the band.
+- With the band first (only when the band has one of these roles: electronicDrums, kick, snare, hiHat, toms, overheads, cajon): Ask whoever plays the drums or percussion to open up in the chorus.
+- With the band first (only when the band has this role: electricGuitar): Ask Player F to play fuller chords in the chorus.
+- With the band first: Ask everyone to hold back in the verse.
 - Then: Keep the 2 dB push on the Low End and Energy DCAs in the chorus, and push the Lead Vocal DCA 1 dB with them so the words stay on top.
 
 ## Vocals
 
 ### Vocals buried
 
+Only offered when the band has: leadVocal or harmonyVocal.
+
 Starts at step 1.
 
 **1. Check** (safe during a service)
 
+- Only when the band has one of these roles: keys, padSynth. Otherwise go to step 3.
 - Do: Pull the Keys and Pads DCA down 3 dB.
 - Ask: Can you hear the words now?
 - Yes: go to step 2. No: go to step 3.
 
 **2. Fix** (safe during a service)
 
-- With the band first: Ask Keys to play fewer notes, and higher or lower than the melody, while Vocalist A sings.
+- With the band first (only when the band has this role: keys): Ask Player D to play fewer notes, and higher or lower than the melody, while Vocalist A sings.
+- With the band first: A sung line needs space around it: whoever plays under it should play less.
 - Then: Leave the Keys and Pads DCA where it is now. Making room under a vocal works better than turning the vocal up.
 
 **3. Check** (safe during a service)
 
-- Do: Put the keys back. Pull the Guitars DCA down 3 dB.
+- Only when the band has one of these roles: acousticGuitar, electricGuitar. Otherwise go to step 5.
+- Do: Put everything back the way it was. Pull the Guitars DCA down 3 dB.
 - Ask: Can you hear the words now?
 - Yes: go to step 4. No: go to step 5.
 
@@ -719,7 +751,7 @@ Starts at step 1.
 
 **5. Check** (safe during a service)
 
-- Do: Put the guitars back. Push the Lead Vocal DCA up 2 dB, and listen for the first hint of ringing.
+- Do: Put everything back the way it was. Push the Lead Vocal DCA up 2 dB, and listen for the first hint of ringing.
 - Ask: Are the words clear now, with no ringing?
 - Yes: go to step 6. No: go to step 7.
 
@@ -736,11 +768,12 @@ Starts at step 1.
 **8. Fix** (safe during a service)
 
 - With the band first: Between songs, ask Vocalist A to hold the mic closer, pointing straight at the mouth. A closer mic gives much more voice before feedback starts.
-- Then: Until then, push the Lead Vocal DCA only as far as it goes without ringing, and pull the Keys and Pads DCA and the Guitars DCA down 2 dB each.
+- Then: Until then, push the Lead Vocal DCA only as far as it goes without ringing, and pull the instrument DCAs down 2 dB each.
 
 **9. Check** (safe during a service)
 
-- Do: Make room where the words are. On the keys and on the electric guitar, cut 2 dB, wide, around 3 kHz (Home screen, eq tab).
+- Only when the band has one of these roles: keys, electricGuitar, acousticGuitar. Otherwise go to step 11.
+- Do: Make room where the words are. On each instrument that plays chords under the voice, cut 2 dB, wide, around 3 kHz (Home screen, eq tab).
 - Ask: Are the words clearer?
 - Yes: go to step 10. No: go to step 11.
 
@@ -751,10 +784,12 @@ Starts at step 1.
 
 **11. Fix** (safe during a service)
 
-- Then: Take the cuts out again, and look at the lead vocal compressor (Home screen, dyn tab). If it shows much more than 4 dB of reduction on loud lines, the voice is being flattened: bring the threshold (threshold (1st encoder)) back up until it shows about that much. If it shows none at all, quiet lines get lost: lower the threshold until loud lines show about that much.
+- Then: Take out any cut you just made, and look at the lead vocal compressor (Home screen, dyn tab). If it shows much more than 4 dB of reduction on loud lines, the voice is being flattened: bring the compressor's threshold (1st encoder) back up until it shows about that much. If it shows none at all, quiet lines get lost: bring it down until loud lines show about that much.
 - Console facts listed with the fix: compScreen, compParamNames
 
 ### Vocals harsh or sibilant
+
+Only offered when the band has: leadVocal or harmonyVocal.
 
 Starts at step 1.
 
@@ -810,10 +845,12 @@ Starts at step 1.
 
 **10. Fix** (safe during a service)
 
-- Then: Take the cut out, and look at the compressor on that vocal (Home screen, dyn tab). Heavy compression makes a voice hard and brings the "s" sounds forward. Bring the threshold (threshold (1st encoder)) back up until loud lines show about 4 dB of reduction. With wedges, compression on a vocal also reaches the wedge unless the monitor send is taken before the compressor.
+- Then: Take the cut out, and look at the compressor on that vocal (Home screen, dyn tab). Heavy compression makes a voice hard and brings the "s" sounds forward. Bring the compressor's threshold (1st encoder) back up until loud lines show about 4 dB of reduction. With wedges, compression on a vocal also reaches the wedge unless the monitor send is taken before the compressor.
 - Console facts listed with the fix: compScreen, compParamNames
 
 ### Lead vocal pops or booms
+
+Only offered when the band has: leadVocal.
 
 Starts at step 1.
 
@@ -872,6 +909,8 @@ Starts at step 1.
 
 ### Bass boomy
 
+Only offered when the band has: bassGuitar or synthBass.
+
 Starts at step 1.
 
 **1. Check** (safe during a service)
@@ -895,6 +934,7 @@ Starts at step 1.
 
 **4. Check** (safe during a service)
 
+- Only when the band has one of these roles: electronicDrums, kick, snare, hiHat, toms, overheads, cajon. Otherwise go to step 6.
 - Do: Put everything back. Pull the Drums DCA down 5 dB for a moment.
 - Ask: Is the boom gone?
 - Yes: go to step 5. No: go to step 6.
@@ -906,7 +946,7 @@ Starts at step 1.
 
 **6. Fix** (safe during a service)
 
-- Then: No single source is the cause, so the room itself is booming at the mixing position. Walk a few steps forward and to the side: if the boom changes, it is the room. Pull the Low End DCA down 2 dB and mix for the middle of the seats, not for your own spot.
+- Then: Put everything back the way it was. No single source is the cause, so the room itself is booming at the mixing position. Walk a few steps forward and to the side: if the boom changes, it is the room. Pull the Low End DCA down 2 dB and mix for the middle of the seats, not for your own spot.
 
 **7. Check** (safe during a service)
 
@@ -923,8 +963,8 @@ Starts at step 1.
 
 **9. Fix** (safe during a service)
 
-- With the band first: Between songs, ask Bass to aim for every note at the same strength. Playing a little softer overall makes that easier.
-- Then: Lower the compressor threshold (threshold (1st encoder)) until the loudest notes show about 7 dB of reduction. The loud notes are then held back, and the boom goes with them. Do this before any EQ.
+- With the band first: Between songs, ask Player G to aim for every note at the same strength. Playing a little softer overall makes that easier.
+- Then: Bring the compressor's threshold (1st encoder) down until the loudest notes show about 7 dB of reduction. The loud notes are then held back, and the boom goes with them. Do this before any EQ.
 - Console facts listed with the fix: compScreen, compParamNames
 
 **10. Check** (safe during a service)
@@ -962,17 +1002,19 @@ Starts at step 1.
 
 **16. Fix** (safe during a service)
 
-- With the band first: Uneven playing is a common cause of a boomy bass. Between songs, ask Bass to aim for every note at the same strength.
-- Then: Take the cut out. If only some notes boom, EQ is not the answer. Open the bass compressor (Home screen, dyn tab) and lower the threshold (threshold (1st encoder)) until the loudest notes show about 7 dB of reduction.
+- With the band first: Uneven playing is a common cause of a boomy bass. Between songs, ask Player G to aim for every note at the same strength.
+- Then: Take the cut out. If only some notes boom, EQ is not the answer. Open the bass compressor (Home screen, dyn tab) and bring the compressor's threshold (1st encoder) down until the loudest notes show about 7 dB of reduction.
 - Console facts listed with the fix: compScreen, compParamNames
 
 ### Bass inaudible
+
+Only offered when the band has: bassGuitar or synthBass.
 
 Starts at step 1.
 
 **1. Check** (safe during a service)
 
-- Do: Look at the bass channel while Bass plays: its mute, its fader, the Low End DCA and its input meter.
+- Do: Look at the bass channel while Player G plays: its mute, its fader, the Low End DCA and its input meter.
 - Ask: Is it unmuted, with the faders up and the meter moving?
 - Yes: go to step 3. No: go to step 2.
 
@@ -1016,18 +1058,20 @@ Starts at step 1.
 
 **9. Fix** (safe during a service)
 
-- With the band first: Between songs, ask Bass to play a little more firmly and to open the tone control on the instrument.
+- With the band first: Between songs, ask Player G to play a little more firmly and to open the tone control on the instrument.
 - Then: Keep the lift, and look at the bass compressor (Home screen, dyn tab). Soft notes disappear when nothing evens them out: the loudest notes should show about 7 dB of reduction.
 - Console facts listed with the fix: compScreen, eqScreen
 
 ### Kick has no punch
+
+Only offered when the band has: kick or electronicDrums or cajon.
 
 Starts at step 1.
 
 **1. Check** (safe during a service)
 
 - Only when the band has this role: kick. Otherwise go to step 10.
-- Do: Look at the kick channel: its mute, its fader, the Low End DCA and the Drums DCA.
+- Do (look only): Look at the kick channel: its mute, its fader, the Low End DCA and the Drums DCA.
 - Ask: Is it unmuted, with all three faders up?
 - Yes: go to step 3. No: go to step 2.
 
@@ -1037,6 +1081,7 @@ Starts at step 1.
 
 **3. Check** (safe during a service)
 
+- Only when the band has one of these roles: bassGuitar, synthBass. Otherwise go to step 5.
 - Do: Pull the bass fader down 5 dB for a moment.
 - Ask: Does the kick punch through now?
 - Yes: go to step 4. No: go to step 5.
@@ -1049,13 +1094,13 @@ Starts at step 1.
 
 **5. Check** (safe during a service)
 
-- Do: Put the bass back. Open the kick gate (Home screen, gate tab) and watch it on soft and hard hits.
+- Do (look only): Put everything back the way it was. Open the kick gate (Home screen, gate tab) and watch it on soft and hard hits.
 - Ask: Does the gate cut off the start of the hits, or stay closed on soft ones?
 - Yes: go to step 6. No: go to step 7.
 
 **6. Fix** (safe during a service)
 
-- Then: Lower the gate threshold (threshold (1st encoder)) until every hit opens it, and make the attack (attack (3rd encoder)) as fast as it goes. The punch of a kick is in its first few milliseconds.
+- Then: Bring the gate's threshold (1st encoder) down until every hit opens it, and make the gate's attack (3rd encoder) as fast as it goes. The punch of a kick is in its first few milliseconds.
 - Console facts listed with the fix: gateScreen, gateParamNames
 
 **7. Check** (safe during a service)
@@ -1071,38 +1116,86 @@ Starts at step 1.
 
 **9. Fix** (safe during a service)
 
-- Then: Take the cut out, and look at the kick compressor (Home screen, dyn tab). An attack (attack (3rd encoder)) that is too fast flattens the punch: set it to 20 to 30 ms. If it shows more than 6 dB of reduction, bring the threshold (threshold (1st encoder)) back up.
+- Then: Take the cut out, and look at the kick compressor (Home screen, dyn tab). If the compressor's attack (3rd encoder) is too fast, it flattens the punch: set it to 20 to 30 ms. If the meter shows more than 6 dB of reduction, bring the compressor's threshold (1st encoder) back up.
 - Console facts listed with the fix: compScreen, compParamNames
 
 **10. Check** (safe during a service)
 
-- Do: The kick has no channel of its own here: it arrives inside the drum channel. Pull the bass fader down 5 dB for a moment.
+- Only when the band has this role: cajon. Otherwise go to step 18.
+- Do (look only): Look at where the cajon mic is. The low thump comes out of the sound hole at the back, so the mic belongs there, a few centimetres from the hole.
+- Ask: Is the mic at the rear sound hole?
+- Yes: go to step 12. No: go to step 11.
+
+**11. Fix** (safe during a service)
+
+- Then: Mute the cajon channel, move the mic to the rear sound hole, a few centimetres from it, then unmute and bring the fader up slowly. A mic at the front picks up the slap of the hands and almost none of the thump.
+
+**12. Check** (safe during a service)
+
+- Do (look only): Look at the low cut (Low Cut) on the cajon and compare it with your console sheet.
+- Ask: Is it set higher than the value on your console sheet?
+- Yes: go to step 13. No: go to step 14.
+
+**13. Fix** (safe during a service)
+
+- Then: Bring the low cut back down to the value on your console sheet (Home screen, config tab (2nd encoder)), the value on your console sheet. A low cut that is too high removes the thump.
+- Console facts listed with the fix: lowCutName, lowCutScreen
+
+**14. Check** (safe during a service)
+
+- Only when the band has one of these roles: bassGuitar, synthBass. Otherwise go to step 15.
+- Do: Pull the bass fader down 5 dB for a moment.
+- Ask: Does the cajon punch through now?
+- Yes: go to step 4. No: go to step 15.
+
+**15. Check** (safe during a service)
+
+- Do: Put everything back the way it was. On the cajon, cut 3 to 4 dB, wide, around 300 to 400 Hz (Home screen, eq tab). That range makes it sound like a cardboard box.
+- Ask: Does the cajon punch more?
+- Yes: go to step 16. No: go to step 17.
+
+**16. Fix** (safe during a service)
+
+- Then: Keep the cut, only as deep as it needs to be.
+- Console facts listed with the fix: eqScreen
+
+**17. Fix** (safe during a service)
+
+- With the band first: Between songs, ask the cajon player to play the low strokes in the middle of the front plate, with a flat hand. That is where the thump is.
+- Then: Take the cut out, and push the cajon fader up 2 dB. The console can only pass on the thump the mic receives.
+
+**18. Check** (safe during a service)
+
+- Only when the band has one of these roles: bassGuitar, synthBass. Otherwise go to step 19.
+- Do: Pull the bass fader down 5 dB for a moment.
 - Ask: Does the kick punch through now?
-- Yes: go to step 4. No: go to step 11.
+- Yes: go to step 4. No: go to step 19.
 
-**11. Check** (safe during a service)
+**19. Check** (safe during a service)
 
-- Do: Put the bass back. Push the Drums DCA up 2 dB.
+- Do: Put everything back the way it was. The kick has no channel of its own here: it arrives together with the rest of the kit. Push the Drums DCA up 2 dB.
 - Ask: Does the kick punch through, without the cymbals getting too loud?
-- Yes: go to step 12. No: go to step 13.
+- Yes: go to step 20. No: go to step 21.
 
-**12. Fix** (safe during a service)
+**20. Fix** (safe during a service)
 
 - Then: Leave the Drums DCA there. The drum channel sits in the Drums DCA and the Energy DCA, so keep an eye on both.
 
-**13. Fix** (REHEARSAL ONLY)
+**21. Fix** (REHEARSAL ONLY)
 
-- With the band first: The balance between kick, snare and cymbals is set at the source, not on the console. Ask Drums to turn the kick up by a few steps on the drum module, or to choose a kick sound with a harder attack.
-- Then: Put the Drums DCA back, and listen again after each change at the source. If the module has a spare output, a separate kick output gives you real control of the low end: raise it with the tech lead.
-- During a service, shown instead: step 14.
+- With the band first: The balance between kick, snare and cymbals is set at the source, not on the console. Ask Player H to turn the kick up by a few steps on the drum module, or to choose a kick sound with a harder attack.
+- Then: Put the Drums DCA back, and listen again after each change at the source. If the module has a spare output, a separate kick output gives you real control of the low end: bring that up with the tech lead.
+- During a service, shown instead: step 22.
 
-**14. Fix** (safe during a service)
+**22. Fix** (safe during a service)
 
-- Then: The kick level is set at the source, and changing that in the middle of a service would change every monitor too. For now, leave the Drums DCA 1 dB higher and the bass 1 dB lower. Raise the kick at the source at the next rehearsal.
+- Then: The kick level is set at the source, and changing that in the middle of a service would change every monitor too. For now, leave the Drums DCA 1 dB higher. Turn the kick up at the source at the next rehearsal.
 
 ## Guitars and keys
 
 ### Electric guitar too loud
+
+Only offered when the band has: electricGuitar.
 
 Starts at step 1.
 
@@ -1114,7 +1207,7 @@ Starts at step 1.
 
 **2. Fix** (safe during a service)
 
-- With the band first: The room hears the guitar straight from the stage. Between songs, ask Electric guitar to turn the amplifier down or to aim it at their own ears, not at the seats.
+- With the band first: The room hears the guitar straight from the stage. Between songs, ask Player F to turn the amplifier down or to aim it at their own ears, not at the seats.
 - Then: Leave the guitar fader low, and turn the guitar down in the monitor mixes that carry it (Home screen, sends tab), 3 dB at a time.
 - Console facts listed with the fix: sendsScreen
 
@@ -1147,16 +1240,18 @@ Starts at step 1.
 
 **8. Fix** (safe during a service)
 
-- With the band first: Between songs, ask Electric guitar to match the levels of their sounds, so the lead sound is only a little louder than the rhythm sound.
-- Then: Lower the compressor threshold (threshold (1st encoder)) until the loud parts show about 2 dB of reduction.
+- With the band first: Between songs, ask Player F to match the levels of their sounds, so the lead sound is only a little louder than the rhythm sound.
+- Then: Bring the compressor's threshold (1st encoder) down until the loud parts show about 2 dB of reduction.
 - Console facts listed with the fix: compScreen, compParamNames
 
 **9. Fix** (safe during a service)
 
-- With the band first: Between songs, ask Electric guitar to match the levels of their sounds, so the lead sound is only a little louder than the rhythm sound.
+- With the band first: Between songs, ask Player F to match the levels of their sounds, so the lead sound is only a little louder than the rhythm sound.
 - Then: The compressor is doing its part, so the jumps are too big for it. Keep a finger on the guitar fader and pull it back 3 dB when the loud sound comes in.
 
 ### Electric guitar too thin
+
+Only offered when the band has: electricGuitar.
 
 Starts at step 1.
 
@@ -1173,13 +1268,13 @@ Starts at step 1.
 
 **3. Check** (safe during a service)
 
-- Do: Listen to the guitar alone on headphones with its solo button. Solo is only for judging the source: it does not change what the room hears.
+- Do: Listen to the guitar alone on headphones with its solo button. Solo is only for judging the source, never for testing what the room hears. Before you press solo, make sure the console is not in a solo-in-place mode (some consoles show an "SIP" indicator): in that mode, solo mutes everything else in the room. On the Behringer X32: Solo goes to a separate solo bus and does not change what the audience hears. Options are on the Monitor screen (View button in the Monitor section).
 - Ask: Is it thin in the headphones too?
 - Yes: go to step 4. No: go to step 5.
 
 **4. Fix** (safe during a service)
 
-- With the band first: The sound is thin before it reaches the console. Ask Electric guitar to check that the speaker cabinet simulation is switched on in their sound, and to choose a fuller one. A direct guitar signal without it sounds thin and fizzy.
+- With the band first: The sound is thin before it reaches the console. Ask Player F to check that the speaker cabinet simulation is switched on in their sound, and to choose a fuller one. A direct guitar signal without it sounds thin and fizzy.
 - Then: No EQ on the console can add what the source does not send. Until the sound is changed, lift 2 dB, wide, around 200 to 250 Hz (Home screen, eq tab).
 - Console facts listed with the fix: eqScreen
 
@@ -1196,11 +1291,14 @@ Starts at step 1.
 
 **7. Fix** (safe during a service)
 
-- With the band first: Ask the keys and the electric guitar to play in different registers: when one plays low chords, the other plays higher.
+- With the band first (only when the band has this role: keys, and the band has this role: electricGuitar): Ask the keys and the electric guitar to play in different registers: when one plays low chords, the other plays higher.
+- With the band first (only when the band has this role: keys, and it is not true that the band has this role: electricGuitar): Ask the keys and the guitar to play in different registers: when one plays low chords, the other plays higher.
 - Then: The guitar is fine alone but thin in the mix, so something else is filling its range. Push the guitar 1 to 2 dB and lift 2 dB, wide, around 200 to 250 Hz (Home screen, eq tab).
 - Console facts listed with the fix: eqScreen
 
 ### Electric guitar too harsh
+
+Only offered when the band has: electricGuitar.
 
 Starts at step 1.
 
@@ -1216,7 +1314,7 @@ Starts at step 1.
 
 **3. Check** (safe during a service)
 
-- Do: Put the fader back. Listen to the guitar alone on headphones with its solo button. Solo is only for judging the source: it does not change what the room hears.
+- Do: Put the fader back. Listen to the guitar alone on headphones with its solo button. Solo is only for judging the source, never for testing what the room hears. Before you press solo, make sure the console is not in a solo-in-place mode (some consoles show an "SIP" indicator): in that mode, solo mutes everything else in the room. On the Behringer X32: Solo goes to a separate solo bus and does not change what the audience hears. Options are on the Monitor screen (View button in the Monitor section).
 - Ask: Is it harsh or fizzy in the headphones too?
 - Yes: go to step 5. No: go to step 4.
 
@@ -1232,17 +1330,19 @@ Starts at step 1.
 
 **6. Fix** (safe during a service)
 
-- With the band first: Between songs, ask Electric guitar to turn the treble or presence of their sound down a little, so the fix is made at the source.
+- With the band first: Between songs, ask Player F to turn the treble or presence of their sound down a little, so the fix is made at the source.
 - Then: Keep the cut, only as deep as it needs to be.
 - Console facts listed with the fix: eqScreen
 
 **7. Fix** (safe during a service)
 
-- With the band first: Ask Electric guitar to use less distortion and less treble in their sound, and to check that the speaker cabinet simulation is switched on.
+- With the band first: Ask Player F to use less distortion and less treble in their sound, and to check that the speaker cabinet simulation is switched on.
 - Then: Keep the 3 kHz cut, and turn down everything above 6 kHz by 3 dB with a high shelf (Home screen, eq tab). Fizz lives up there, and a guitar needs very little of it.
 - Console facts listed with the fix: eqScreen
 
 ### Keys fight the guitars
+
+Only offered when the band has: keys, and acousticGuitar or electricGuitar.
 
 Starts at step 1.
 
@@ -1254,7 +1354,8 @@ Starts at step 1.
 
 **2. Fix** (safe during a service)
 
-- With the band first: Ask the keys and the electric guitar to play in different registers: when one plays low chords, the other plays higher.
+- With the band first (only when the band has this role: keys, and the band has this role: electricGuitar): Ask the keys and the electric guitar to play in different registers: when one plays low chords, the other plays higher.
+- With the band first (only when the band has this role: keys, and it is not true that the band has this role: electricGuitar): Ask the keys and the guitar to play in different registers: when one plays low chords, the other plays higher.
 - Then: Leave the keys 2 dB lower than they were. If they still cover the guitar, cut 2 dB, wide, around 500 Hz on the keys (Home screen, eq tab), so the guitar has the middle.
 - Console facts listed with the fix: eqScreen
 
@@ -1278,16 +1379,21 @@ Starts at step 1.
 
 **6. Fix** (safe during a service)
 
-- With the band first: Ask the keys and the electric guitar to play in different registers: when one plays low chords, the other plays higher.
+- With the band first (only when the band has this role: keys, and the band has this role: electricGuitar): Ask the keys and the electric guitar to play in different registers: when one plays low chords, the other plays higher.
+- With the band first (only when the band has this role: keys, and it is not true that the band has this role: electricGuitar): Ask the keys and the guitar to play in different registers: when one plays low chords, the other plays higher.
 - Then: Keep the cut on the keys. It is the optional low-mid cut from your console sheet.
 - Console facts listed with the fix: eqScreen
 
 **7. Fix** (safe during a service)
 
-- With the band first: Arrangement beats EQ. If two sources fight, first ask who should play less, before any fader or EQ move. Ask the keys and the electric guitar to play in different registers: when one plays low chords, the other plays higher.
+- With the band first: Arrangement beats EQ. If two sources fight, first ask who should play less, before any fader or EQ move.
+- With the band first (only when the band has this role: keys, and the band has this role: electricGuitar): Ask the keys and the electric guitar to play in different registers: when one plays low chords, the other plays higher.
+- With the band first (only when the band has this role: keys, and it is not true that the band has this role: electricGuitar): Ask the keys and the guitar to play in different registers: when one plays low chords, the other plays higher.
 - Then: Take the cut out. Faders and EQ cannot separate two parts that play the same notes in the same rhythm. Until the band changes the parts, choose one to lead in each song and run the other 3 dB lower.
 
 ### Keys fight the bass
+
+Only offered when the band has: keys, and bassGuitar or synthBass.
 
 Starts at step 1.
 

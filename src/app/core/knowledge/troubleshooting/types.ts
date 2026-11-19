@@ -19,6 +19,7 @@ import { Reverberance, Role } from '../../model';
  *   {target}                  the channel or group the mixer picked, or "the channel you suspect"
  *   {targetMember}            the musician behind the picked channel, or "the musician"
  *   {loudnessTarget}          the room's loudness target, or a neutral phrase when there is none
+ *   {soloCaution}             the warning about solo-in-place that every "press solo" step must carry
  *
  * Console control names may ONLY reach the text through {control:...} tokens. Never type an X32
  * or WING control name into a tree.
@@ -54,15 +55,26 @@ export type TreeCondition =
   | { kind: 'roomIs'; reverberance: Reverberance }
   | { kind: 'wedgesInUse' }
   | { kind: 'roleInBand'; role: Role }
+  /** True when the band has at least one of these roles. */
+  | { kind: 'anyRoleInBand'; roles: Role[] }
   /** True when someone playing this role is at the lowest skill level. Never shown in text. */
   | { kind: 'lowestSkill'; role: Role }
   | { kind: 'streamMixEnabled' }
-  | { kind: 'subOnOwnBus' };
+  | { kind: 'subOnOwnBus' }
+  /** True when every listed condition holds. */
+  | { kind: 'allOf'; conditions: TreeCondition[] }
+  | { kind: 'not'; condition: TreeCondition };
 
 /** A node with a condition is only used when the condition holds. Otherwise the walk skips to `otherwise`. */
 export interface NodeCondition {
   condition: TreeCondition;
   otherwise: string;
+}
+
+/** One sentence of arrangement advice that is only shown when its condition holds. */
+export interface AdviceLine {
+  text: string;
+  when?: TreeCondition;
 }
 
 export interface CheckNode {
@@ -78,13 +90,22 @@ export interface CheckNode {
   /** Where a hidden rehearsal-only check skips to during a service. Defaults to the `no` node. */
   duringService?: string;
   risky?: RiskyChange[];
+  /**
+   * True when the step only LOOKS at a setting and changes nothing. Looking is always safe, so
+   * only a looks-only check may name a control (phantom power, preamp gain, main assignment)
+   * that must not be changed during a service.
+   */
+  looksOnly?: boolean;
 }
 
 export interface FixNode {
   kind: 'fix';
   text: string;
-  /** What to ask the band. Shown before the technical fix. */
-  arrangementAdvice?: string;
+  /**
+   * What to ask the band. Shown before the technical fix. A list is used when a sentence names
+   * an instrument: each line is only shown when its condition holds for the current band.
+   */
+  arrangementAdvice?: string | AdviceLine[];
   safety: StepSafety;
   /** Console facts listed under the fix as "where to find it". */
   controlRefs: ConsoleFactKey[];
@@ -113,6 +134,12 @@ export interface TroubleshootingTree {
   symptom: string;
   group: SymptomGroupId;
   targetPicker: TargetPicker;
+  /**
+   * The instruments this symptom is about. The band must have at least one role from EACH list.
+   * An empty list means the symptom applies to any band.
+   * Example: [['keys'], ['bassGuitar', 'synthBass']] needs keys AND some kind of bass.
+   */
+  needsOneOfEach: Role[][];
   entryNodeId: string;
   nodes: Record<string, TroubleshootingNode>;
 }

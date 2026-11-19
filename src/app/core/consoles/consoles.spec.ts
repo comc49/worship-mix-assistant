@@ -267,4 +267,11 @@ describe('console adapters', () => {
     expect(inEarIds).not.toContain('monitors:ring-out');
     expect(JSON.stringify(inEarSection)).not.toMatch(/wedge/i);
   });
+
+  it('WING Compact: the main limiter goes on the post-fader insert of the main bus', () => {
+    const steps = expectSheet(toWingCompact(fullLive())).sections.flatMap((section) => section.steps);
+    const limiter = steps.find((step) => step.id === 'main:limiter');
+    expect(limiter?.subSteps.join(' ')).toContain('post-fader insert point');
+    expect(limiter?.subSteps[0]).toContain('Select the main bus');
+  });
 });

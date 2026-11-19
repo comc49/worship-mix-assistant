@@ -20,6 +20,7 @@ const LIVE_REVERB_ADJUSTMENTS: Adjustment[] = [
 
 const DRY_REVERB_ADJUSTMENTS: Adjustment[] = [
   add('fxSend.vocalPlate', 3, 'A dry room gives the voice no sustain of its own.'),
+  ceiling('fxSend.vocalPlate', -8, 'Dry room limit: in a small dry room more plate than this is heard as an effect on the words.'),
   add('fxSend.hall', 3, 'A dry room gives instruments no space of their own.'),
   add('fxSend.drumRoom', 3, 'A dry room makes drums sound small.'),
 ];
@@ -49,6 +50,7 @@ function dryUnchanged(why: string): RoomRoleModifier {
 const FOUNDATION_WHY = 'Kick and bass are the foundation. Their low cut is not raised for the room.';
 const LIVE_WHY = 'The room builds up low-mids, so this source sends less of them into it and uses less reverb.';
 const DRY_WHY = 'The room is thin and adds nothing, so this source keeps more low end and gets more reverb.';
+const DRY_VOCAL_WHY = 'A handheld vocal mic has the same handling noise, plosives and monitor spill in any room, so its low cut is not lowered. It gets more reverb.';
 const DRY_FOUNDATION_WHY = 'The foundation is already at its lowest sensible cut.';
 
 const LIVE_BY_ROLE: Record<Role, RoomRoleModifier> = {
@@ -64,7 +66,10 @@ const LIVE_BY_ROLE: Record<Role, RoomRoleModifier> = {
   kick: liveFoundation(FOUNDATION_WHY),
   snare: liveRaised(LIVE_WHY),
   hiHat: liveRaised(LIVE_WHY),
-  toms: liveRaised(LIVE_WHY),
+  toms: {
+    why: 'A floor tom\'s weight sits around 80 Hz, so its low cut is raised less than other sources.',
+    adjustments: [add('lowCutHz', 10, 'A smaller rise for the live room, to keep the floor tom\'s weight.'), ...LIVE_REVERB_ADJUSTMENTS],
+  },
   overheads: liveRaised(LIVE_WHY),
   cajon: liveFoundation('The cajon is the kick of a stripped set. Its low cut is not raised.'),
   backingTracks: liveFoundation('Tracks are already mixed; their low end is handled by level.'),
@@ -72,8 +77,8 @@ const LIVE_BY_ROLE: Record<Role, RoomRoleModifier> = {
 };
 
 const DRY_BY_ROLE: Record<Role, RoomRoleModifier> = {
-  leadVocal: dryLowered(DRY_WHY),
-  harmonyVocal: dryLowered(DRY_WHY),
+  leadVocal: dryUnchanged(DRY_VOCAL_WHY),
+  harmonyVocal: dryUnchanged(DRY_VOCAL_WHY),
   acousticGuitar: dryLowered(DRY_WHY),
   electricGuitar: dryLowered(DRY_WHY),
   bassGuitar: dryUnchanged(DRY_FOUNDATION_WHY),
@@ -118,7 +123,7 @@ export const ROOM_MODIFIERS: RoomModifierSet[] = [
     summary: 'Dry, thin room: conservative low cuts, longer and louder reverb, pads used as atmosphere.',
     byRole: DRY_BY_ROLE,
     effectTime: {
-      vocalPlate: { addSeconds: 0.4, ceilingSeconds: null, why: 'A dry room gives no tail, so the plate provides it.' },
+      vocalPlate: { addSeconds: 0.2, ceilingSeconds: null, why: 'A dry room gives no tail, so the plate provides a little more of it.' },
       hall: { addSeconds: 0.4, ceilingSeconds: null, why: 'A longer hall replaces the space the room lacks.' },
       drumRoom: { addSeconds: 0.2, ceilingSeconds: null, why: 'Drums sound small in a dry room.' },
       tempoDelay: { addSeconds: 0, ceilingSeconds: null, why: 'Delay time follows the song tempo, not the room.' },
@@ -134,5 +139,8 @@ export const LOW_FREQUENCY_NOISE_ADJUSTMENT: Adjustment = add(
   'The room has constant low-frequency noise (HVAC). Every open mic picks it up, so its low cut goes a little higher.',
 );
 
-/** Roles whose low cut is never raised for room noise. */
+/** Kick and bass roles. Their low cut is never raised for the room. */
 export const FOUNDATION_ROLES: Role[] = ['kick', 'bassGuitar', 'synthBass', 'electronicDrums', 'cajon'];
+
+/** Roles whose low cut is not raised for room noise: the foundation, and gated close mics. */
+export const ROOM_NOISE_EXEMPT_ROLES: Role[] = [...FOUNDATION_ROLES, 'toms'];

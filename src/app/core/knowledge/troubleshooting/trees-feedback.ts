@@ -116,6 +116,7 @@ function buildFeedbackTree(band: FeedbackBand): TroubleshootingTree {
     symptom: band.symptom,
     group: 'feedback',
     targetPicker: 'channelOrGroup',
+    needsOneOfEach: [],
     entryNodeId: 'muteFirst',
     nodes,
   };

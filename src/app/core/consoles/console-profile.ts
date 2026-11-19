@@ -133,6 +133,8 @@ export interface ConsoleFacts {
   preampGain: Fact<string>;
   polarity: Fact<string>;
   mainBusProcessing: Fact<string>;
+  /** Which insert point of the main bus a limiter belongs in, where the console offers a choice. null otherwise. */
+  mainLimiterInsertPoint: Fact<string | null>;
 }
 
 export type ConsoleFactKey = keyof ConsoleFacts;

@@ -1,4 +1,16 @@
-import { HOUSE_PRINCIPLES, MAIN_BUS_RULES } from '../rules';
+import { HOUSE_PRINCIPLES } from '../rules';
+import {
+  BAND_HAS_BASS,
+  BAND_HAS_DRUMS,
+  BAND_HAS_ELECTRIC_GUITAR,
+  BAND_HAS_ENERGY,
+  BAND_HAS_KEYS,
+  BAND_HAS_KEYS_OR_PAD,
+  BAND_HAS_LOW_END,
+  BAND_HAS_NO_BASS,
+  BAND_HAS_PAD,
+  BAND_HAS_VOCALS,
+} from './band-conditions';
 import { ensembleAdvice } from './rule-text';
 import { TroubleshootingTree } from './types';
 
@@ -6,11 +18,14 @@ import { TroubleshootingTree } from './types';
  * Problems with the mix as a whole: muddy, harsh, thin, too loud, chorus does not lift.
  * To test a cause, a group is pulled down for a moment: that changes what the room hears,
  * which a headphone solo does not.
+ *
+ * These trees are offered to every band, so a step that names an instrument carries a `when`
+ * condition, and a step that follows a skipped one says "put everything back" rather than
+ * naming what was moved.
  */
 
 // HOUSE_PRINCIPLES, by position in src/app/core/knowledge/rules.ts.
 const PRINCIPLE_ARRANGEMENT_BEATS_EQ = HOUSE_PRINCIPLES[0];
-const PRINCIPLE_KICK_AND_BASS_FIRST = HOUSE_PRINCIPLES[1];
 const PRINCIPLE_FEWER_SOURCES = HOUSE_PRINCIPLES[2];
 const PRINCIPLE_CEILING_FIRST = HOUSE_PRINCIPLES[3];
 const PRINCIPLE_RIDE_DCAS = HOUSE_PRINCIPLES[4];
@@ -20,12 +35,13 @@ export const MUDDY_TREE: TroubleshootingTree = {
   symptom: 'Mix is muddy',
   group: 'wholeMix',
   targetPicker: 'none',
+  needsOneOfEach: [],
   entryNodeId: 'liveSourceCount',
   nodes: {
     // In a live room, the number of sources and the low-mid buildup come first.
     liveSourceCount: {
       kind: 'check',
-      when: { condition: { kind: 'roomIs', reverberance: 'live' }, otherwise: 'lowCutLook' },
+      when: { condition: { kind: 'allOf', conditions: [{ kind: 'roomIs', reverberance: 'live' }, BAND_HAS_KEYS_OR_PAD] }, otherwise: 'liveLowMidCuts' },
       action: 'This room builds up low-mids by itself, so count what is playing at once. Pull the Keys and Pads DCA down 5 dB for a moment.',
       question: 'Does the mix clear up?',
       yes: 'fixFewerSources',
@@ -34,14 +50,19 @@ export const MUDDY_TREE: TroubleshootingTree = {
     },
     fixFewerSources: {
       kind: 'fix',
-      arrangementAdvice: `${PRINCIPLE_FEWER_SOURCES} ${ensembleAdvice('padUnderKeys')} ${ensembleAdvice('keysLeaveRoomForBass')}`,
+      arrangementAdvice: [
+        { text: PRINCIPLE_FEWER_SOURCES },
+        { text: ensembleAdvice('padUnderKeys'), when: { kind: 'allOf', conditions: [BAND_HAS_PAD, BAND_HAS_KEYS] } },
+        { text: ensembleAdvice('keysLeaveRoomForBass'), when: { kind: 'allOf', conditions: [BAND_HAS_KEYS, BAND_HAS_BASS] } },
+      ],
       text: 'Until the band can change the arrangement, leave the Keys and Pads DCA 2 to 3 dB lower than it was.',
       safety: 'safeDuringService',
       controlRefs: [],
     },
     liveLowMidCuts: {
       kind: 'check',
-      action: 'Put the DCA back. Open the EQ ({control:eqScreen}) of the keys, then the pad, then the acoustic guitar, and on each one try the optional low-mid cut from your console sheet: 2 to 3 dB, wide, around 250 to 300 Hz. Listen after each one.',
+      when: { condition: { kind: 'roomIs', reverberance: 'live' }, otherwise: 'lowCutLook' },
+      action: 'Put everything back the way it was. This room builds up low-mids, so try the optional low-mid cuts from your console sheet. Open the EQ ({control:eqScreen}) of each instrument that has one listed, and try it: 2 to 3 dB, wide, around 250 to 300 Hz. Listen after each one.',
       question: 'Is the mix clearer?',
       yes: 'fixKeepLowMidCuts',
       no: 'lowCutLook',
@@ -56,11 +77,12 @@ export const MUDDY_TREE: TroubleshootingTree = {
     // The general path, for every room.
     lowCutLook: {
       kind: 'check',
-      action: 'Look at the low cut ({control:lowCutName}) on every channel except the kick and the bass, and compare with your console sheet.',
+      action: 'Look at the low cut ({control:lowCutName}) on every voice and instrument except the lowest ones, and compare with your console sheet.',
       question: 'Is a low cut switched off, or set clearly lower than the sheet says?',
       yes: 'fixLowCuts',
       no: 'bassTest',
       safety: 'safeDuringService',
+      looksOnly: true,
     },
     fixLowCuts: {
       kind: 'fix',
@@ -70,6 +92,7 @@ export const MUDDY_TREE: TroubleshootingTree = {
     },
     bassTest: {
       kind: 'check',
+      when: { condition: BAND_HAS_BASS, otherwise: 'keysTest' },
       action: 'Pull the bass fader down 5 dB for a moment.',
       question: 'Does the mud clear?',
       yes: 'fixBassIsTheCause',
@@ -79,14 +102,14 @@ export const MUDDY_TREE: TroubleshootingTree = {
     fixBassIsTheCause: {
       kind: 'fix',
       arrangementAdvice: ensembleAdvice('kickAndBassLanes'),
-      text: 'The bass is the cause. Leave it 2 dB lower for now, then work through "Bass is boomy".',
+      text: 'The bass is the cause. Leave it 2 dB lower for now, then work through "Bass boomy".',
       safety: 'safeDuringService',
       controlRefs: [],
     },
     keysTest: {
       kind: 'check',
-      when: { condition: { kind: 'roleInBand', role: 'keys' }, otherwise: 'reverbTest' },
-      action: 'Put the bass back. Pull the Keys and Pads DCA down 5 dB for a moment.',
+      when: { condition: BAND_HAS_KEYS_OR_PAD, otherwise: 'reverbTest' },
+      action: 'Put everything back the way it was. Pull the Keys and Pads DCA down 5 dB for a moment.',
       question: 'Does the mud clear?',
       yes: 'fixKeysLowMids',
       no: 'reverbTest',
@@ -94,14 +117,18 @@ export const MUDDY_TREE: TroubleshootingTree = {
     },
     fixKeysLowMids: {
       kind: 'fix',
-      arrangementAdvice: ensembleAdvice('keysLeaveRoomForBass'),
-      text: 'Leave the Keys and Pads DCA 2 dB lower, and try the optional low-mid cut from your console sheet on the keys: 2 dB, wide, around 300 Hz ({control:eqScreen}).',
+      arrangementAdvice: [
+        { text: ensembleAdvice('keysLeaveRoomForBass'), when: { kind: 'allOf', conditions: [BAND_HAS_KEYS, BAND_HAS_BASS] } },
+        { text: 'Ask {member:keys} to play fewer low notes with the left hand.', when: { kind: 'allOf', conditions: [BAND_HAS_KEYS, BAND_HAS_NO_BASS] } },
+        { text: ensembleAdvice('padUnderKeys'), when: { kind: 'allOf', conditions: [BAND_HAS_PAD, BAND_HAS_KEYS] } },
+      ],
+      text: 'Leave the Keys and Pads DCA 2 dB lower, and try the optional low-mid cut from your console sheet on those channels: 2 dB, wide, around 300 Hz ({control:eqScreen}).',
       safety: 'safeDuringService',
       controlRefs: ['eqScreen'],
     },
     reverbTest: {
       kind: 'check',
-      action: 'Put everything back. Pull the FX Returns DCA all the way down for a moment.',
+      action: 'Put everything back the way it was. Pull the FX Returns DCA all the way down for a moment.',
       question: 'Does the mix clear up?',
       yes: 'fixLessReverb',
       no: 'fixLowMidCuts',
@@ -116,7 +143,7 @@ export const MUDDY_TREE: TroubleshootingTree = {
     fixLowMidCuts: {
       kind: 'fix',
       arrangementAdvice: PRINCIPLE_ARRANGEMENT_BEATS_EQ,
-      text: 'Open the EQ ({control:eqScreen}) and try the optional low-mid cuts from your console sheet, one channel at a time: 2 to 3 dB, wide, around 250 to 300 Hz, on keys, pad and acoustic guitar. Keep only the cuts you can hear helping.',
+      text: 'Bring the FX Returns DCA back. Open the EQ ({control:eqScreen}) and try the optional low-mid cuts from your console sheet, one channel at a time: 2 to 3 dB, wide, around 250 to 300 Hz. Keep only the cuts you can hear helping.',
       safety: 'safeDuringService',
       controlRefs: ['eqScreen'],
     },
@@ -128,11 +155,13 @@ export const HARSH_TREE: TroubleshootingTree = {
   symptom: 'Mix is harsh or painful',
   group: 'wholeMix',
   targetPicker: 'none',
+  needsOneOfEach: [],
   entryNodeId: 'energyTest',
   nodes: {
     energyTest: {
       kind: 'check',
-      action: 'Pull the Energy DCA down 3 dB. It holds the cymbals, the snare and the electric guitar.',
+      when: { condition: BAND_HAS_ENERGY, otherwise: 'vocalTest' },
+      action: 'Pull the Energy DCA down 3 dB. It holds the bright, loud sources, such as cymbals, snare and electric guitar.',
       question: 'Is the pain gone?',
       yes: 'fixEnergyLower',
       no: 'vocalTest',
@@ -140,14 +169,15 @@ export const HARSH_TREE: TroubleshootingTree = {
     },
     fixEnergyLower: {
       kind: 'fix',
-      arrangementAdvice: 'If the cymbals or the electric guitar are loud on stage as well, ask the player to play them more gently. The console cannot turn down what the room hears directly.',
+      arrangementAdvice: 'If those sources are loud on stage as well, ask the players to play them more gently. The console cannot turn down what the room hears directly.',
       text: 'Leave the Energy DCA where it is now. Ride it up only for the big moments, and bring it back afterwards.',
       safety: 'safeDuringService',
       controlRefs: [],
     },
     vocalTest: {
       kind: 'check',
-      action: 'Put the Energy DCA back. Pull the Lead Vocal and Harmony Vocals DCAs down 3 dB for a moment.',
+      when: { condition: BAND_HAS_VOCALS, otherwise: 'keysTest' },
+      action: 'Put everything back the way it was. Pull the Lead Vocal and Harmony Vocals DCAs down 3 dB for a moment.',
       question: 'Is the pain gone?',
       yes: 'fixVocalBite',
       no: 'keysTest',
@@ -161,8 +191,8 @@ export const HARSH_TREE: TroubleshootingTree = {
     },
     keysTest: {
       kind: 'check',
-      when: { condition: { kind: 'roleInBand', role: 'keys' }, otherwise: 'fixOverallLevel' },
-      action: 'Put the vocals back. Pull the Keys and Pads DCA down 3 dB for a moment.',
+      when: { condition: BAND_HAS_KEYS, otherwise: 'fixOverallLevel' },
+      action: 'Put everything back the way it was. Pull the Keys and Pads DCA down 3 dB for a moment.',
       question: 'Is the pain gone?',
       yes: 'fixKeysBright',
       no: 'fixOverallLevel',
@@ -177,7 +207,7 @@ export const HARSH_TREE: TroubleshootingTree = {
     },
     fixOverallLevel: {
       kind: 'fix',
-      text: `No single group is the cause, so it is the overall level: ears hear a mix that is too loud as harsh. Pull every DCA down by the same 2 to 3 dB, slowly. ${MAIN_BUS_RULES.eq.value}: ${MAIN_BUS_RULES.eq.why}`,
+      text: 'No single group is the cause, so it is the overall level: ears hear a mix that is too loud as harsh. Put everything back, then pull every DCA down by the same 2 to 3 dB, slowly. Leave the EQ on the main bus flat: the system EQ was set for the room and the speakers, and mix problems are fixed on the channels.',
       safety: 'safeDuringService',
       controlRefs: [],
     },
@@ -189,17 +219,19 @@ export const THIN_TREE: TroubleshootingTree = {
   symptom: 'Mix is thin',
   group: 'wholeMix',
   targetPicker: 'none',
+  needsOneOfEach: [],
   entryNodeId: 'dryLowCutLook',
   nodes: {
     // In a dry room, low cuts and reverb come first.
     dryLowCutLook: {
       kind: 'check',
       when: { condition: { kind: 'roomIs', reverberance: 'dry' }, otherwise: 'lowEndTest' },
-      action: 'This room adds no warmth of its own, so look at the low cuts first. Compare the low cut ({control:lowCutName}) on the vocals, guitars and keys with your console sheet.',
+      action: 'This room adds no warmth of its own, so look at the low cuts first. Compare the low cut ({control:lowCutName}) on every voice and instrument with your console sheet.',
       question: 'Is a low cut set higher than the sheet says?',
       yes: 'fixLowCutsBack',
       no: 'dryReverbLook',
       safety: 'safeDuringService',
+      looksOnly: true,
     },
     fixLowCutsBack: {
       kind: 'fix',
@@ -214,6 +246,7 @@ export const THIN_TREE: TroubleshootingTree = {
       yes: 'fixReverbBack',
       no: 'lowEndTest',
       safety: 'safeDuringService',
+      looksOnly: true,
     },
     fixReverbBack: {
       kind: 'fix',
@@ -224,7 +257,8 @@ export const THIN_TREE: TroubleshootingTree = {
     // The general path, for every room.
     lowEndTest: {
       kind: 'check',
-      action: 'Push the Low End DCA up 3 dB for a moment. It holds the kick and the bass.',
+      when: { condition: BAND_HAS_LOW_END, otherwise: 'subBusLook' },
+      action: 'Push the Low End DCA up 3 dB for a moment. It holds the lowest instruments.',
       question: 'Does the mix fill out?',
       yes: 'fixLowEndUp',
       no: 'subBusLook',
@@ -232,28 +266,29 @@ export const THIN_TREE: TroubleshootingTree = {
     },
     fixLowEndUp: {
       kind: 'fix',
-      text: `Leave the Low End DCA 2 to 3 dB higher. ${PRINCIPLE_KICK_AND_BASS_FIRST}`,
+      text: 'Leave the Low End DCA 2 to 3 dB higher. A mix sounds full when its lowest instruments are solid, so get those right before you thin anything else out.',
       safety: 'safeDuringService',
       controlRefs: [],
     },
     subBusLook: {
       kind: 'check',
       when: { condition: { kind: 'subOnOwnBus' }, otherwise: 'subListen' },
-      action: 'Put the DCA back. The subwoofer has its own feed, so look at the master fader and the mute of that feed.',
+      action: 'Put everything back the way it was. The subwoofer has its own feed, so look at the master fader and the mute of that feed.',
       question: 'Is the subwoofer feed down or muted?',
       yes: 'fixSubFeedUp',
       no: 'subListen',
       safety: 'safeDuringService',
+      looksOnly: true,
     },
     fixSubFeedUp: {
       kind: 'fix',
-      text: 'Unmute the subwoofer feed and bring its master up slowly while the kick and bass play, until the low end is felt but not booming.',
+      text: 'Unmute the subwoofer feed and bring its master up slowly while the band plays, until the low end is felt but not booming.',
       safety: 'safeDuringService',
       controlRefs: [],
     },
     subListen: {
       kind: 'check',
-      action: 'Walk to the subwoofer while the kick and the bass play.',
+      action: 'Put everything back the way it was. Walk to the subwoofer while the lowest instruments play.',
       question: 'Is sound coming out of the subwoofer?',
       yes: 'lowEqLook',
       no: 'helpSubSilent',
@@ -261,27 +296,41 @@ export const THIN_TREE: TroubleshootingTree = {
     },
     helpSubSilent: {
       kind: 'askForHelp',
-      text: 'The subwoofer is silent while the kick and bass play. That is a problem with its power, its amplifier or its feed, not with your mix. Ask the tech lead.',
+      text: 'The subwoofer is silent while the band plays. That is a problem with its power, its amplifier or its feed, not with your mix. Ask the tech lead.',
       safety: 'safeDuringService',
     },
     lowEqLook: {
       kind: 'check',
-      action: 'Open the EQ ({control:eqScreen}) of the kick and of the bass and look below 200 Hz. Look at their low cuts too.',
+      when: { condition: BAND_HAS_LOW_END, otherwise: 'fixFillTheMiddle' },
+      action: 'Open the EQ ({control:eqScreen}) of each instrument in the Low End DCA and look below 200 Hz. Look at their low cuts too.',
       question: 'Is there a deep cut below 200 Hz, or a low cut above the sheet value?',
       yes: 'fixLowEqFlat',
       no: 'fixFillTheMiddle',
       safety: 'safeDuringService',
+      looksOnly: true,
     },
     fixLowEqFlat: {
       kind: 'fix',
-      text: 'Take those cuts out and set the low cuts back to the sheet values. The bass low cut on your sheet is {lowCut:bassGuitar}.',
+      text: 'Take those cuts out, and set the low cuts back to the values on your console sheet ({control:lowCutScreen}).',
       safety: 'safeDuringService',
       controlRefs: ['eqScreen', 'lowCutScreen'],
     },
     fixFillTheMiddle: {
       kind: 'fix',
-      arrangementAdvice: 'Ask {member:keys} or {member:padSynth} to hold fuller chords in the quiet sections. A thin arrangement cannot be mixed full.',
+      when: { condition: BAND_HAS_KEYS_OR_PAD, otherwise: 'fixFillWithReverb' },
+      arrangementAdvice: [
+        { text: 'Ask {member:keys} to play fuller chords in the quiet sections.', when: BAND_HAS_KEYS },
+        { text: 'Ask {member:padSynth} to hold fuller chords under the band.', when: BAND_HAS_PAD },
+        { text: 'A thin arrangement cannot be mixed full.' },
+      ],
       text: 'The low end is working, so the middle is empty. Push the Keys and Pads DCA up 2 dB, and add a little reverb with the FX Returns DCA.',
+      safety: 'safeDuringService',
+      controlRefs: [],
+    },
+    fixFillWithReverb: {
+      kind: 'fix',
+      arrangementAdvice: 'Ask the band to play fuller parts in the quiet sections. A thin arrangement cannot be mixed full.',
+      text: 'The low end is working, so the middle is empty. Push the Guitars DCA up 2 dB if the band has guitars, and add a little reverb with the FX Returns DCA.',
       safety: 'safeDuringService',
       controlRefs: [],
     },
@@ -293,6 +342,7 @@ export const TOO_LOUD_TREE: TroubleshootingTree = {
   symptom: 'Mix is too loud overall',
   group: 'wholeMix',
   targetPicker: 'none',
+  needsOneOfEach: [],
   entryNodeId: 'stageTest',
   nodes: {
     stageTest: {
@@ -338,19 +388,21 @@ export const CHORUS_NO_LIFT_TREE: TroubleshootingTree = {
   symptom: 'Chorus does not lift',
   group: 'wholeMix',
   targetPicker: 'none',
+  needsOneOfEach: [],
   entryNodeId: 'mainBusLook',
   nodes: {
     mainBusLook: {
       kind: 'check',
-      action: 'Watch the main bus during a chorus: its compressor and its limiter meter. On the {console} the main bus has: {control:mainBusProcessing}',
+      action: 'Watch the main bus during a chorus: its compressor and its limiter meter.',
       question: 'Is the main bus compressor on, or does the limiter show more than 2 dB of reduction in the chorus?',
       yes: 'fixMainBusProcessing',
       no: 'verseLook',
       safety: 'safeDuringService',
+      looksOnly: true,
     },
     fixMainBusProcessing: {
       kind: 'fix',
-      text: `Main bus compressor: ${MAIN_BUS_RULES.compressor.value}. ${MAIN_BUS_RULES.compressor.why} Limiter: ${MAIN_BUS_RULES.limiter.value}. ${MAIN_BUS_RULES.limiter.listenFor}`,
+      text: 'Switch the main bus compressor off. A compressed main bus flattens builds: the chorus cannot get bigger than the verse. Keep the limiter on, but set it so it only catches accidents: it should show no reduction in normal playing, and only 1 to 2 dB at the very loudest moment.',
       safety: 'rehearsalOnly',
       controlRefs: ['mainBusProcessing'],
       duringService: 'fixUnderTheLimiter',
@@ -368,11 +420,12 @@ export const CHORUS_NO_LIFT_TREE: TroubleshootingTree = {
       yes: 'fixVerseLower',
       no: 'dcaRide',
       safety: 'safeDuringService',
+      looksOnly: true,
     },
     fixVerseLower: {
       kind: 'fix',
       arrangementAdvice: 'Ask the band to play less in the verse: a chorus only lifts when the verse leaves room for it.',
-      text: `The faders started too high. In the verse, pull the Energy DCA and the Keys and Pads DCA down 3 dB, and keep the vocal where it is. ${PRINCIPLE_CEILING_FIRST}`,
+      text: `The faders started too high. In the verse, pull the instrument DCAs down 3 dB, and keep the vocal where it is. ${PRINCIPLE_CEILING_FIRST}`,
       safety: 'safeDuringService',
       controlRefs: [],
     },
@@ -392,7 +445,12 @@ export const CHORUS_NO_LIFT_TREE: TroubleshootingTree = {
     },
     fixArrangementLift: {
       kind: 'fix',
-      arrangementAdvice: 'The lift has to come from the band. Ask the drummer to open up to the cymbals in the chorus, {member:electricGuitar} to play fuller chords, and everyone to hold back in the verse.',
+      arrangementAdvice: [
+        { text: 'The lift has to come from the band.' },
+        { text: 'Ask whoever plays the drums or percussion to open up in the chorus.', when: BAND_HAS_DRUMS },
+        { text: 'Ask {member:electricGuitar} to play fuller chords in the chorus.', when: BAND_HAS_ELECTRIC_GUITAR },
+        { text: 'Ask everyone to hold back in the verse.' },
+      ],
       text: 'Keep the 2 dB push on the Low End and Energy DCAs in the chorus, and push the Lead Vocal DCA 1 dB with them so the words stay on top.',
       safety: 'safeDuringService',
       controlRefs: [],

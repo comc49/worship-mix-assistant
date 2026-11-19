@@ -405,7 +405,7 @@ function buildLowCutSection(context: BuildContext): SheetSection {
   return {
     id: 'lowCuts',
     title: 'Low cuts and optional EQ',
-    intro: 'Remove the low rumble each source does not need, so the kick and bass have the low end to themselves. The EQ cuts are optional: try each one and keep it only if it sounds better.',
+    intro: 'Remove the low rumble each source does not need, so the kick and bass have the low end to themselves. The EQ cuts are optional: try each one and keep it only if it sounds better. "Q" is how wide a cut is: a wide Q also turns down the notes around it, a narrow Q only a small range.',
     steps,
   };
 }
@@ -555,7 +555,7 @@ function buildGroupsSection(context: BuildContext): SheetSection {
   return {
     id: 'groups',
     title: 'DCAs, mute groups and group buses',
-    intro: 'Gather the channels into a few faders you can ride during the service, instead of chasing thirty.',
+    intro: 'Gather the channels into a few faders you can ride during the service, instead of chasing thirty. A DCA is a remote control: its fader moves the faders of its members, and no sound passes through it. A group bus is different: the sound of its members really passes through it, so it can have its own EQ.',
     steps,
   };
 }
@@ -692,7 +692,7 @@ function buildFxSection(context: BuildContext): SheetSection {
   return {
     id: 'fx',
     title: 'FX rack',
-    intro: 'Set up a small number of shared effects. Each channel then sends a little of itself to them.',
+    intro: 'Set up a small number of shared effects. Each channel then sends a little of itself to them. "Post-fader" means the send follows the channel fader: pull the channel down and its reverb goes down with it.',
     steps,
   };
 }
@@ -838,7 +838,7 @@ function buildMonitorsSection(context: BuildContext): SheetSection {
         id: `monitors:${mix.id}:name`,
         sectionId: 'monitors',
         subject: `${mix.label} · ${busText}`,
-        instruction: `Use ${busText} for this monitor mix (for: ${mix.forMemberNames.join(', ')}) and name it`,
+        instruction: `Use ${busText} for this monitor mix (for: ${mix.forMemberNames.join(', ')}) and name it "${mix.label.split(':')[0]}"`,
         value: busText,
         detail: plainDetail('Which musician shares which mix is a starting guess. Change it to match the stage.', 'Nothing to listen for.'),
         safety: 'rehearsalOnly',
@@ -897,8 +897,8 @@ function buildMonitorsSection(context: BuildContext): SheetSection {
   }
 
   const intro = inEarsOnly
-    ? 'Give each musician what they need to hear, starting low. In-ears sit inside the ear, so every level here comes up slowly.'
-    : 'Give each musician what they need to hear, starting low. Quiet monitors are the best protection against feedback.';
+    ? 'Give each musician what they need to hear, starting low. In-ears sit inside the ear, so every level here comes up slowly. "Pre-fader" means the monitor gets the signal before the channel fader, so moving a fader for the room does not change what the musician hears.'
+    : 'Give each musician what they need to hear, starting low. Quiet monitors are the best protection against feedback. "Pre-fader" means the monitor gets the signal before the channel fader, so moving a fader for the room does not change what the musician hears.';
 
   return {
     id: 'monitors',
@@ -915,6 +915,11 @@ function buildMainSection(context: BuildContext): SheetSection {
 
   const limiter = findFx(context, 'mainLimiter');
   if (limiter !== undefined) {
+    const limiterSubSteps = [`Select the main bus, not a channel. ${facts.fxInsertProcedure.value}`];
+    const insertPoint = facts.mainLimiterInsertPoint.value;
+    if (insertPoint !== null) {
+      limiterSubSteps.push(`Use ${insertPoint}, so the limiter also catches a main fader that is pushed up.`);
+    }
     steps.push(
       makeStep(context, {
         id: 'main:limiter',
@@ -922,10 +927,10 @@ function buildMainSection(context: BuildContext): SheetSection {
         subject: 'Main bus',
         instruction: `Load "${limiter.effectName}" into FX slot ${limiter.slot} and insert it on the main bus. ${plan.mainBus.limiter.value}`,
         value: limiter.effectName,
-        subSteps: [facts.fxInsertProcedure.value],
+        subSteps: limiterSubSteps,
         detail: textDetail(plan.mainBus.limiter),
         safety: 'rehearsalOnly',
-        refs: ['limiterEffects', 'fxInsertProcedure', 'mainBusProcessing'],
+        refs: ['limiterEffects', 'fxInsertProcedure', 'mainBusProcessing', 'mainLimiterInsertPoint'],
         effectName: limiter.effectName,
         fxSlot: limiter.slot,
       }),

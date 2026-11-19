@@ -116,7 +116,7 @@ export const SEND_EFFECTS: SendEffectDefinition[] = [
     family: 'delay',
     priority: 2,
     time: null,
-    timeNote: 'Tap the tempo of each song so the repeats land on the quarter note. Keep feedback low: two or three repeats.',
+    timeNote: 'Tap the tempo of each song so the repeats land on the quarter note. Keep the number of repeats low: two or three.',
     timeLimit: null,
     why: 'A quiet delay on the lead vocal fills gaps without the wash of more reverb.',
     listenFor: 'If you can clearly hear repeats in a fast song, mute it for that song.',
@@ -187,7 +187,7 @@ export const MUTE_GROUP_DEFINITIONS: { id: MuteGroupId; label: string; why: stri
 
 export const HOUSE_PRINCIPLES: string[] = [
   'Arrangement beats EQ. If two sources fight, first ask who should play less, before any fader or EQ move.',
-  'Establish kick and bass first. Do not high-pass and thin everything out before the low-end foundation is solid.',
+  'Establish kick and bass first. Do not raise low cuts and thin everything out before the low-end foundation is solid.',
   'In a reverberant room, fewer simultaneous sources beats lower faders.',
   'Set the ceiling first: set fader positions at the loudest moment of the loudest song, then work backward.',
   'Ride up into a climax with the Low End and Energy DCAs instead of pushing everything.',
@@ -232,7 +232,7 @@ export const STREAM_DIFFERENCES: TextSetting[] = [
 
 export const MAIN_BUS_RULES = {
   limiter: {
-    value: 'On, set so it only catches accidents',
+    value: 'On. Set it so it shows no reduction in normal playing, and only 1 to 2 dB at the very loudest moment',
     why: 'A limiter protects the speakers and ears from a dropped mic or a sudden spike.',
     listenFor: 'It should show no reduction in normal playing, and only 1 to 2 dB at the very loudest moment.',
   } satisfies TextSetting,

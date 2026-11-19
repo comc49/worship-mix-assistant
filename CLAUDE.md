@@ -54,11 +54,11 @@ Items marked *(assumed)* were chosen as defaults on 2026-11-18 because the brief
 - Vocalist A: lead vocal, intermediate, SM58, medium voice. Also acoustic guitar, intermediate, mono DI.
 - Vocalist B: harmony vocal, beginner, SM58, high voice.
 - Vocalist C: harmony vocal, advanced, SM58, low voice.
-- Keys: Nord Stage 2, beginner, stereo DI.
-- Pad: synth pad, intermediate, stereo DI.
-- Electric guitar: intermediate, modeler direct.
-- Bass: bass guitar, beginner, mono DI.
-- Drums: electronic kit, intermediate, drum module stereo pair.
+- Player D: keys (Nord Stage 2), beginner, stereo DI.
+- Player E: synth pad, intermediate, stereo DI.
+- Player F: electric guitar, intermediate, modeler direct.
+- Player G: bass guitar, beginner, mono DI.
+- Player H: electronic drums, intermediate, drum module stereo pair.
 
 The fixture lives in `src/app/core/testing/fixtures.ts`.
 

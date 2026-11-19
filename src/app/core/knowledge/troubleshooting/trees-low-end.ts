@@ -1,3 +1,4 @@
+import { BAND_HAS_BASS, BAND_HAS_DRUMS, BASS_ROLES, KICK_LIKE_ROLES } from './band-conditions';
 import { ensembleAdvice } from './rule-text';
 import { TroubleshootingTree } from './types';
 
@@ -12,6 +13,7 @@ export const BASS_BOOMY_TREE: TroubleshootingTree = {
   symptom: 'Bass boomy',
   group: 'lowEnd',
   targetPicker: 'none',
+  needsOneOfEach: [BASS_ROLES],
   entryNodeId: 'muteTest',
   nodes: {
     muteTest: {
@@ -41,6 +43,7 @@ export const BASS_BOOMY_TREE: TroubleshootingTree = {
     },
     drumsTest: {
       kind: 'check',
+      when: { condition: BAND_HAS_DRUMS, otherwise: 'fixRoomBoom' },
       action: 'Put everything back. Pull the Drums DCA down 5 dB for a moment.',
       question: 'Is the boom gone?',
       yes: 'fixKickBoom',
@@ -56,7 +59,7 @@ export const BASS_BOOMY_TREE: TroubleshootingTree = {
     },
     fixRoomBoom: {
       kind: 'fix',
-      text: 'No single source is the cause, so the room itself is booming at the mixing position. Walk a few steps forward and to the side: if the boom changes, it is the room. Pull the Low End DCA down 2 dB and mix for the middle of the seats, not for your own spot.',
+      text: 'Put everything back the way it was. No single source is the cause, so the room itself is booming at the mixing position. Walk a few steps forward and to the side: if the boom changes, it is the room. Pull the Low End DCA down 2 dB and mix for the middle of the seats, not for your own spot.',
       safety: 'safeDuringService',
       controlRefs: [],
     },
@@ -81,7 +84,7 @@ export const BASS_BOOMY_TREE: TroubleshootingTree = {
     fixCompressorFirst: {
       kind: 'fix',
       arrangementAdvice: 'Between songs, ask {member:bassGuitar} to aim for every note at the same strength. Playing a little softer overall makes that easier.',
-      text: 'Lower the compressor threshold ({control:compParamNames.threshold}) until the loudest notes show about {compReduction:bassGuitar} of reduction. The loud notes are then held back, and the boom goes with them. Do this before any EQ.',
+      text: 'Bring the compressor\'s {control:compParamNames.threshold} down until the loudest notes show about {compReduction:bassGuitar} of reduction. The loud notes are then held back, and the boom goes with them. Do this before any EQ.',
       safety: 'safeDuringService',
       controlRefs: ['compScreen', 'compParamNames'],
     },
@@ -131,7 +134,7 @@ export const BASS_BOOMY_TREE: TroubleshootingTree = {
     fixCompressorLast: {
       kind: 'fix',
       arrangementAdvice: 'Uneven playing is a common cause of a boomy bass. Between songs, ask {member:bassGuitar} to aim for every note at the same strength.',
-      text: 'Take the cut out. If only some notes boom, EQ is not the answer. Open the bass compressor ({control:compScreen}) and lower the threshold ({control:compParamNames.threshold}) until the loudest notes show about {compReduction:bassGuitar} of reduction.',
+      text: 'Take the cut out. If only some notes boom, EQ is not the answer. Open the bass compressor ({control:compScreen}) and bring the compressor\'s {control:compParamNames.threshold} down until the loudest notes show about {compReduction:bassGuitar} of reduction.',
       safety: 'safeDuringService',
       controlRefs: ['compScreen', 'compParamNames'],
     },
@@ -143,6 +146,7 @@ export const BASS_INAUDIBLE_TREE: TroubleshootingTree = {
   symptom: 'Bass inaudible',
   group: 'lowEnd',
   targetPicker: 'none',
+  needsOneOfEach: [BASS_ROLES],
   entryNodeId: 'channelLook',
   nodes: {
     channelLook: {
@@ -218,17 +222,19 @@ export const KICK_NO_PUNCH_TREE: TroubleshootingTree = {
   symptom: 'Kick has no punch',
   group: 'lowEnd',
   targetPicker: 'none',
+  needsOneOfEach: [KICK_LIKE_ROLES],
   entryNodeId: 'kickChannelLook',
   nodes: {
-    // A kick on its own channel.
+    // Branch 1: a kick drum on its own channel.
     kickChannelLook: {
       kind: 'check',
-      when: { condition: { kind: 'roleInBand', role: 'kick' }, otherwise: 'moduleBassTest' },
+      when: { condition: { kind: 'roleInBand', role: 'kick' }, otherwise: 'cajonMicLook' },
       action: 'Look at the kick channel: its mute, its fader, the Low End DCA and the Drums DCA.',
       question: 'Is it unmuted, with all three faders up?',
       yes: 'bassTest',
       no: 'fixKickFaders',
       safety: 'safeDuringService',
+      looksOnly: true,
     },
     fixKickFaders: {
       kind: 'fix',
@@ -238,12 +244,14 @@ export const KICK_NO_PUNCH_TREE: TroubleshootingTree = {
     },
     bassTest: {
       kind: 'check',
+      when: { condition: BAND_HAS_BASS, otherwise: 'gateLook' },
       action: 'Pull the bass fader down 5 dB for a moment.',
       question: 'Does the kick punch through now?',
       yes: 'fixBassOutOfTheWay',
       no: 'gateLook',
       safety: 'safeDuringService',
     },
+    // Shared by all three branches. Only reached when the band has a bass.
     fixBassOutOfTheWay: {
       kind: 'fix',
       arrangementAdvice: ensembleAdvice('kickAndBassLanes'),
@@ -253,15 +261,16 @@ export const KICK_NO_PUNCH_TREE: TroubleshootingTree = {
     },
     gateLook: {
       kind: 'check',
-      action: 'Put the bass back. Open the kick gate ({control:gateScreen}) and watch it on soft and hard hits.',
+      action: 'Put everything back the way it was. Open the kick gate ({control:gateScreen}) and watch it on soft and hard hits.',
       question: 'Does the gate cut off the start of the hits, or stay closed on soft ones?',
       yes: 'fixKickGate',
       no: 'kickEq',
       safety: 'safeDuringService',
+      looksOnly: true,
     },
     fixKickGate: {
       kind: 'fix',
-      text: 'Lower the gate threshold ({control:gateParamNames.threshold}) until every hit opens it, and make the attack ({control:gateParamNames.attack}) as fast as it goes. The punch of a kick is in its first few milliseconds.',
+      text: 'Bring the gate\'s {control:gateParamNames.threshold} down until every hit opens it, and make the gate\'s {control:gateParamNames.attack} as fast as it goes. The punch of a kick is in its first few milliseconds.',
       safety: 'safeDuringService',
       controlRefs: ['gateScreen', 'gateParamNames'],
     },
@@ -281,14 +290,77 @@ export const KICK_NO_PUNCH_TREE: TroubleshootingTree = {
     },
     fixKickCompressor: {
       kind: 'fix',
-      text: 'Take the cut out, and look at the kick compressor ({control:compScreen}). An attack ({control:compParamNames.attack}) that is too fast flattens the punch: set it to 20 to 30 ms. If it shows more than 6 dB of reduction, bring the threshold ({control:compParamNames.threshold}) back up.',
+      text: 'Take the cut out, and look at the kick compressor ({control:compScreen}). If the compressor\'s {control:compParamNames.attack} is too fast, it flattens the punch: set it to 20 to 30 ms. If the meter shows more than 6 dB of reduction, bring the compressor\'s {control:compParamNames.threshold} back up.',
       safety: 'safeDuringService',
       controlRefs: ['compScreen', 'compParamNames'],
     },
-    // The kick comes from a drum module or a cajon: there is no kick channel to work on.
+    // Branch 2: a cajon plays the kick part. Its punch is the low thump from the back of the box.
+    cajonMicLook: {
+      kind: 'check',
+      when: { condition: { kind: 'roleInBand', role: 'cajon' }, otherwise: 'moduleBassTest' },
+      action: 'Look at where the cajon mic is. The low thump comes out of the sound hole at the back, so the mic belongs there, a few centimetres from the hole.',
+      question: 'Is the mic at the rear sound hole?',
+      yes: 'cajonLowCutLook',
+      no: 'fixCajonMic',
+      safety: 'safeDuringService',
+      looksOnly: true,
+    },
+    fixCajonMic: {
+      kind: 'fix',
+      text: 'Mute the cajon channel, move the mic to the rear sound hole, a few centimetres from it, then unmute and bring the fader up slowly. A mic at the front picks up the slap of the hands and almost none of the thump.',
+      safety: 'safeDuringService',
+      controlRefs: [],
+    },
+    cajonLowCutLook: {
+      kind: 'check',
+      action: 'Look at the low cut ({control:lowCutName}) on the cajon and compare it with your console sheet.',
+      question: 'Is it set higher than {lowCut:cajon}?',
+      yes: 'fixCajonLowCut',
+      no: 'cajonBassTest',
+      safety: 'safeDuringService',
+      looksOnly: true,
+    },
+    fixCajonLowCut: {
+      kind: 'fix',
+      text: 'Bring the low cut back down to {lowCut:cajon} ({control:lowCutScreen}), the value on your console sheet. A low cut that is too high removes the thump.',
+      safety: 'safeDuringService',
+      controlRefs: ['lowCutName', 'lowCutScreen'],
+    },
+    cajonBassTest: {
+      kind: 'check',
+      when: { condition: BAND_HAS_BASS, otherwise: 'cajonEq' },
+      action: 'Pull the bass fader down 5 dB for a moment.',
+      question: 'Does the cajon punch through now?',
+      yes: 'fixBassOutOfTheWay',
+      no: 'cajonEq',
+      safety: 'safeDuringService',
+    },
+    cajonEq: {
+      kind: 'check',
+      action: 'Put everything back the way it was. On the cajon, cut 3 to 4 dB, wide, around 300 to 400 Hz ({control:eqScreen}). That range makes it sound like a cardboard box.',
+      question: 'Does the cajon punch more?',
+      yes: 'fixKeepCajonEq',
+      no: 'fixCajonPlaying',
+      safety: 'safeDuringService',
+    },
+    fixKeepCajonEq: {
+      kind: 'fix',
+      text: 'Keep the cut, only as deep as it needs to be.',
+      safety: 'safeDuringService',
+      controlRefs: ['eqScreen'],
+    },
+    fixCajonPlaying: {
+      kind: 'fix',
+      arrangementAdvice: 'Between songs, ask {member:cajon} to play the low strokes in the middle of the front plate, with a flat hand. That is where the thump is.',
+      text: 'Take the cut out, and push the cajon fader up 2 dB. The console can only pass on the thump the mic receives.',
+      safety: 'safeDuringService',
+      controlRefs: [],
+    },
+    // Branch 3: the kick comes out of a drum module together with the rest of the kit.
     moduleBassTest: {
       kind: 'check',
-      action: 'The kick has no channel of its own here: it arrives inside the drum channel. Pull the bass fader down 5 dB for a moment.',
+      when: { condition: BAND_HAS_BASS, otherwise: 'drumsUp' },
+      action: 'Pull the bass fader down 5 dB for a moment.',
       question: 'Does the kick punch through now?',
       yes: 'fixBassOutOfTheWay',
       no: 'drumsUp',
@@ -296,7 +368,7 @@ export const KICK_NO_PUNCH_TREE: TroubleshootingTree = {
     },
     drumsUp: {
       kind: 'check',
-      action: 'Put the bass back. Push the Drums DCA up 2 dB.',
+      action: 'Put everything back the way it was. The kick has no channel of its own here: it arrives together with the rest of the kit. Push the Drums DCA up 2 dB.',
       question: 'Does the kick punch through, without the cymbals getting too loud?',
       yes: 'fixLeaveDrumsUp',
       no: 'fixKickInsideModule',
@@ -311,14 +383,14 @@ export const KICK_NO_PUNCH_TREE: TroubleshootingTree = {
     fixKickInsideModule: {
       kind: 'fix',
       arrangementAdvice: 'The balance between kick, snare and cymbals is set at the source, not on the console. Ask {member:electronicDrums} to turn the kick up by a few steps on the drum module, or to choose a kick sound with a harder attack.',
-      text: 'Put the Drums DCA back, and listen again after each change at the source. If the module has a spare output, a separate kick output gives you real control of the low end: raise it with the tech lead.',
+      text: 'Put the Drums DCA back, and listen again after each change at the source. If the module has a spare output, a separate kick output gives you real control of the low end: bring that up with the tech lead.',
       safety: 'rehearsalOnly',
       controlRefs: [],
       duringService: 'fixKickForNow',
     },
     fixKickForNow: {
       kind: 'fix',
-      text: 'The kick level is set at the source, and changing that in the middle of a service would change every monitor too. For now, leave the Drums DCA 1 dB higher and the bass 1 dB lower. Raise the kick at the source at the next rehearsal.',
+      text: 'The kick level is set at the source, and changing that in the middle of a service would change every monitor too. For now, leave the Drums DCA 1 dB higher. Turn the kick up at the source at the next rehearsal.',
       safety: 'safeDuringService',
       controlRefs: [],
     },

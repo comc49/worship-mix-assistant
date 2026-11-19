@@ -33,7 +33,7 @@ const STEREO_PAN: TextSetting = {
 };
 
 const MATCH_BYPASS: TextSetting = {
-  value: 'Match the bypassed level',
+  value: 'Switch the compressor off and on, and raise the makeup gain until both sound equally loud',
   why: 'Makeup gain restores what compression took away.',
   listenFor: 'Switching the compressor in and out should not change how loud the source seems.',
 };

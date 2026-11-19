@@ -48,7 +48,7 @@ function describeNode(nodeId: string, node: TroubleshootingNode, numbers: Record
   }
 
   if (node.kind === 'check') {
-    lines.push(`- Do: ${resolveText(node.action, context).text}`);
+    lines.push(`- Do${node.looksOnly === true ? ' (look only)' : ''}: ${resolveText(node.action, context).text}`);
     lines.push(`- Ask: ${resolveText(node.question, context).text}`);
     lines.push(`- Yes: go to ${goTo(node.yes)}. No: go to ${goTo(node.no)}.`);
     if (node.safety === 'rehearsalOnly') {
@@ -57,8 +57,14 @@ function describeNode(nodeId: string, node: TroubleshootingNode, numbers: Record
   }
 
   if (node.kind === 'fix') {
-    if (node.arrangementAdvice !== undefined) {
+    if (typeof node.arrangementAdvice === 'string') {
       lines.push(`- With the band first: ${resolveText(node.arrangementAdvice, context).text}`);
+    }
+    if (Array.isArray(node.arrangementAdvice)) {
+      for (const adviceLine of node.arrangementAdvice) {
+        const condition = adviceLine.when === undefined ? '' : ` (only when ${describeCondition(adviceLine.when)})`;
+        lines.push(`- With the band first${condition}: ${resolveText(adviceLine.text, context).text}`);
+      }
     }
     lines.push(`- Then: ${resolveText(node.text, context).text}`);
     if (node.controlRefs.length > 0) {
@@ -98,6 +104,10 @@ export function buildTroubleshootingReviewMarkdown(context: TroubleshootContext)
     for (const tree of treesInGroup) {
       const numbers = numberNodes(tree);
       lines.push(`### ${tree.symptom}`, '');
+      if (tree.needsOneOfEach.length > 0) {
+        const needs = tree.needsOneOfEach.map((roles) => roles.join(' or ')).join(', and ');
+        lines.push(`Only offered when the band has: ${needs}.`, '');
+      }
       lines.push(`Starts at step ${numbers[tree.entryNodeId]}.`, '');
       for (const [nodeId, node] of Object.entries(tree.nodes)) {
         lines.push(...describeNode(nodeId, node, numbers, context));

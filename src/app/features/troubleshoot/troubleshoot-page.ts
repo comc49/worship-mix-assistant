@@ -2,6 +2,7 @@ import { afterNextRender, Component, computed, ElementRef, inject, Injector, sig
 import { SYMPTOM_GROUPS, TROUBLESHOOTING_TREES } from '../../core/knowledge/troubleshooting';
 import { StepSafety, SymptomGroup, TroubleshootingTree } from '../../core/knowledge/troubleshooting/types';
 import {
+  isTreeRelevant,
   listTargetOptions,
   ResolvedAskForHelp,
   ResolvedCheck,
@@ -46,11 +47,27 @@ export class TroubleshootPage {
   readonly situation = this.store.situation;
   readonly consoleName = computed(() => this.store.consoleProfile().name);
 
-  /** Every symptom, grouped under the picker's headings. Static: the trees never change at runtime. */
-  readonly symptomGroups: SymptomButtonGroup[] = SYMPTOM_GROUPS.map((group) => ({
-    group,
-    trees: TROUBLESHOOTING_TREES.filter((tree) => tree.group === group.id),
-  }));
+  /** The symptoms that make sense for the current band. With no band entered, that is all of them. */
+  readonly relevantTrees = computed<TroubleshootingTree[]>(() => {
+    const band = this.store.band();
+    return TROUBLESHOOTING_TREES.filter((tree) => isTreeRelevant(tree, band));
+  });
+
+  /** The relevant symptoms under the picker's headings. A heading with no symptom left is not shown. */
+  readonly symptomGroups = computed<SymptomButtonGroup[]>(() => {
+    const relevantTrees = this.relevantTrees();
+    const groups: SymptomButtonGroup[] = [];
+    for (const group of SYMPTOM_GROUPS) {
+      const trees = relevantTrees.filter((tree) => tree.group === group.id);
+      if (trees.length > 0) {
+        groups.push({ group, trees });
+      }
+    }
+    return groups;
+  });
+
+  readonly bandIsEmpty = computed(() => this.store.band().length === 0);
+  readonly hiddenSymptomCount = computed(() => TROUBLESHOOTING_TREES.length - this.relevantTrees().length);
 
   readonly selectedTreeId = signal<string | null>(null);
   readonly answers = signal<WalkAnswer[]>([]);

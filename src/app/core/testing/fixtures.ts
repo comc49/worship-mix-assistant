@@ -24,8 +24,8 @@ export const FIXTURE_IN_EARS: ServiceSetup = { ...DEFAULT_SERVICE_SETUP, monitor
 /** Stripped set: Vocalist A with acoustic guitar, cajon, keys. */
 export const FIXTURE_STRIPPED_BAND: BandMember[] = [
   FIXTURE_FULL_BAND[0],
-  { id: 'm-cajon', name: 'Cajon', roles: [{ role: 'cajon', skill: 'intermediate', connection: 'dynamicMic', vocal: null }] },
+  { id: 'm-cajon', name: 'Player I', roles: [{ role: 'cajon', skill: 'intermediate', connection: 'dynamicMic', vocal: null }] },
   FIXTURE_FULL_BAND[3],
 ];
 
-export const FIXTURE_NAMES: string[] = ['Vocalist A', 'Vocalist B', 'Vocalist C'];
+export const FIXTURE_NAMES: string[] = ['Vocalist A', 'Vocalist B', 'Vocalist C', 'Player D', 'Player E', 'Player F', 'Player G', 'Player H'];

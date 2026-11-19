@@ -11,6 +11,7 @@ export const NO_SOUND_TREE: TroubleshootingTree = {
   symptom: 'No sound from a channel',
   group: 'soundAndNoise',
   targetPicker: 'channel',
+  needsOneOfEach: [],
   entryNodeId: 'muteState',
   nodes: {
     muteState: {
@@ -52,6 +53,7 @@ export const NO_SOUND_TREE: TroubleshootingTree = {
     gateLook: {
       kind: 'check',
       action: 'Open the gate for that channel ({control:gateScreen}) and watch it while {targetMember} plays.',
+      looksOnly: true,
       question: 'Is a gate switched on and staying closed while they play?',
       yes: 'fixGateOpen',
       no: 'mainAssignLook',
@@ -59,21 +61,22 @@ export const NO_SOUND_TREE: TroubleshootingTree = {
     },
     fixGateOpen: {
       kind: 'fix',
-      text: 'Lower the gate threshold ({control:gateParamNames.threshold}) until the gate opens on every note, also the soft ones. If it still chops notes off, switch the gate off: an open channel is better than a missing one.',
+      text: 'Lower the gate\'s {control:gateParamNames.threshold} until the gate opens on every note, also the soft ones. If it still chops notes off, switch the gate off: an open channel is better than a missing one.',
       safety: 'safeDuringService',
       controlRefs: ['gateScreen', 'gateParamNames'],
     },
     mainAssignLook: {
       kind: 'check',
-      action: 'Look at whether the channel is assigned to the main mix.',
+      action: 'Look at whether the channel is assigned to the main mix. Only look: do not press anything in this step. So you know where to look, this is how the {console} manual describes the control that takes a channel OUT of the main mix: {control:removeChannelFromMain}',
       question: 'Is it assigned to the main mix?',
       yes: 'helpAfterConsole',
       no: 'fixAssignToMain',
       safety: 'safeDuringService',
+      looksOnly: true,
     },
     fixAssignToMain: {
       kind: 'fix',
-      text: 'Pull the channel fader down, assign the channel to the main mix, then bring the fader up slowly. This is the place where that assignment lives on the {console}: {control:removeChannelFromMain}',
+      text: 'Pull the channel fader down, assign the channel to the main mix with the control you just looked at, then bring the fader up slowly.',
       safety: 'rehearsalOnly',
       risky: ['routing'],
       controlRefs: ['removeChannelFromMain'],
@@ -86,12 +89,12 @@ export const NO_SOUND_TREE: TroubleshootingTree = {
     },
     helpAfterConsole: {
       kind: 'askForHelp',
-      text: 'The console receives the signal and sends it on, so the problem is after this channel: an output, an amplifier or a speaker. Ask the tech lead.',
+      text: 'The channel has signal, is unmuted, has its fader up and is assigned to the main mix, yet it is not heard while the other channels are. So it is something on this channel\'s own path that this list does not cover, such as a group bus it goes through, an insert, or its pan. Ask the tech lead.',
       safety: 'safeDuringService',
     },
     sourceLook: {
       kind: 'check',
-      action: 'No signal reaches the console. Check the source on stage: the mic switch, the instrument volume, the battery or wireless receiver, and the cable at both ends.',
+      action: 'Mute the channel first. No signal reaches the console, so check the source on stage: the mic switch, the instrument volume, the battery or wireless receiver, and the cable at both ends.',
       question: 'Did you find something switched off, flat or unplugged?',
       yes: 'fixSource',
       no: 'phantomLook',
@@ -99,7 +102,7 @@ export const NO_SOUND_TREE: TroubleshootingTree = {
     },
     fixSource: {
       kind: 'fix',
-      text: 'Mute the channel before you touch any plug, so nobody hears a bang. Fix what you found, unmute, and bring the fader up slowly.',
+      text: 'Keep the channel muted while you touch any plug, so nobody hears a bang. Fix what you found, unmute, and bring the fader up slowly.',
       safety: 'safeDuringService',
       controlRefs: [],
     },
@@ -109,7 +112,8 @@ export const NO_SOUND_TREE: TroubleshootingTree = {
       question: 'Does the source need phantom power while it is switched off?',
       yes: 'fixPhantom',
       no: 'gainLook',
-      safety: 'rehearsalOnly',
+      safety: 'safeDuringService',
+      looksOnly: true,
     },
     fixPhantom: {
       kind: 'fix',
@@ -117,6 +121,12 @@ export const NO_SOUND_TREE: TroubleshootingTree = {
       safety: 'rehearsalOnly',
       risky: ['phantomPower'],
       controlRefs: ['phantomPower'],
+      duringService: 'helpPhantomOff',
+    },
+    helpPhantomOff: {
+      kind: 'askForHelp',
+      text: 'Phantom power is off on an input that needs it. Tell the tech lead now. Do not change it yourself during the service.',
+      safety: 'safeDuringService',
     },
     gainLook: {
       kind: 'check',
@@ -124,18 +134,25 @@ export const NO_SOUND_TREE: TroubleshootingTree = {
       question: 'Is the gain turned all the way down?',
       yes: 'fixGain',
       no: 'cableSwap',
-      safety: 'rehearsalOnly',
+      safety: 'safeDuringService',
+      looksOnly: true,
     },
     fixGain: {
       kind: 'fix',
-      text: 'Pull the fader down, then set the gain the way the gain staging step on your console sheet describes, while {targetMember} plays their loudest. Bring the fader back up slowly.',
+      text: 'Pull the fader down, then set the gain the way the gain staging step on your console sheet describes, while {targetMember} plays their loudest. Raise it slowly: wedges and in-ears follow the gain, not the fader, so the musician hears every step. Bring the fader back up slowly.',
       safety: 'rehearsalOnly',
       risky: ['gainUp'],
       controlRefs: ['preampGain'],
+      duringService: 'helpGainDown',
+    },
+    helpGainDown: {
+      kind: 'askForHelp',
+      text: 'The gain is all the way down on this input. Tell the tech lead now. Do not change it yourself during the service.',
+      safety: 'safeDuringService',
     },
     cableSwap: {
       kind: 'check',
-      action: 'Mute the channel, swap the cable for one you know works, and unmute.',
+      action: 'With the channel still muted, swap the cable for one you know works, then unmute.',
       question: 'Does the meter move now?',
       yes: 'fixBadCable',
       no: 'helpNoSignal',
@@ -160,6 +177,7 @@ export const HUM_OR_BUZZ_TREE: TroubleshootingTree = {
   symptom: 'Hum or buzz',
   group: 'soundAndNoise',
   targetPicker: 'channel',
+  needsOneOfEach: [],
   entryNodeId: 'findChannel',
   nodes: {
     findChannel: {
@@ -243,6 +261,7 @@ export const DISTORTION_TREE: TroubleshootingTree = {
   symptom: 'Distortion or clipping',
   group: 'soundAndNoise',
   targetPicker: 'channel',
+  needsOneOfEach: [],
   entryNodeId: 'inputMeter',
   nodes: {
     inputMeter: {
@@ -262,7 +281,7 @@ export const DISTORTION_TREE: TroubleshootingTree = {
     },
     headphones: {
       kind: 'check',
-      action: 'Listen to the channel alone on headphones with its solo button. Solo is only for judging the source: it does not change what the room hears.',
+      action: 'Listen to the channel alone on headphones with its solo button. Solo is only for judging the source, never for testing what the room hears. {soloCaution} On the {console}: {control:soloBehavior}',
       question: 'Is it distorted in the headphones too?',
       yes: 'fixSourceLevel',
       no: 'compressorLook',
@@ -284,7 +303,7 @@ export const DISTORTION_TREE: TroubleshootingTree = {
     },
     fixCompressor: {
       kind: 'fix',
-      text: 'The compressor is working too hard. Bring the threshold ({control:compParamNames.threshold}) back up until the loudest moments show only a few dB of reduction, as on your console sheet.',
+      text: 'The compressor is working too hard. Bring the compressor\'s {control:compParamNames.threshold} back up until the loudest moments show only a few dB of reduction, as on your console sheet.',
       safety: 'safeDuringService',
       controlRefs: ['compScreen', 'compParamNames'],
     },

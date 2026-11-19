@@ -44,7 +44,7 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
         },
         "makeupGain": {
           "listenFor": "Switching the compressor in and out should not change how loud the drum seems.",
-          "value": "Match the bypassed level",
+          "value": "Switch the compressor off and on, and raise the makeup gain until both sound equally loud",
           "why": "Makeup gain restores what compression took away.",
         },
         "ratio": {
@@ -154,7 +154,7 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
         "why": "The kick is inside this pair, so only inaudible sub-rumble is removed.",
       },
       "memberId": "m-drums",
-      "memberName": "Drums",
+      "memberName": "Player H",
       "mixerNotes": [
         "The balance between kick, snare and cymbals is set inside the drum module, not on the console.",
         "If the module has a spare output, a separate kick output gives you real control of the low end. Consider it.",
@@ -309,7 +309,7 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
         },
         "makeupGain": {
           "listenFor": "Switching the compressor in and out should not change how loud the source seems.",
-          "value": "Match the bypassed level",
+          "value": "Switch the compressor off and on, and raise the makeup gain until both sound equally loud",
           "why": "Makeup gain restores what compression took away.",
         },
         "ratio": {
@@ -423,7 +423,7 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
         "why": "Removes only the sub-rumble below the lowest bass note. The foundation stays.",
       },
       "memberId": "m-bass",
-      "memberName": "Bass",
+      "memberName": "Player G",
       "mixerNotes": [
         "If single notes boom, it is usually uneven playing, not EQ. Check the compressor is working before cutting lows.",
       ],
@@ -520,7 +520,7 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
         },
         "makeupGain": {
           "listenFor": "Switching the compressor in and out should not change how loud the source seems.",
-          "value": "Match the bypassed level",
+          "value": "Switch the compressor off and on, and raise the makeup gain until both sound equally loud",
           "why": "Makeup gain restores what compression took away.",
         },
         "ratio": {
@@ -820,7 +820,7 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
         },
         "makeupGain": {
           "listenFor": "Switching the compressor in and out should not change how loud the source seems.",
-          "value": "Match the bypassed level",
+          "value": "Switch the compressor off and on, and raise the makeup gain until both sound equally loud",
           "why": "Makeup gain restores what compression took away.",
         },
         "ratio": {
@@ -935,8 +935,9 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
         "why": "Electric guitar has nothing useful below the low E string's body. Lows here only crowd the bass.",
       },
       "memberId": "m-electric",
-      "memberName": "Electric guitar",
+      "memberName": "Player F",
       "mixerNotes": [
+        "Set the compressor threshold while the guitarist plays their LOUDEST sound. Their normal sounds should then show little or no reduction.",
         "Watch for volume jumps when the guitarist changes sounds, and ride the fader between songs.",
       ],
       "monitorSends": [
@@ -1028,7 +1029,7 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
         },
         "makeupGain": {
           "listenFor": "Switching the compressor in and out should not change how loud the source seems.",
-          "value": "Match the bypassed level",
+          "value": "Switch the compressor off and on, and raise the makeup gain until both sound equally loud",
           "why": "Makeup gain restores what compression took away.",
         },
         "ratio": {
@@ -1188,7 +1189,7 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
         "why": "Clears sub-rumble while keeping the piano's left hand. Band context raises it when a bass guitar is present.",
       },
       "memberId": "m-keys",
-      "memberName": "Keys",
+      "memberName": "Player D",
       "mixerNotes": [],
       "monitorSends": [
         {
@@ -1416,7 +1417,7 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
         "why": "A pad is atmosphere. Its low end only clouds the bass and the room.",
       },
       "memberId": "m-pad",
-      "memberName": "Pad",
+      "memberName": "Player E",
       "mixerNotes": [],
       "monitorSends": [
         {
@@ -1672,18 +1673,13 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
             "source": "Baseline",
             "valueAfter": 100,
           },
-          {
-            "description": "-10 Hz. Conservative low cut for the dry room: the room adds no warmth, so the source keeps more of its own.",
-            "source": "Room",
-            "valueAfter": 90,
-          },
         ],
         "range": {
           "max": 140,
           "min": 70,
         },
         "unit": "Hz",
-        "value": 90,
+        "value": 100,
         "why": "Removes handling noise, stage rumble and plosives below the voice.",
       },
       "memberId": "m-vocalist-a",
@@ -1918,13 +1914,18 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
                 "source": "Room",
                 "valueAfter": -7,
               },
+              {
+                "description": "Held at -8 dB. Dry room limit: in a small dry room more plate than this is heard as an effect on the words.",
+                "source": "Room",
+                "valueAfter": -8,
+              },
             ],
             "range": {
               "max": -6,
               "min": -20,
             },
             "unit": "dB",
-            "value": -7,
+            "value": -8,
             "why": "Shared reverb glues the harmony voices together.",
           },
         },
@@ -2006,18 +2007,13 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
             "source": "Baseline",
             "valueAfter": 120,
           },
-          {
-            "description": "-10 Hz. Conservative low cut for the dry room: the room adds no warmth, so the source keeps more of its own.",
-            "source": "Room",
-            "valueAfter": 110,
-          },
         ],
         "range": {
           "max": 170,
           "min": 80,
         },
         "unit": "Hz",
-        "value": 110,
+        "value": 120,
         "why": "Harmony voices do not need low body; the lead carries it.",
       },
       "memberId": "m-vocalist-b",
@@ -2269,18 +2265,13 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
             "source": "Baseline",
             "valueAfter": 80,
           },
-          {
-            "description": "-10 Hz. Conservative low cut for the dry room: the room adds no warmth, so the source keeps more of its own.",
-            "source": "Room",
-            "valueAfter": 70,
-          },
         ],
         "range": {
           "max": 110,
           "min": 60,
         },
         "unit": "Hz",
-        "value": 70,
+        "value": 80,
         "why": "Harmony voices do not need low body; the lead carries it.",
       },
       "memberId": "m-vocalist-c",
@@ -2469,7 +2460,7 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
   ],
   "housePrinciples": [
     "Arrangement beats EQ. If two sources fight, first ask who should play less, before any fader or EQ move.",
-    "Establish kick and bass first. Do not high-pass and thin everything out before the low-end foundation is solid.",
+    "Establish kick and bass first. Do not raise low cuts and thin everything out before the low-end foundation is solid.",
     "In a reverberant room, fewer simultaneous sources beats lower faders.",
     "Set the ceiling first: set fader positions at the loudest moment of the loudest song, then work backward.",
     "Ride up into a climax with the Low End and Energy DCAs instead of pushing everything.",
@@ -2503,7 +2494,7 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
     },
     "limiter": {
       "listenFor": "It should show no reduction in normal playing, and only 1 to 2 dB at the very loudest moment.",
-      "value": "On, set so it only catches accidents",
+      "value": "On. Set it so it shows no reduction in normal playing, and only 1 to 2 dB at the very loudest moment",
       "why": "A limiter protects the speakers and ears from a dropped mic or a sudden spike.",
     },
   },
@@ -2535,8 +2526,8 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
     },
     {
       "forMemberNames": [
-        "Keys",
-        "Pad",
+        "Player D",
+        "Player E",
       ],
       "id": "monitor-3",
       "label": "Monitor 3: Keys",
@@ -2545,9 +2536,9 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
     },
     {
       "forMemberNames": [
-        "Electric guitar",
-        "Bass",
-        "Drums",
+        "Player F",
+        "Player G",
+        "Player H",
       ],
       "id": "monitor-4",
       "label": "Monitor 4: Band",
@@ -2612,9 +2603,9 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
             "valueAfter": 1.6,
           },
           {
-            "description": "+0.4 s. A dry room gives no tail, so the plate provides it.",
+            "description": "+0.2 s. A dry room gives no tail, so the plate provides a little more of it.",
             "source": "Room",
-            "valueAfter": 2,
+            "valueAfter": 1.8,
           },
         ],
         "range": {
@@ -2622,7 +2613,7 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
           "min": 1,
         },
         "unit": "s",
-        "value": 2,
+        "value": 1.8,
         "why": "A medium plate adds sustain to voices without a long tail.",
       },
       "why": "The one reverb every band needs: it gives the vocals sustain and blends harmonies.",
@@ -2637,7 +2628,7 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
       "label": "Tempo delay",
       "listenFor": "If you can clearly hear repeats in a fast song, mute it for that song.",
       "priority": 2,
-      "timeNote": "Tap the tempo of each song so the repeats land on the quarter note. Keep feedback low: two or three repeats.",
+      "timeNote": "Tap the tempo of each song so the repeats land on the quarter note. Keep the number of repeats low: two or three.",
       "timeSeconds": null,
       "why": "A quiet delay on the lead vocal fills gaps without the wash of more reverb.",
     },
@@ -2762,7 +2753,7 @@ exports[`buildMixPlan: golden plans > full band, live room, wedges 1`] = `
         },
         "makeupGain": {
           "listenFor": "Switching the compressor in and out should not change how loud the drum seems.",
-          "value": "Match the bypassed level",
+          "value": "Switch the compressor off and on, and raise the makeup gain until both sound equally loud",
           "why": "Makeup gain restores what compression took away.",
         },
         "ratio": {
@@ -2872,7 +2863,7 @@ exports[`buildMixPlan: golden plans > full band, live room, wedges 1`] = `
         "why": "The kick is inside this pair, so only inaudible sub-rumble is removed.",
       },
       "memberId": "m-drums",
-      "memberName": "Drums",
+      "memberName": "Player H",
       "mixerNotes": [
         "The balance between kick, snare and cymbals is set inside the drum module, not on the console.",
         "If the module has a spare output, a separate kick output gives you real control of the low end. Consider it.",
@@ -3027,7 +3018,7 @@ exports[`buildMixPlan: golden plans > full band, live room, wedges 1`] = `
         },
         "makeupGain": {
           "listenFor": "Switching the compressor in and out should not change how loud the source seems.",
-          "value": "Match the bypassed level",
+          "value": "Switch the compressor off and on, and raise the makeup gain until both sound equally loud",
           "why": "Makeup gain restores what compression took away.",
         },
         "ratio": {
@@ -3141,7 +3132,7 @@ exports[`buildMixPlan: golden plans > full band, live room, wedges 1`] = `
         "why": "Removes only the sub-rumble below the lowest bass note. The foundation stays.",
       },
       "memberId": "m-bass",
-      "memberName": "Bass",
+      "memberName": "Player G",
       "mixerNotes": [
         "If single notes boom, it is usually uneven playing, not EQ. Check the compressor is working before cutting lows.",
       ],
@@ -3238,7 +3229,7 @@ exports[`buildMixPlan: golden plans > full band, live room, wedges 1`] = `
         },
         "makeupGain": {
           "listenFor": "Switching the compressor in and out should not change how loud the source seems.",
-          "value": "Match the bypassed level",
+          "value": "Switch the compressor off and on, and raise the makeup gain until both sound equally loud",
           "why": "Makeup gain restores what compression took away.",
         },
         "ratio": {
@@ -3538,7 +3529,7 @@ exports[`buildMixPlan: golden plans > full band, live room, wedges 1`] = `
         },
         "makeupGain": {
           "listenFor": "Switching the compressor in and out should not change how loud the source seems.",
-          "value": "Match the bypassed level",
+          "value": "Switch the compressor off and on, and raise the makeup gain until both sound equally loud",
           "why": "Makeup gain restores what compression took away.",
         },
         "ratio": {
@@ -3653,8 +3644,9 @@ exports[`buildMixPlan: golden plans > full band, live room, wedges 1`] = `
         "why": "Electric guitar has nothing useful below the low E string's body. Lows here only crowd the bass.",
       },
       "memberId": "m-electric",
-      "memberName": "Electric guitar",
+      "memberName": "Player F",
       "mixerNotes": [
+        "Set the compressor threshold while the guitarist plays their LOUDEST sound. Their normal sounds should then show little or no reduction.",
         "Watch for volume jumps when the guitarist changes sounds, and ride the fader between songs.",
       ],
       "monitorSends": [
@@ -3746,7 +3738,7 @@ exports[`buildMixPlan: golden plans > full band, live room, wedges 1`] = `
         },
         "makeupGain": {
           "listenFor": "Switching the compressor in and out should not change how loud the source seems.",
-          "value": "Match the bypassed level",
+          "value": "Switch the compressor off and on, and raise the makeup gain until both sound equally loud",
           "why": "Makeup gain restores what compression took away.",
         },
         "ratio": {
@@ -3906,7 +3898,7 @@ exports[`buildMixPlan: golden plans > full band, live room, wedges 1`] = `
         "why": "Clears sub-rumble while keeping the piano's left hand. Band context raises it when a bass guitar is present.",
       },
       "memberId": "m-keys",
-      "memberName": "Keys",
+      "memberName": "Player D",
       "mixerNotes": [],
       "monitorSends": [
         {
@@ -4129,7 +4121,7 @@ exports[`buildMixPlan: golden plans > full band, live room, wedges 1`] = `
         "why": "A pad is atmosphere. Its low end only clouds the bass and the room.",
       },
       "memberId": "m-pad",
-      "memberName": "Pad",
+      "memberName": "Player E",
       "mixerNotes": [],
       "monitorSends": [
         {
@@ -5213,7 +5205,7 @@ exports[`buildMixPlan: golden plans > full band, live room, wedges 1`] = `
   ],
   "housePrinciples": [
     "Arrangement beats EQ. If two sources fight, first ask who should play less, before any fader or EQ move.",
-    "Establish kick and bass first. Do not high-pass and thin everything out before the low-end foundation is solid.",
+    "Establish kick and bass first. Do not raise low cuts and thin everything out before the low-end foundation is solid.",
     "In a reverberant room, fewer simultaneous sources beats lower faders.",
     "Set the ceiling first: set fader positions at the loudest moment of the loudest song, then work backward.",
     "Ride up into a climax with the Low End and Energy DCAs instead of pushing everything.",
@@ -5247,7 +5239,7 @@ exports[`buildMixPlan: golden plans > full band, live room, wedges 1`] = `
     },
     "limiter": {
       "listenFor": "It should show no reduction in normal playing, and only 1 to 2 dB at the very loudest moment.",
-      "value": "On, set so it only catches accidents",
+      "value": "On. Set it so it shows no reduction in normal playing, and only 1 to 2 dB at the very loudest moment",
       "why": "A limiter protects the speakers and ears from a dropped mic or a sudden spike.",
     },
   },
@@ -5279,8 +5271,8 @@ exports[`buildMixPlan: golden plans > full band, live room, wedges 1`] = `
     },
     {
       "forMemberNames": [
-        "Keys",
-        "Pad",
+        "Player D",
+        "Player E",
       ],
       "id": "monitor-3",
       "label": "Monitor 3: Keys",
@@ -5289,9 +5281,9 @@ exports[`buildMixPlan: golden plans > full band, live room, wedges 1`] = `
     },
     {
       "forMemberNames": [
-        "Electric guitar",
-        "Bass",
-        "Drums",
+        "Player F",
+        "Player G",
+        "Player H",
       ],
       "id": "monitor-4",
       "label": "Monitor 4: Band",
@@ -5381,7 +5373,7 @@ exports[`buildMixPlan: golden plans > full band, live room, wedges 1`] = `
       "label": "Tempo delay",
       "listenFor": "If you can clearly hear repeats in a fast song, mute it for that song.",
       "priority": 2,
-      "timeNote": "Tap the tempo of each song so the repeats land on the quarter note. Keep feedback low: two or three repeats.",
+      "timeNote": "Tap the tempo of each song so the repeats land on the quarter note. Keep the number of repeats low: two or three.",
       "timeSeconds": null,
       "why": "A quiet delay on the lead vocal fills gaps without the wash of more reverb.",
     },
@@ -5506,7 +5498,7 @@ exports[`buildMixPlan: golden plans > stripped set 1`] = `
         },
         "makeupGain": {
           "listenFor": "Switching the compressor in and out should not change how loud the drum seems.",
-          "value": "Match the bypassed level",
+          "value": "Switch the compressor off and on, and raise the makeup gain until both sound equally loud",
           "why": "Makeup gain restores what compression took away.",
         },
         "ratio": {
@@ -5608,7 +5600,7 @@ exports[`buildMixPlan: golden plans > stripped set 1`] = `
         "why": "The cajon is the kick drum of a stripped set. Only rumble is removed.",
       },
       "memberId": "m-cajon",
-      "memberName": "Cajon",
+      "memberName": "Player I",
       "mixerNotes": [],
       "monitorSends": [
         {
@@ -5703,7 +5695,7 @@ exports[`buildMixPlan: golden plans > stripped set 1`] = `
         },
         "makeupGain": {
           "listenFor": "Switching the compressor in and out should not change how loud the source seems.",
-          "value": "Match the bypassed level",
+          "value": "Switch the compressor off and on, and raise the makeup gain until both sound equally loud",
           "why": "Makeup gain restores what compression took away.",
         },
         "ratio": {
@@ -5983,7 +5975,7 @@ exports[`buildMixPlan: golden plans > stripped set 1`] = `
         },
         "makeupGain": {
           "listenFor": "Switching the compressor in and out should not change how loud the source seems.",
-          "value": "Match the bypassed level",
+          "value": "Switch the compressor off and on, and raise the makeup gain until both sound equally loud",
           "why": "Makeup gain restores what compression took away.",
         },
         "ratio": {
@@ -6128,7 +6120,7 @@ exports[`buildMixPlan: golden plans > stripped set 1`] = `
         "why": "Clears sub-rumble while keeping the piano's left hand. Band context raises it when a bass guitar is present.",
       },
       "memberId": "m-keys",
-      "memberName": "Keys",
+      "memberName": "Player D",
       "mixerNotes": [],
       "monitorSends": [
         {
@@ -6621,7 +6613,7 @@ exports[`buildMixPlan: golden plans > stripped set 1`] = `
   "groupBuses": [],
   "housePrinciples": [
     "Arrangement beats EQ. If two sources fight, first ask who should play less, before any fader or EQ move.",
-    "Establish kick and bass first. Do not high-pass and thin everything out before the low-end foundation is solid.",
+    "Establish kick and bass first. Do not raise low cuts and thin everything out before the low-end foundation is solid.",
     "In a reverberant room, fewer simultaneous sources beats lower faders.",
     "Set the ceiling first: set fader positions at the loudest moment of the loudest song, then work backward.",
     "Ride up into a climax with the Low End and Energy DCAs instead of pushing everything.",
@@ -6655,7 +6647,7 @@ exports[`buildMixPlan: golden plans > stripped set 1`] = `
     },
     "limiter": {
       "listenFor": "It should show no reduction in normal playing, and only 1 to 2 dB at the very loudest moment.",
-      "value": "On, set so it only catches accidents",
+      "value": "On. Set it so it shows no reduction in normal playing, and only 1 to 2 dB at the very loudest moment",
       "why": "A limiter protects the speakers and ears from a dropped mic or a sudden spike.",
     },
   },
@@ -6677,19 +6669,19 @@ exports[`buildMixPlan: golden plans > stripped set 1`] = `
     },
     {
       "forMemberNames": [
-        "Keys",
+        "Player D",
       ],
       "id": "monitor-2",
-      "label": "Monitor 2: Keys",
+      "label": "Monitor 2: Player D",
       "preFader": true,
       "why": "Monitor sends are pre-fader, so moving a channel fader for the room does not change what the musician hears.",
     },
     {
       "forMemberNames": [
-        "Cajon",
+        "Player I",
       ],
       "id": "monitor-3",
-      "label": "Monitor 3: Cajon",
+      "label": "Monitor 3: Player I",
       "preFader": true,
       "why": "Monitor sends are pre-fader, so moving a channel fader for the room does not change what the musician hears.",
     },
@@ -6769,7 +6761,7 @@ exports[`buildMixPlan: golden plans > stripped set 1`] = `
       "label": "Tempo delay",
       "listenFor": "If you can clearly hear repeats in a fast song, mute it for that song.",
       "priority": 2,
-      "timeNote": "Tap the tempo of each song so the repeats land on the quarter note. Keep feedback low: two or three repeats.",
+      "timeNote": "Tap the tempo of each song so the repeats land on the quarter note. Keep the number of repeats low: two or three.",
       "timeSeconds": null,
       "why": "A quiet delay on the lead vocal fills gaps without the wash of more reverb.",
     },

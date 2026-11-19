@@ -5,7 +5,7 @@ import {
   EnsembleRule,
   findProfiles,
   findRoleNotes,
-  FOUNDATION_ROLES,
+  ROOM_NOISE_EXEMPT_ROLES,
   getMusicalLimit,
   InstrumentProfile,
   LOW_FREQUENCY_NOISE_ADJUSTMENT,
@@ -261,8 +261,8 @@ export function applyRoomModifiers(channels: ChannelDraft[], room: Room): void {
       }
     }
 
-    const isFoundation = FOUNDATION_ROLES.includes(channel.memberRole.role);
-    const noiseApplies = room.constantLowFrequencyNoise && isOpenMic(channel) && !isFoundation;
+    const isExempt = ROOM_NOISE_EXEMPT_ROLES.includes(channel.memberRole.role);
+    const noiseApplies = room.constantLowFrequencyNoise && isOpenMic(channel) && !isExempt;
     if (noiseApplies) {
       applyAdjustment(channel, LOW_FREQUENCY_NOISE_ADJUSTMENT, 'Room noise');
     }

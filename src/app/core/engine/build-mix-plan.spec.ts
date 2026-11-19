@@ -285,3 +285,30 @@ describe('buildMixPlan: privacy', () => {
     }
   });
 });
+
+describe('buildMixPlan: values corrected after the accuracy review', () => {
+  it('does not lower a vocal low cut for the dry room, and caps the plate send there', () => {
+    const neutral = buildMixPlan(FIXTURE_FULL_BAND, FIXTURE_NEUTRAL_ROOM, FIXTURE_WEDGES);
+    const dry = fullDry();
+    for (const channel of dry.channels.filter((entry) => isVocalRole(entry.role))) {
+      const sameInNeutral = neutral.channels.find((entry) => entry.id === channel.id);
+      expect(channel.lowCut?.value).toBe(sameInNeutral?.lowCut?.value);
+      const plate = channel.fxSends.find((send) => send.effectId === 'vocalPlate');
+      expect(plate?.levelDb.value).toBeLessThanOrEqual(-8);
+    }
+  });
+
+  it('keeps a miked tom at 80 Hz in the live room with room noise', () => {
+    const band: BandMember[] = [{ id: 'm-tom', name: 'Player J', roles: [{ role: 'toms', skill: 'intermediate', connection: 'dynamicMic', vocal: null }] }];
+    const plan = buildMixPlan(band, FIXTURE_LIVE_ROOM, FIXTURE_WEDGES);
+    expect(findChannel(plan, 'toms.mic').lowCut?.value).toBe(80);
+  });
+
+  it('holds a lowest-rated electric guitar to 4:1 with a 10 ms attack, and tells the mixer where to set the threshold', () => {
+    const plan = buildMixPlan(withSkill(FIXTURE_FULL_BAND, 'm-electric', 'beginner'), FIXTURE_LIVE_ROOM, FIXTURE_WEDGES);
+    const guitar = findChannel(plan, 'electricGuitar.modeler');
+    expect(guitar.compressor?.ratio.value).toBe(4);
+    expect(guitar.compressor?.attackMs.value).toBe(10);
+    expect(guitar.mixerNotes.join(' ')).toContain('LOUDEST sound');
+  });
+});

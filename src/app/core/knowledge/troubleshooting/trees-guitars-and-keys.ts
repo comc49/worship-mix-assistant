@@ -1,6 +1,7 @@
 import { HOUSE_PRINCIPLES } from '../rules';
+import { BAND_HAS_ELECTRIC_GUITAR, BAND_HAS_KEYS, BASS_ROLES, GUITAR_ROLES } from './band-conditions';
 import { ensembleAdvice } from './rule-text';
-import { TroubleshootingTree } from './types';
+import { AdviceLine, TroubleshootingTree } from './types';
 
 /**
  * Electric guitar (too loud, too thin, too harsh) and keys fighting the guitars or the bass.
@@ -9,11 +10,25 @@ import { TroubleshootingTree } from './types';
 
 const PRINCIPLE_ARRANGEMENT_BEATS_EQ = HOUSE_PRINCIPLES[0];
 
+/**
+ * "Play in different registers", worded for the guitar the band really has. The knowledge base's
+ * rule is about keys and electric guitar; a band with keys and only an acoustic guitar gets the
+ * same advice without the word "electric".
+ */
+const KEYS_AND_GUITAR_REGISTERS: AdviceLine[] = [
+  { text: ensembleAdvice('keysAndGuitarsLanes'), when: { kind: 'allOf', conditions: [BAND_HAS_KEYS, BAND_HAS_ELECTRIC_GUITAR] } },
+  {
+    text: 'Ask the keys and the guitar to play in different registers: when one plays low chords, the other plays higher.',
+    when: { kind: 'allOf', conditions: [BAND_HAS_KEYS, { kind: 'not', condition: BAND_HAS_ELECTRIC_GUITAR }] },
+  },
+];
+
 export const GUITAR_TOO_LOUD_TREE: TroubleshootingTree = {
   id: 'guitarTooLoud',
   symptom: 'Electric guitar too loud',
   group: 'guitarsAndKeys',
   targetPicker: 'none',
+  needsOneOfEach: [['electricGuitar']],
   entryNodeId: 'stageTest',
   nodes: {
     stageTest: {
@@ -70,7 +85,7 @@ export const GUITAR_TOO_LOUD_TREE: TroubleshootingTree = {
     fixGuitarCompressor: {
       kind: 'fix',
       arrangementAdvice: 'Between songs, ask {member:electricGuitar} to match the levels of their sounds, so the lead sound is only a little louder than the rhythm sound.',
-      text: 'Lower the compressor threshold ({control:compParamNames.threshold}) until the loud parts show about {compReduction:electricGuitar} of reduction.',
+      text: 'Bring the compressor\'s {control:compParamNames.threshold} down until the loud parts show about {compReduction:electricGuitar} of reduction.',
       safety: 'safeDuringService',
       controlRefs: ['compScreen', 'compParamNames'],
     },
@@ -89,6 +104,7 @@ export const GUITAR_THIN_TREE: TroubleshootingTree = {
   symptom: 'Electric guitar too thin',
   group: 'guitarsAndKeys',
   targetPicker: 'none',
+  needsOneOfEach: [['electricGuitar']],
   entryNodeId: 'lowCutLook',
   nodes: {
     lowCutLook: {
@@ -107,7 +123,7 @@ export const GUITAR_THIN_TREE: TroubleshootingTree = {
     },
     headphones: {
       kind: 'check',
-      action: 'Listen to the guitar alone on headphones with its solo button. Solo is only for judging the source: it does not change what the room hears.',
+      action: 'Listen to the guitar alone on headphones with its solo button. Solo is only for judging the source, never for testing what the room hears. {soloCaution} On the {console}: {control:soloBehavior}',
       question: 'Is it thin in the headphones too?',
       yes: 'fixThinSource',
       no: 'eqLook',
@@ -136,7 +152,7 @@ export const GUITAR_THIN_TREE: TroubleshootingTree = {
     },
     fixBodyLift: {
       kind: 'fix',
-      arrangementAdvice: ensembleAdvice('keysAndGuitarsLanes'),
+      arrangementAdvice: KEYS_AND_GUITAR_REGISTERS,
       text: 'The guitar is fine alone but thin in the mix, so something else is filling its range. Push the guitar 1 to 2 dB and lift 2 dB, wide, around 200 to 250 Hz ({control:eqScreen}).',
       safety: 'safeDuringService',
       controlRefs: ['eqScreen'],
@@ -149,6 +165,7 @@ export const GUITAR_HARSH_TREE: TroubleshootingTree = {
   symptom: 'Electric guitar too harsh',
   group: 'guitarsAndKeys',
   targetPicker: 'none',
+  needsOneOfEach: [['electricGuitar']],
   entryNodeId: 'levelTest',
   nodes: {
     levelTest: {
@@ -167,7 +184,7 @@ export const GUITAR_HARSH_TREE: TroubleshootingTree = {
     },
     headphones: {
       kind: 'check',
-      action: 'Put the fader back. Listen to the guitar alone on headphones with its solo button. Solo is only for judging the source: it does not change what the room hears.',
+      action: 'Put the fader back. Listen to the guitar alone on headphones with its solo button. Solo is only for judging the source, never for testing what the room hears. {soloCaution} On the {console}: {control:soloBehavior}',
       question: 'Is it harsh or fizzy in the headphones too?',
       yes: 'harshCut',
       no: 'fixHarshInTheRoom',
@@ -209,6 +226,7 @@ export const KEYS_FIGHT_GUITARS_TREE: TroubleshootingTree = {
   symptom: 'Keys fight the guitars',
   group: 'guitarsAndKeys',
   targetPicker: 'none',
+  needsOneOfEach: [['keys'], GUITAR_ROLES],
   entryNodeId: 'keysTest',
   nodes: {
     keysTest: {
@@ -221,7 +239,7 @@ export const KEYS_FIGHT_GUITARS_TREE: TroubleshootingTree = {
     },
     fixSeparateRegisters: {
       kind: 'fix',
-      arrangementAdvice: ensembleAdvice('keysAndGuitarsLanes'),
+      arrangementAdvice: KEYS_AND_GUITAR_REGISTERS,
       text: 'Leave the keys 2 dB lower than they were. If they still cover the guitar, cut 2 dB, wide, around 500 Hz on the keys ({control:eqScreen}), so the guitar has the middle.',
       safety: 'safeDuringService',
       controlRefs: ['eqScreen'],
@@ -252,14 +270,14 @@ export const KEYS_FIGHT_GUITARS_TREE: TroubleshootingTree = {
     },
     fixKeepLowMidCut: {
       kind: 'fix',
-      arrangementAdvice: ensembleAdvice('keysAndGuitarsLanes'),
+      arrangementAdvice: KEYS_AND_GUITAR_REGISTERS,
       text: 'Keep the cut on the keys. It is the optional low-mid cut from your console sheet.',
       safety: 'safeDuringService',
       controlRefs: ['eqScreen'],
     },
     fixArrangementOnly: {
       kind: 'fix',
-      arrangementAdvice: `${PRINCIPLE_ARRANGEMENT_BEATS_EQ} ${ensembleAdvice('keysAndGuitarsLanes')}`,
+      arrangementAdvice: [{ text: PRINCIPLE_ARRANGEMENT_BEATS_EQ }, ...KEYS_AND_GUITAR_REGISTERS],
       text: 'Take the cut out. Faders and EQ cannot separate two parts that play the same notes in the same rhythm. Until the band changes the parts, choose one to lead in each song and run the other 3 dB lower.',
       safety: 'safeDuringService',
       controlRefs: [],
@@ -272,6 +290,7 @@ export const KEYS_FIGHT_BASS_TREE: TroubleshootingTree = {
   symptom: 'Keys fight the bass',
   group: 'guitarsAndKeys',
   targetPicker: 'none',
+  needsOneOfEach: [['keys'], BASS_ROLES],
   entryNodeId: 'lowCutLook',
   nodes: {
     lowCutLook: {

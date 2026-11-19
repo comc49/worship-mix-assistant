@@ -138,15 +138,18 @@ export const SKILL_MODIFIERS: SkillModifier[] = [
   {
     role: 'electricGuitar',
     level: 'beginner',
-    why: 'Volume jumps between patches, so the compressor acts like a limiter that only catches the loud ones.',
+    why: 'Volume jumps between patches, so the compressor is set firmer to hold back the loud ones.',
     adjustments: [
-      skillAdd('compRatio', 6, 'A limiter-style ratio only affects the patches that are too loud.'),
-      skillAdd('compAttackMs', -15, 'A fast attack catches a loud patch immediately.'),
+      skillAdd('compRatio', 2, 'A firmer ratio holds back the patches that are too loud.'),
+      skillAdd('compAttackMs', -10, 'A faster attack catches a loud patch sooner.'),
       skillAdd('compGainReductionDb', 2, 'On the loudest patch only. Normal patches should show almost none.'),
       skillAdd('levelDb', -1, 'A slightly lower start leaves room for a loud patch.'),
     ],
     coaching: 'Set every patch to the same volume at home, with the lead patch only a little louder.',
-    mixerNotes: [{ text: 'Watch for volume jumps when the guitarist changes sounds, and ride the fader between songs.', onlyProfileIds: [] }],
+    mixerNotes: [
+      { text: 'Set the compressor threshold while the guitarist plays their LOUDEST sound. Their normal sounds should then show little or no reduction.', onlyProfileIds: [] },
+      { text: 'Watch for volume jumps when the guitarist changes sounds, and ride the fader between songs.', onlyProfileIds: [] },
+    ],
   },
   {
     role: 'electricGuitar',

@@ -4,7 +4,7 @@ import { X32_PROFILE } from '../consoles/x32-profile';
 import { buildMixPlan } from '../engine';
 import { SYMPTOM_GROUPS, TROUBLESHOOTING_TREES } from '../knowledge/troubleshooting';
 import { RiskyChange, TroubleshootingNode, TroubleshootingTree } from '../knowledge/troubleshooting/types';
-import { BandMember, Room, ServiceSetup } from '../model';
+import { BandMember, Role, Room, ServiceSetup } from '../model';
 import {
   FIXTURE_DRY_ROOM,
   FIXTURE_FULL_BAND,
@@ -15,6 +15,7 @@ import {
   FIXTURE_WEDGES,
 } from '../testing/fixtures';
 import { ResolvedNode, ResolvedTree, TroubleshootContext, TroubleshootSituation, TroubleTarget } from './context';
+import { isTreeRelevant } from './conditions';
 import { resolveTree } from './resolver';
 import { buildTroubleshootingReviewMarkdown } from './review';
 import { listTargetOptions } from './targets';
@@ -34,14 +35,20 @@ const BANDS: BandMember[][] = [FIXTURE_FULL_BAND, FIXTURE_STRIPPED_BAND, ACOUSTI
 const SKILL_WORDS = /beginner|intermediate|advanced/i;
 const UNRESOLVED_TOKEN = /\{[^}]*\}/;
 const SOLO_IN_PLACE = /solo[\s-]*in[\s-]*place|\bSIP\b/i;
+/** Solo-in-place may only ever be named as something to avoid. Telling the mixer to use it is forbidden. */
+const ENABLE_SOLO_IN_PLACE = /\b(enable|switch on|turn on|switch to|select|choose|use|set)\b[^.]{0,40}(solo[\s-]*in[\s-]*place|\bSIP\b)/i;
+const SOLO_CAUTION = /make sure the console is not in a solo-in-place mode/i;
+const SOLO_RULED_OUT = /this console has no solo-in-place mode/i;
+const PRESSES_SOLO = /\bsolo button\b/i;
+/** Wording that tells the mixer to CHANGE phantom power, as opposed to looking at it or reporting it. */
+const CHANGE_PHANTOM = /\b(switch|turn|put)\b[^.]{0,40}(phantom|48 ?V)[^.]{0,20}\bon\b/i;
 
 /** Wording that must never be reachable while a service is running. */
 const FORBIDDEN_DURING_SERVICE: { name: string; pattern: RegExp }[] = [
   { name: 'raising gain', pattern: /\b(raise|increase|turn up|add|more|push|bring up|boost)\b[^.]{0,40}\bgain\b(?! reduction)/i },
-  { name: 'phantom power', pattern: /phantom|48 ?V/i },
   { name: 'routing changes', pattern: /\brouting\b|\bre-?route|\bpatch|\breassign|\bassign the channel/i },
   { name: 'scene loads', pattern: /\bscenes?\b|\bsnapshots?\b/i },
-  { name: 'solo-in-place', pattern: SOLO_IN_PLACE },
+  { name: 'using solo-in-place', pattern: ENABLE_SOLO_IN_PLACE },
 ];
 
 /** Console facts whose only use is a change that is not allowed during a service. */
@@ -163,9 +170,38 @@ function rawTextOf(node: TroubleshootingNode): string {
     return `${node.action} ${node.question}`;
   }
   if (node.kind === 'fix') {
-    return `${node.text} ${node.arrangementAdvice ?? ''}`;
+    const advice = node.arrangementAdvice;
+    if (advice === undefined) {
+      return node.text;
+    }
+    const adviceText = typeof advice === 'string' ? advice : advice.map((line) => line.text).join(' ');
+    return `${node.text} ${adviceText}`;
   }
   return node.text;
+}
+
+function isLooksOnlyCheck(node: TroubleshootingNode | ResolvedNode): boolean {
+  return node.kind === 'check' && node.looksOnly === true;
+}
+
+function findTree(treeId: string): TroubleshootingTree {
+  const tree = TROUBLESHOOTING_TREES.find((entry) => entry.id === treeId);
+  if (tree === undefined) {
+    throw new Error(`No tree "${treeId}"`);
+  }
+  return tree;
+}
+
+function contextFor(band: BandMember[], room: Room, serviceSetup: ServiceSetup, profile: ConsoleProfile, situation: TroubleshootSituation): TroubleshootContext {
+  return { band, room, serviceSetup, plan: buildMixPlan(band, room, serviceSetup), profile, situation, target: null };
+}
+
+function memberNameForRole(band: BandMember[], role: Role): string {
+  const member = band.find((entry) => entry.roles.some((memberRole) => memberRole.role === role));
+  if (member === undefined) {
+    throw new Error(`The fixture band has nobody on ${role}`);
+  }
+  return member.name;
 }
 
 describe('troubleshooting trees (raw data)', () => {
@@ -266,7 +302,13 @@ describe('troubleshooting trees (raw data)', () => {
         if (node.safety === 'rehearsalOnly') {
           continue;
         }
+        // Looking is always safe: a looks-only check may name any control, because it changes nothing.
+        if (isLooksOnlyCheck(node)) {
+          expect(node.kind === 'check' && node.risky, `${tree.id}.${nodeId}`).toBeUndefined();
+          continue;
+        }
         const rawText = rawTextOf(node);
+        expect(CHANGE_PHANTOM.test(rawText), `${tree.id}.${nodeId} changes phantom power`).toBe(false);
         const listedKeys: ConsoleFactKey[] = node.kind === 'fix' ? node.controlRefs : [];
         for (const key of REHEARSAL_ONLY_FACTS) {
           expect(rawText.includes(`{control:${key}`), `${tree.id}.${nodeId} names ${key}`).toBe(false);
@@ -290,14 +332,32 @@ describe('troubleshooting trees (raw data)', () => {
     }
   });
 
-  it('never mentions solo-in-place, and never imports the solo fact that names it', () => {
+  it('never types solo-in-place into a tree: the caution comes from the {soloCaution} token on every step that presses solo', () => {
+    let stepsThatPressSolo = 0;
     for (const tree of TROUBLESHOOTING_TREES) {
       for (const [nodeId, node] of Object.entries(tree.nodes)) {
         const rawText = rawTextOf(node);
         expect(SOLO_IN_PLACE.test(rawText), `${tree.id}.${nodeId}`).toBe(false);
-        expect(rawText.includes('{control:soloBehavior'), `${tree.id}.${nodeId}`).toBe(false);
+        expect(/does not change what the room hears/i.test(rawText), `${tree.id}.${nodeId} claims solo is harmless`).toBe(false);
+        if (PRESSES_SOLO.test(rawText)) {
+          stepsThatPressSolo = stepsThatPressSolo + 1;
+          expect(rawText.includes('{soloCaution}'), `${tree.id}.${nodeId}`).toBe(true);
+        }
       }
     }
+    expect(stepsThatPressSolo).toBe(3);
+  });
+
+  it('says which instruments each instrument-specific tree needs', () => {
+    expect(findTree('bassBoomy').needsOneOfEach).toEqual([['bassGuitar', 'synthBass']]);
+    expect(findTree('bassInaudible').needsOneOfEach).toEqual([['bassGuitar', 'synthBass']]);
+    expect(findTree('guitarTooLoud').needsOneOfEach).toEqual([['electricGuitar']]);
+    expect(findTree('guitarThin').needsOneOfEach).toEqual([['electricGuitar']]);
+    expect(findTree('guitarHarsh').needsOneOfEach).toEqual([['electricGuitar']]);
+    expect(findTree('keysFightGuitars').needsOneOfEach).toEqual([['keys'], ['acousticGuitar', 'electricGuitar']]);
+    expect(findTree('keysFightBass').needsOneOfEach).toEqual([['keys'], ['bassGuitar', 'synthBass']]);
+    expect(findTree('kickNoPunch').needsOneOfEach).toEqual([['kick', 'electronicDrums', 'cajon']]);
+    expect(findTree('muddy').needsOneOfEach).toEqual([]);
   });
 });
 
@@ -323,7 +383,12 @@ describe('resolveTree', () => {
             expect(text.length, where).toBeGreaterThan(0);
             expect(UNRESOLVED_TOKEN.test(text), where).toBe(false);
             expect(SKILL_WORDS.test(text), where).toBe(false);
-            expect(SOLO_IN_PLACE.test(text), where).toBe(false);
+          }
+          const wording = wordingWithoutControlNames(node);
+          expect(ENABLE_SOLO_IN_PLACE.test(wording), `${tree.id}.${node.id} in ${scenario.label}`).toBe(false);
+          expect(/does not change what the room hears/i.test(wording) && !SOLO_RULED_OUT.test(wording), `${tree.id}.${node.id} claims solo is harmless`).toBe(false);
+          if (PRESSES_SOLO.test(wording)) {
+            expect(SOLO_CAUTION.test(wording) || SOLO_RULED_OUT.test(wording), `${tree.id}.${node.id} in ${scenario.label}`).toBe(true);
           }
         }
       }
@@ -373,7 +438,8 @@ describe('resolveTree', () => {
         for (const node of Object.values(resolveTree(tree, scenario.context).nodes)) {
           const listed = node.kind === 'fix' ? node.controlRefs : [];
           const anyUnverified = [...node.inlineControls, ...listed].some((control) => !control.verified);
-          expect(node.checkOnConsole, `${tree.id}.${node.id} in ${scenario.label}`).toBe(anyUnverified);
+          const carriesSoloCaution = SOLO_CAUTION.test(textsOf(node).join(' '));
+          expect(node.checkOnConsole, `${tree.id}.${node.id} in ${scenario.label}`).toBe(anyUnverified || carriesSoloCaution);
         }
       }
     }
@@ -391,6 +457,13 @@ describe('resolveTree', () => {
           for (const forbidden of FORBIDDEN_DURING_SERVICE) {
             expect(forbidden.pattern.test(wording), `${where} suggests ${forbidden.name}: ${wording}`).toBe(false);
           }
+          if (isLooksOnlyCheck(node)) {
+            continue;
+          }
+          expect(CHANGE_PHANTOM.test(wording), `${where} changes phantom power: ${wording}`).toBe(false);
+          if (node.kind !== 'askForHelp') {
+            expect(/phantom|48 ?V/i.test(wording), `${where} mentions phantom power: ${wording}`).toBe(false);
+          }
           for (const control of node.inlineControls) {
             expect(REHEARSAL_ONLY_FACTS, where).not.toContain(control.key);
           }
@@ -406,6 +479,10 @@ describe('resolveTree', () => {
         for (const node of Object.values(resolveTree(tree, scenario.context).nodes)) {
           const listed = node.kind === 'fix' ? node.controlRefs : [];
           const namesGain = [...node.inlineControls, ...listed].some((control) => control.key === 'preampGain');
+          if (namesGain && isLooksOnlyCheck(node)) {
+            expect(`${tree.id}.${node.id}`).toBe('noSound.gainLook');
+            continue;
+          }
           if (namesGain) {
             expect(`${tree.id}.${node.id}`).toBe('distortion.fixGainDown');
             expect(textsOf(node).join(' ')).toMatch(/gain of that input down/i);
@@ -465,6 +542,7 @@ describe('resolveTree', () => {
       symptom: 'Test',
       group: 'wholeMix',
       targetPicker: 'none',
+      needsOneOfEach: [],
       entryNodeId: 'look',
       nodes: {
         look: { kind: 'check', action: 'Look.', question: 'Is it off?', yes: 'riskyFix', no: 'hiddenCheck', safety: 'safeDuringService' },
@@ -551,7 +629,8 @@ describe('resolveTree', () => {
     expect(lowCutOnWing.kind === 'check' && lowCutOnWing.action).toContain('LO CUT');
 
     const compressorFix = onX32.nodes['fixCompressorFirst'];
-    expect(compressorFix.kind === 'fix' && compressorFix.arrangementAdvice).toContain('ask Bass to aim');
+    const bassistName = memberNameForRole(FIXTURE_FULL_BAND, 'bassGuitar');
+    expect(compressorFix.kind === 'fix' && compressorFix.arrangementAdvice).toContain(`ask ${bassistName} to aim`);
     expect(compressorFix.kind === 'fix' && compressorFix.text).toContain('7 dB');
 
     // With nobody on bass, the text falls back to a role word.
@@ -621,7 +700,208 @@ describe('troubleshooting review document', () => {
       }
       expect(SKILL_WORDS.test(markdown)).toBe(false);
       expect(UNRESOLVED_TOKEN.test(markdown)).toBe(false);
-      expect(SOLO_IN_PLACE.test(markdown)).toBe(false);
+    }
+  });
+});
+
+describe('accuracy review fixes', () => {
+  it('noSound during a service looks at phantom power and gain before it blames the mic, DI or input', () => {
+    const tree = findTree('noSound');
+    for (const profile of PROFILES) {
+      const resolved = resolveTree(tree, contextFor(FIXTURE_FULL_BAND, FIXTURE_LIVE_ROOM, FIXTURE_WEDGES, profile, 'service'));
+
+      // Not muted, no meter movement, nothing found on stage.
+      const phantomLook = walkTree(resolved, ['no', 'no', 'no']).current;
+      expect(phantomLook.id).toBe('phantomLook');
+      expect(phantomLook.safety).toBe('safeDuringService');
+      expect(phantomLook.kind === 'check' && phantomLook.looksOnly).toBe(true);
+
+      const phantomOff = walkTree(resolved, ['no', 'no', 'no', 'yes']).current;
+      expect(phantomOff.kind).toBe('askForHelp');
+      expect(phantomOff.kind === 'askForHelp' && phantomOff.text).toMatch(/Phantom power is off.*Tell the tech lead.*Do not change it yourself during the service/);
+
+      const gainLook = walkTree(resolved, ['no', 'no', 'no', 'no']).current;
+      expect(gainLook.id).toBe('gainLook');
+      expect(gainLook.kind === 'check' && gainLook.looksOnly).toBe(true);
+
+      const gainDown = walkTree(resolved, ['no', 'no', 'no', 'no', 'yes']).current;
+      expect(gainDown.kind).toBe('askForHelp');
+      expect(gainDown.kind === 'askForHelp' && gainDown.text).toMatch(/gain is all the way down.*Do not change it yourself during the service/);
+
+      // helpNoSignal is only reachable after both looks.
+      const lastStep = walkTree(resolved, ['no', 'no', 'no', 'no', 'no', 'no']);
+      expect(lastStep.current.id).toBe('helpNoSignal');
+      expect(lastStep.trail.map((entry) => entry.nodeId)).toEqual(['muteState', 'inputMeter', 'sourceLook', 'phantomLook', 'gainLook', 'cableSwap']);
+
+      expect(resolved.nodes['fixPhantom']).toBeUndefined();
+      expect(resolved.nodes['fixGain']).toBeUndefined();
+    }
+  });
+
+  it('noSound in rehearsal still offers the phantom and gain fixes, mutes before the source check, and names where to look for the main assignment', () => {
+    const tree = findTree('noSound');
+    for (const profile of PROFILES) {
+      const resolved = resolveTree(tree, contextFor(FIXTURE_FULL_BAND, FIXTURE_LIVE_ROOM, FIXTURE_WEDGES, profile, 'rehearsal'));
+      expect(walkTree(resolved, ['no', 'no', 'no', 'yes']).current.id).toBe('fixPhantom');
+      const fixGain = walkTree(resolved, ['no', 'no', 'no', 'no', 'yes']).current;
+      expect(fixGain.id).toBe('fixGain');
+      expect(fixGain.kind === 'fix' && fixGain.text).toMatch(/Raise it slowly: wedges and in-ears follow the gain, not the fader/);
+
+      const sourceLook = resolved.nodes['sourceLook'];
+      expect(sourceLook.kind === 'check' && sourceLook.action.startsWith('Mute the channel first.')).toBe(true);
+
+      const mainAssignLook = resolved.nodes['mainAssignLook'];
+      expect(mainAssignLook.kind === 'check' && mainAssignLook.looksOnly).toBe(true);
+      expect(mainAssignLook.inlineControls.map((control) => control.key)).toEqual(['removeChannelFromMain']);
+      expect(mainAssignLook.kind === 'check' && mainAssignLook.action).toMatch(/Only look: do not press anything/);
+
+      const helpAfterConsole = resolved.nodes['helpAfterConsole'];
+      expect(helpAfterConsole.kind === 'askForHelp' && helpAfterConsole.text).not.toMatch(/amplifier|speaker/i);
+      expect(helpAfterConsole.kind === 'askForHelp' && helpAfterConsole.text).toMatch(/group bus.*insert.*pan/);
+    }
+  });
+
+  it('every solo step warns about solo-in-place, shows the console\'s own description, and carries the check-on-console flag', () => {
+    const soloSteps: { treeId: string; nodeId: string }[] = [
+      { treeId: 'distortion', nodeId: 'headphones' },
+      { treeId: 'guitarThin', nodeId: 'headphones' },
+      { treeId: 'guitarHarsh', nodeId: 'headphones' },
+    ];
+    for (const profile of PROFILES) {
+      // Neither console has a verified "no solo-in-place" fact, so both must show the caution.
+      const soloFact = profile.facts.soloInPlaceExists;
+      const ruledOut = soloFact.source.status === 'verified' && soloFact.value === false;
+      expect(ruledOut).toBe(false);
+
+      for (const soloStep of soloSteps) {
+        for (const situation of SITUATIONS) {
+          const resolved = resolveTree(findTree(soloStep.treeId), contextFor(FIXTURE_FULL_BAND, FIXTURE_LIVE_ROOM, FIXTURE_WEDGES, profile, situation));
+          const node = resolved.nodes[soloStep.nodeId];
+          expect(node.kind).toBe('check');
+          const action = node.kind === 'check' ? node.action : '';
+          expect(action).toMatch(SOLO_CAUTION);
+          expect(action).toMatch(/solo mutes everything else in the room/);
+          expect(action).toContain(String(profile.facts.soloBehavior.value));
+          expect(action).not.toMatch(/does not change what the room hears\.? ?$/);
+          expect(node.checkOnConsole).toBe(true);
+          expect(ENABLE_SOLO_IN_PLACE.test(wordingWithoutControlNames(node))).toBe(false);
+        }
+      }
+    }
+  });
+
+  it('drops the solo caution only for a console with a verified "no solo-in-place" fact', () => {
+    const profileWithoutSip: ConsoleProfile = {
+      ...X32_PROFILE,
+      facts: {
+        ...X32_PROFILE.facts,
+        soloInPlaceExists: { value: false, source: { status: 'verified', manual: 'Test manual', section: 'Test', page: 1, quote: 'test', note: '' } },
+      },
+    };
+    const resolved = resolveTree(findTree('distortion'), contextFor(FIXTURE_FULL_BAND, FIXTURE_LIVE_ROOM, FIXTURE_WEDGES, profileWithoutSip, 'service'));
+    const node = resolved.nodes['headphones'];
+    expect(node.kind === 'check' && node.action).toMatch(SOLO_RULED_OUT);
+    expect(node.kind === 'check' && node.action).not.toMatch(SOLO_CAUTION);
+    expect(node.checkOnConsole).toBe(false);
+  });
+
+  it('offers a band only the trees for instruments it has, and offers an empty band everything', () => {
+    const relevantIds = (band: BandMember[]): string[] => TROUBLESHOOTING_TREES.filter((tree) => isTreeRelevant(tree, band)).map((tree) => tree.id);
+
+    expect(relevantIds([]).length).toBe(TROUBLESHOOTING_TREES.length);
+    expect(relevantIds(FIXTURE_FULL_BAND).length).toBe(TROUBLESHOOTING_TREES.length);
+
+    // The stripped band: a singer with an acoustic guitar, a cajon and keys.
+    const strippedIds = relevantIds(FIXTURE_STRIPPED_BAND);
+    for (const hiddenId of ['bassBoomy', 'bassInaudible', 'keysFightBass', 'guitarTooLoud', 'guitarThin', 'guitarHarsh']) {
+      expect(strippedIds, hiddenId).not.toContain(hiddenId);
+    }
+    for (const shownId of ['kickNoPunch', 'keysFightGuitars', 'vocalsBuried', 'muddy', 'noSound', 'feedbackMid', 'cannotHear']) {
+      expect(strippedIds, shownId).toContain(shownId);
+    }
+  });
+
+  it('never mentions a bass guitar, a pad player or a drum module to the stripped band', () => {
+    const absentInstrumentWords = /bass guitar|\bbassist\b|\bbass fader\b|pad player|drum module|electric guitarist|\bthe pad\b(?! switch)/i;
+    const relevantTrees = TROUBLESHOOTING_TREES.filter((tree) => isTreeRelevant(tree, FIXTURE_STRIPPED_BAND));
+    const problems = new Set<string>();
+    for (const profile of PROFILES) {
+      for (const situation of SITUATIONS) {
+        for (const room of ROOMS) {
+          for (const serviceSetup of SETUPS) {
+            const context = contextFor(FIXTURE_STRIPPED_BAND, room, serviceSetup, profile, situation);
+            for (const tree of relevantTrees) {
+              for (const node of Object.values(resolveTree(tree, context).nodes)) {
+                const wording = wordingWithoutControlNames(node);
+                if (absentInstrumentWords.test(wording)) {
+                  problems.add(`${tree.id}.${node.id}: ${wording}`);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    expect([...problems]).toEqual([]);
+  });
+
+  it('gives a cajon band its own "kick has no punch" branch', () => {
+    const resolved = resolveTree(findTree('kickNoPunch'), contextFor(FIXTURE_STRIPPED_BAND, FIXTURE_LIVE_ROOM, FIXTURE_WEDGES, X32_PROFILE, 'service'));
+    expect(resolved.entryNodeId).toBe('cajonMicLook');
+    const entry = resolved.nodes['cajonMicLook'];
+    expect(entry.kind === 'check' && entry.action).toMatch(/sound hole at the back/);
+
+    // Mic is in the right place, low cut matches the sheet: no bass in this band, so straight to the EQ cut.
+    const eqStep = walkTree(resolved, ['yes', 'no']).current;
+    expect(eqStep.id).toBe('cajonEq');
+    expect(eqStep.kind === 'check' && eqStep.action).toMatch(/300 to 400 Hz/);
+    expect(resolved.nodes['cajonBassTest']).toBeUndefined();
+    expect(resolved.nodes['moduleBassTest']).toBeUndefined();
+    expect(resolved.nodes['fixKickInsideModule']).toBeUndefined();
+
+    // The full fixture band plays an electronic kit: it gets the drum module branch, with the bass test.
+    const fullBand = resolveTree(findTree('kickNoPunch'), contextFor(FIXTURE_FULL_BAND, FIXTURE_LIVE_ROOM, FIXTURE_WEDGES, X32_PROFILE, 'rehearsal'));
+    expect(fullBand.entryNodeId).toBe('moduleBassTest');
+    expect(fullBand.nodes['cajonMicLook']).toBeUndefined();
+  });
+
+  it('skips the steps of the general trees that name an instrument the band does not have', () => {
+    const noKeysNoBass: BandMember[] = [FIXTURE_FULL_BAND[0]];
+    const context = contextFor(noKeysNoBass, FIXTURE_LIVE_ROOM, FIXTURE_WEDGES, X32_PROFILE, 'service');
+
+    const muddy = resolveTree(findTree('muddy'), context);
+    expect(muddy.entryNodeId).toBe('liveLowMidCuts');
+    expect(muddy.nodes['liveSourceCount']).toBeUndefined();
+    expect(muddy.nodes['bassTest']).toBeUndefined();
+    expect(muddy.nodes['keysTest']).toBeUndefined();
+
+    const vocalsBuried = resolveTree(findTree('vocalsBuried'), context);
+    expect(vocalsBuried.entryNodeId).toBe('guitarsDown');
+    expect(vocalsBuried.nodes['keysDown']).toBeUndefined();
+
+    const thin = resolveTree(findTree('thin'), context);
+    expect(thin.nodes['fixFillTheMiddle']).toBeUndefined();
+    expect(thin.nodes['fixFillWithReverb']).toBeDefined();
+  });
+
+  it('reads naturally on both consoles when it names a compressor or gate control', () => {
+    const onX32 = resolveTree(findTree('bassBoomy'), contextFor(FIXTURE_FULL_BAND, FIXTURE_LIVE_ROOM, FIXTURE_WEDGES, X32_PROFILE, 'rehearsal'));
+    const onWing = resolveTree(findTree('bassBoomy'), contextFor(FIXTURE_FULL_BAND, FIXTURE_LIVE_ROOM, FIXTURE_WEDGES, WING_COMPACT_PROFILE, 'rehearsal'));
+    const x32Fix = onX32.nodes['fixCompressorFirst'];
+    const wingFix = onWing.nodes['fixCompressorFirst'];
+    expect(x32Fix.kind === 'fix' && x32Fix.text).toContain(`the compressor's ${X32_PROFILE.facts.compParamNames.value.threshold} down`);
+    expect(wingFix.kind === 'fix' && wingFix.text).toContain(`the compressor's ${WING_COMPACT_PROFILE.facts.compParamNames.value.threshold} down`);
+
+    // No doubled word such as "threshold (threshold (1st encoder))", and no raw property name in the list.
+    for (const scenario of SCENARIOS) {
+      for (const tree of TROUBLESHOOTING_TREES) {
+        for (const node of Object.values(resolveTree(tree, scenario.context).nodes)) {
+          for (const text of textsOf(node)) {
+            expect(/\b(threshold|attack|ratio|release) \(\1\b/i.test(text), `${tree.id}.${node.id}: ${text}`).toBe(false);
+            expect(/makeupGain|: threshold \(/.test(text), `${tree.id}.${node.id}: ${text}`).toBe(false);
+          }
+        }
+      }
     }
   });
 });

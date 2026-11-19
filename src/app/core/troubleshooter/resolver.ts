@@ -1,7 +1,7 @@
-import { TroubleshootingNode, TroubleshootingTree } from '../knowledge/troubleshooting/types';
+import { AdviceLine, TroubleshootingNode, TroubleshootingTree } from '../knowledge/troubleshooting/types';
 import { evaluateCondition } from './conditions';
 import { ResolvedControl, ResolvedNode, ResolvedTree, TroubleshootContext } from './context';
-import { resolveControl, resolveText } from './tokens';
+import { resolveControl, ResolvedText, resolveText } from './tokens';
 
 /**
  * resolveTree(tree, context) returns the tree as the mixer should see it right now:
@@ -95,6 +95,30 @@ function buildDeferredFix(id: string): ResolvedNode {
   };
 }
 
+/**
+ * Resolves a fix's arrangement advice. A list keeps only the lines whose condition holds for
+ * this band, so the advice never names an instrument the band does not have.
+ */
+function resolveAdvice(advice: string | AdviceLine[] | undefined, context: TroubleshootContext): ResolvedText | null {
+  if (advice === undefined) {
+    return null;
+  }
+  if (typeof advice === 'string') {
+    return resolveText(advice, context);
+  }
+  const shownLines: string[] = [];
+  for (const line of advice) {
+    if (line.when !== undefined && !evaluateCondition(line.when, context)) {
+      continue;
+    }
+    shownLines.push(line.text);
+  }
+  if (shownLines.length === 0) {
+    return null;
+  }
+  return resolveText(shownLines.join(' '), context);
+}
+
 export function resolveTree(tree: TroubleshootingTree, context: TroubleshootContext): ResolvedTree {
   const resolvedNodes: Record<string, ResolvedNode> = {};
   const entry = findDestination(tree, tree.entryNodeId, context);
@@ -131,8 +155,9 @@ export function resolveTree(tree: TroubleshootingTree, context: TroubleshootCont
         yes: destinationId(yes),
         no: destinationId(no),
         safety: node.safety,
+        looksOnly: node.looksOnly === true,
         inlineControls,
-        checkOnConsole: hasUnverified(inlineControls),
+        checkOnConsole: hasUnverified(inlineControls) || action.needsConsoleCheck || question.needsConsoleCheck,
       };
       queue.push(yes, no);
       continue;
@@ -140,7 +165,7 @@ export function resolveTree(tree: TroubleshootingTree, context: TroubleshootCont
 
     if (node.kind === 'fix') {
       const text = resolveText(node.text, context);
-      const advice = node.arrangementAdvice === undefined ? null : resolveText(node.arrangementAdvice, context);
+      const advice = resolveAdvice(node.arrangementAdvice, context);
       const inlineControls = advice === null ? text.controls : [...text.controls, ...advice.controls];
       const controlRefs: ResolvedControl[] = [];
       for (const key of node.controlRefs) {
@@ -157,7 +182,7 @@ export function resolveTree(tree: TroubleshootingTree, context: TroubleshootCont
         safety: node.safety,
         inlineControls,
         controlRefs,
-        checkOnConsole: hasUnverified(inlineControls) || hasUnverified(controlRefs),
+        checkOnConsole: hasUnverified(inlineControls) || hasUnverified(controlRefs) || text.needsConsoleCheck,
         deferredUntilAfterService: false,
       };
       continue;
@@ -170,7 +195,7 @@ export function resolveTree(tree: TroubleshootingTree, context: TroubleshootCont
       text: helpText.text,
       safety: node.safety,
       inlineControls: helpText.controls,
-      checkOnConsole: hasUnverified(helpText.controls),
+      checkOnConsole: hasUnverified(helpText.controls) || helpText.needsConsoleCheck,
     };
   }
 

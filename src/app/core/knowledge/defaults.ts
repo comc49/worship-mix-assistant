@@ -125,10 +125,10 @@ export function buildRegularLineup(): BandMember[] {
     { id: 'm-vocalist-a', name: 'Vocalist A', roles: [vocalRole('leadVocal', 'intermediate', 'medium'), instrumentRole('acousticGuitar', 'intermediate', 'monoDi')] },
     { id: 'm-vocalist-b', name: 'Vocalist B', roles: [vocalRole('harmonyVocal', 'beginner', 'high')] },
     { id: 'm-vocalist-c', name: 'Vocalist C', roles: [vocalRole('harmonyVocal', 'advanced', 'low')] },
-    { id: 'm-keys', name: 'Keys', roles: [instrumentRole('keys', 'beginner', 'stereoDi')] },
-    { id: 'm-pad', name: 'Pad', roles: [instrumentRole('padSynth', 'intermediate', 'stereoDi')] },
-    { id: 'm-electric', name: 'Electric guitar', roles: [instrumentRole('electricGuitar', 'intermediate', 'modelerDirect')] },
-    { id: 'm-bass', name: 'Bass', roles: [instrumentRole('bassGuitar', 'beginner', 'monoDi')] },
-    { id: 'm-drums', name: 'Drums', roles: [instrumentRole('electronicDrums', 'intermediate', 'drumModuleStereoPair')] },
+    { id: 'm-keys', name: 'Player D', roles: [instrumentRole('keys', 'beginner', 'stereoDi')] },
+    { id: 'm-pad', name: 'Player E', roles: [instrumentRole('padSynth', 'intermediate', 'stereoDi')] },
+    { id: 'm-electric', name: 'Player F', roles: [instrumentRole('electricGuitar', 'intermediate', 'modelerDirect')] },
+    { id: 'm-bass', name: 'Player G', roles: [instrumentRole('bassGuitar', 'beginner', 'monoDi')] },
+    { id: 'm-drums', name: 'Player H', roles: [instrumentRole('electronicDrums', 'intermediate', 'drumModuleStereoPair')] },
   ];
 }

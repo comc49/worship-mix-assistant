@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TROUBLESHOOTING_TREES } from '../../core/knowledge/troubleshooting';
-import { FIXTURE_FULL_BAND } from '../../core/testing/fixtures';
+import { FIXTURE_FULL_BAND, FIXTURE_STRIPPED_BAND } from '../../core/testing/fixtures';
 import { MixStore } from '../../state/mix-store';
 import { TroubleshootPage } from './troubleshoot-page';
 
@@ -133,5 +133,39 @@ describe('TroubleshootPage', () => {
       expect(/beginner|intermediate|advanced/i.test(element.textContent ?? ''), tree.id).toBe(false);
       await click(query('walker-change-symptom'));
     }
+  });
+
+  it('hides the problems for instruments the band does not have, and says so', async () => {
+    expect(query('hidden-symptoms-hint')).toBeNull();
+    expect(query('band-empty-hint')).toBeNull();
+
+    store.clearBand();
+    for (const member of FIXTURE_STRIPPED_BAND) {
+      store.addMember(member);
+    }
+    await fixture.whenStable();
+
+    const shownIds = Array.from(element.querySelectorAll<HTMLElement>('[data-testid="symptom-button"]')).map((button) => button.getAttribute('data-symptom-id'));
+    for (const hiddenId of ['bassBoomy', 'bassInaudible', 'keysFightBass', 'guitarTooLoud', 'guitarThin', 'guitarHarsh']) {
+      expect(shownIds, hiddenId).not.toContain(hiddenId);
+    }
+    expect(shownIds).toContain('kickNoPunch');
+    expect(shownIds).toContain('muddy');
+    expect(query('hidden-symptoms-hint')?.textContent).toContain('6 problems');
+  });
+
+  it('lists every problem for an empty band, with a hint to add the band', async () => {
+    store.clearBand();
+    await fixture.whenStable();
+    expect(element.querySelectorAll('[data-testid="symptom-button"]').length).toBe(TROUBLESHOOTING_TREES.length);
+    expect(query('band-empty-hint')).not.toBeNull();
+    expect(query('hidden-symptoms-hint')).toBeNull();
+  });
+
+  it('warns about solo-in-place and flags the step when it asks for a headphone solo', async () => {
+    await selectSymptom('distortion');
+    await click(query('answer-no'));
+    expect(query('walker-action')?.textContent).toContain('not in a solo-in-place mode');
+    expect(query('check-on-console')).not.toBeNull();
   });
 });

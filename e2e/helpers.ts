@@ -25,11 +25,11 @@ export const FIXTURE_BAND: MemberInput[] = [
   },
   { name: 'Vocalist B', roles: [{ role: 'harmonyVocal', connection: 'dynamicMic', behavior: 0, voiceRange: 'high' }] },
   { name: 'Vocalist C', roles: [{ role: 'harmonyVocal', connection: 'dynamicMic', behavior: 2, voiceRange: 'low' }] },
-  { name: 'Keys', roles: [{ role: 'keys', connection: 'stereoDi', behavior: 0 }] },
-  { name: 'Pad', roles: [{ role: 'padSynth', connection: 'stereoDi', behavior: 1 }] },
-  { name: 'Electric guitar', roles: [{ role: 'electricGuitar', connection: 'modelerDirect', behavior: 1 }] },
-  { name: 'Bass', roles: [{ role: 'bassGuitar', connection: 'monoDi', behavior: 0 }] },
-  { name: 'Drums', roles: [{ role: 'electronicDrums', connection: 'drumModuleStereoPair', behavior: 1 }] },
+  { name: 'Player D', roles: [{ role: 'keys', connection: 'stereoDi', behavior: 0 }] },
+  { name: 'Player E', roles: [{ role: 'padSynth', connection: 'stereoDi', behavior: 1 }] },
+  { name: 'Player F', roles: [{ role: 'electricGuitar', connection: 'modelerDirect', behavior: 1 }] },
+  { name: 'Player G', roles: [{ role: 'bassGuitar', connection: 'monoDi', behavior: 0 }] },
+  { name: 'Player H', roles: [{ role: 'electronicDrums', connection: 'drumModuleStereoPair', behavior: 1 }] },
 ];
 
 export const SKILL_WORDS = /beginner|intermediate|advanced/i;

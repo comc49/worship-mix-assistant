@@ -70,6 +70,7 @@ Manual: X32 Digital Mixer User Manual (Behringer, P0ASF, 75 pages)
 | preampGain | Gain knob in the channel strip Config/Preamp section | 2.1 Channel Strip, p13 ✓ | "Adjust the preamp gain for the selected channel with the" |
 | polarity | "phase flip": Home screen home tab, page 2, tap the 2nd encoder | 7.2.1 Home Screen: Home Tab, p46 ✓ | "Tap the 2nd encoder to toggle phase flip on/off for the currently" The manual says "phase", never "polarity". |
 | mainBusProcessing | Insert point, 6-band parametric EQ, compressor/expander, sends to 6 matrices. No built-in limiter is documented. | 1. Operational Overview (Routing I/O), p11 ✓ | "Main Bus Channels LR/C are always available and independent from Mix Buses." |
+| mainLimiterInsertPoint | null | 1. Operational Overview (Routing I/O), p11 ✓ | "Main Bus Channels LR/C are always available and independent from Mix Buses." The main bus has one insert point. |
 
 ### Still UNVERIFIED on the Behringer X32
 
@@ -154,6 +155,7 @@ Manual: WING series User Manual (Behringer, 2025-10-20 edition, 167 pages)
 | preampGain | Preamp gain is a property of the Source: ROUTING, SOURCES, select the Source | **UNVERIFIED** | The manual says gain is a Source property (p40). The exact on-screen label, and any hardware gain knob on the WING Compact, are not described. |
 | polarity | INVERT, in HOME, INPUT under TRIM & BALANCE | 6.1 INPUT Channels, p69 ✓ | "INVERT: phase inversion" |
 | mainBusProcessing | Dynamics slot, pre-fader insert, 8-band EQ, post-fader insert. No gate. | 6.5 Main Channels, p77 ✓ | "There are 4 Main Channels available" |
+| mainLimiterInsertPoint | the post-fader insert point of the main bus | 6.5 Main Channels, p77 ✓ | "Post-fader insert point" The main bus also has a pre-fader insert point. A limiter before the fader does not catch a main fader that is pushed up. |
 
 ### Still UNVERIFIED on the Behringer WING Compact
 

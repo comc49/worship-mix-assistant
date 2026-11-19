@@ -93,6 +93,7 @@ export const WING_COMPACT_PROFILE: ConsoleProfile = {
     preampGain: unverified('Preamp gain is a property of the Source: ROUTING, SOURCES, select the Source', 'The manual says gain is a Source property (p40). The exact on-screen label, and any hardware gain knob on the WING Compact, are not described.'),
     polarity: verified('INVERT, in HOME, INPUT under TRIM & BALANCE', '6.1 INPUT Channels', 69, 'INVERT: phase inversion'),
     mainBusProcessing: verified('Dynamics slot, pre-fader insert, 8-band EQ, post-fader insert. No gate.', '6.5 Main Channels', 77, 'There are 4 Main Channels available'),
+    mainLimiterInsertPoint: verified('the post-fader insert point of the main bus', '6.5 Main Channels', 77, 'Post-fader insert point', 'The main bus also has a pre-fader insert point. A limiter before the fader does not catch a main fader that is pushed up.'),
   },
   effectChoice: {
     plateReverb: 'Plate Reverb',

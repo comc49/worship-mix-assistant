@@ -108,8 +108,8 @@
           </h3>
           @if (check.checkOnConsole) {
             <p class="dim step__console-note">
-              A control name in this step was not confirmed in the {{ consoleName() }} manual. Check
-              it on your console.
+              This step depends on a control name or a setting the app could not confirm for the
+              {{ consoleName() }}. Check it on your console.
             </p>
           }
           <div class="step__answers">
@@ -179,8 +179,8 @@
           }
           @if (fix.checkOnConsole) {
             <p class="dim step__console-note">
-              A control name in this fix was not confirmed in the {{ consoleName() }} manual. Check
-              it on your console.
+              This fix depends on a control name or a setting the app could not confirm for the
+              {{ consoleName() }}. Check it on your console.
             </p>
           }
           <p class="dim step__footnote">Values are typical starting points. Your ears decide.</p>
@@ -216,7 +216,19 @@
       <h2 id="picker-heading" #pickerHeading tabindex="-1" class="picker__heading">
         What is wrong?
       </h2>
-      @for (entry of symptomGroups; track entry.group.id) {
+      @if (bandIsEmpty()) {
+        <p class="notice notice--info" data-testid="band-empty-hint">
+          No band has been entered yet, so every problem is listed and the steps use general words.
+          Add the band on the Band screen to see names, values and only the problems that apply.
+        </p>
+      }
+      @if (hiddenSymptomCount() > 0) {
+        <p class="dim" data-testid="hidden-symptoms-hint">
+          {{ hiddenSymptomCount() }} problems are not listed because they are about instruments this
+          band does not have.
+        </p>
+      }
+      @for (entry of symptomGroups(); track entry.group.id) {
         <div class="picker__group" data-testid="symptom-group">
           <h3 class="picker__title">{{ entry.group.title }}</h3>
           <div class="picker__buttons">

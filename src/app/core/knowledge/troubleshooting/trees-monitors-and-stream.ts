@@ -18,6 +18,7 @@ export const CANNOT_HEAR_TREE: TroubleshootingTree = {
   symptom: 'A musician cannot hear themselves',
   group: 'monitorsAndStream',
   targetPicker: 'channel',
+  needsOneOfEach: [],
   entryNodeId: 'whatIsMissing',
   nodes: {
     whatIsMissing: {
@@ -136,6 +137,7 @@ export const STREAM_DIFFERENT_TREE: TroubleshootingTree = {
   symptom: 'Stream mix sounds different from the room',
   group: 'monitorsAndStream',
   targetPicker: 'none',
+  needsOneOfEach: [],
   entryNodeId: 'headphones',
   nodes: {
     fixNoStreamMix: {

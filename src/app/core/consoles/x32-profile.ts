@@ -134,6 +134,7 @@ export const X32_PROFILE: ConsoleProfile = {
     preampGain: verified('Gain knob in the channel strip Config/Preamp section', '2.1 Channel Strip', 13, 'Adjust the preamp gain for the selected channel with the'),
     polarity: verified('"phase flip": Home screen home tab, page 2, tap the 2nd encoder', '7.2.1 Home Screen: Home Tab', 46, 'Tap the 2nd encoder to toggle phase flip on/off for the currently', 'The manual says "phase", never "polarity".'),
     mainBusProcessing: verified('Insert point, 6-band parametric EQ, compressor/expander, sends to 6 matrices. No built-in limiter is documented.', '1. Operational Overview (Routing I/O)', 11, 'Main Bus Channels LR/C are always available and independent from Mix Buses.'),
+    mainLimiterInsertPoint: verified(null, '1. Operational Overview (Routing I/O)', 11, 'Main Bus Channels LR/C are always available and independent from Mix Buses.', 'The main bus has one insert point.'),
   },
   effectChoice: {
     plateReverb: 'Plate Reverb',

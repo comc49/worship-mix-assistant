@@ -44,14 +44,35 @@ const FACT_LABELS: Partial<Record<ConsoleFactKey, string>> = {
   preampGain: 'Preamp gain',
   phantomPower: 'Phantom power',
   polarity: 'Polarity',
+  soloInPlaceExists: 'Solo in place',
   mainBusProcessing: 'Main bus processing',
   removeChannelFromMain: 'Main mix assignment',
   soloBehavior: 'Solo',
 };
 
+/** Plain-language names for the parts of a fact that holds several control names. */
+const PART_LABELS: Record<string, string> = {
+  threshold: 'Threshold',
+  range: 'Range',
+  ratio: 'Ratio',
+  attack: 'Attack',
+  hold: 'Hold',
+  release: 'Release',
+  makeupGain: 'Makeup gain',
+};
+
+/** Shown when the console may have a solo-in-place mode, or when the manual does not say. */
+const SOLO_CAUTION =
+  'Before you press solo, make sure the console is not in a solo-in-place mode (some consoles show an "SIP" indicator): in that mode, solo mutes everything else in the room.';
+
+/** Shown only when the profile has a verified fact that the console has no solo-in-place mode. */
+const SOLO_NO_CAUTION_NEEDED = 'This console has no solo-in-place mode, so solo does not change what the room hears.';
+
 export interface ResolvedText {
   text: string;
   controls: ResolvedControl[];
+  /** True when the text depends on a console setting the app cannot confirm (for example the solo mode). */
+  needsConsoleCheck: boolean;
 }
 
 const TOKEN_PATTERN = /\{([a-zA-Z]+)(?::([a-zA-Z0-9.]+))?\}/g;
@@ -188,10 +209,33 @@ export function formatFactValue(value: unknown, part: string | null): string | n
     return texts.length > 0 ? texts.join(' ') : null;
   }
   if (isStringRecord(value)) {
-    const parts = Object.entries(value).map(([name, text]) => `${name}: ${text}`);
+    const parts = Object.entries(value).map(([name, text]) => formatNamedPart(name, text));
     return parts.length > 0 ? parts.join(', ') : null;
   }
   return null;
+}
+
+/**
+ * One part of a fact that holds several control names, as it is listed under a fix.
+ * When the console's wording already starts with the plain name ("threshold (1st encoder)"),
+ * it is shown as it is. Otherwise the plain name goes in front ("Threshold: THR").
+ */
+function formatNamedPart(name: string, consoleText: string): string {
+  const plainLabel = PART_LABELS[name];
+  if (plainLabel === undefined) {
+    return consoleText;
+  }
+  const consoleTextStartsWithLabel = consoleText.toLowerCase().startsWith(plainLabel.toLowerCase());
+  if (consoleTextStartsWithLabel) {
+    return consoleText;
+  }
+  return `${plainLabel}: ${consoleText}`;
+}
+
+/** True only when the profile has a verified fact that says the console has no solo-in-place mode. */
+function soloInPlaceIsRuledOut(profile: ConsoleProfile): boolean {
+  const fact = profile.facts.soloInPlaceExists;
+  return fact.source.status === 'verified' && fact.value === false;
 }
 
 /** Looks one console fact up in the profile. `argument` is "key" or "key.part". */
@@ -223,6 +267,7 @@ function capitalizeSentenceStarts(text: string): string {
 /** Resolves every token in one piece of tree text. */
 export function resolveText(text: string, context: TroubleshootContext): ResolvedText {
   const controls: ResolvedControl[] = [];
+  let needsConsoleCheck = false;
 
   const replaced = text.replace(TOKEN_PATTERN, (token: string, name: string, argument: string | undefined) => {
     if (name === 'console') {
@@ -236,6 +281,13 @@ export function resolveText(text: string, context: TroubleshootContext): Resolve
     }
     if (name === 'loudnessTarget') {
       return loudnessTargetPhrase(context);
+    }
+    if (name === 'soloCaution') {
+      if (soloInPlaceIsRuledOut(context.profile)) {
+        return SOLO_NO_CAUTION_NEEDED;
+      }
+      needsConsoleCheck = true;
+      return SOLO_CAUTION;
     }
     if (argument === undefined) {
       return token;
@@ -263,5 +315,5 @@ export function resolveText(text: string, context: TroubleshootContext): Resolve
     return token;
   });
 
-  return { text: capitalizeSentenceStarts(replaced), controls };
+  return { text: capitalizeSentenceStarts(replaced), controls, needsConsoleCheck };
 }

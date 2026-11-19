@@ -39,6 +39,8 @@ export interface ResolvedCheck {
   yes: string;
   no: string;
   safety: StepSafety;
+  /** True when the step only looks at a setting and changes nothing. */
+  looksOnly: boolean;
   /** Every console fact named in the text. */
   inlineControls: ResolvedControl[];
   checkOnConsole: boolean;

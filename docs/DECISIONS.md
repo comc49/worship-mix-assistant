@@ -52,4 +52,16 @@ These were needed to proceed and are flagged for review.
 35. **Tips and mixer notes are per role, not per rating,** and every channel gets a tip. This changes decision 5: skill no longer changes coaching notes, because a note that appears only for some ratings reveals the rating of a named person on the printed sheet. The praise lines for the highest rating were removed.
 36. **The value trail never prints,** even when a detail panel is open. It stays on screen, where the mixer who entered the ratings is the reader.
 
-Not fixed in this round (from the same review, still open): the "no sound" tree skipping phantom and gain looks in a service; beginner electric guitar threshold wording; headphone-solo wording on the WING; cable check before muting; trees shown for instruments the band lacks; WING limiter on the pre-fader insert; dry-room vocal low cuts and reverb; tom low cut; jargon and naming consistency; fixture placeholders named after roles.
+## 2026-11-19: second round of review fixes, approved by Brian
+
+37. **"No sound" in a service looks at phantom power and gain** (look-only steps are safe). Changing either is still rehearsal only; in a service the tree ends in "tell the tech lead" instead.
+38. **Headphone solo steps carry a solo-in-place caution** and the console's own description, and are flagged "check on your console" unless a profile verifies the console has no such mode.
+39. **The troubleshooter hides symptoms the band has no instrument for,** and steps inside general trees are skipped when they name an absent instrument. An empty band shows everything. "Kick has no punch" has a cajon branch.
+40. **Lowest-rated electric guitar is 4:1 with a 10 ms attack** (was 8:1 and 5 ms), limit 6:1, and every electric guitar gets the note "set the threshold on the loudest sound".
+41. **Dry room:** vocal low cuts are not lowered; plate is +0.2 s (was +0.4) and its send is capped at -8 dB.
+42. **Toms:** +10 Hz in the live room (was +20) and no room-noise bump, giving 80 Hz.
+43. **WING Compact main limiter goes on the post-fader insert** of the main bus (manual p77).
+44. **Wording:** "Q", DCA versus group bus, post-fader and pre-fader are each explained once in a section intro, which prints. "Low cut" is the only name for that filter; "feedback" only means howl; "saved lineups" is the only name for templates in the UI.
+45. **Fixture placeholders are person-like** ("Player D" to "Player I") so a name is always printed next to a role in tests.
+
+Still open from the review, by choice: the on-screen value trail still shows the reason for a player adjustment under a named channel; two named people in one role still get visibly different numbers (inherent in the design); monitor and effect-feed buses are not explicitly taken off the main mix on the sheet; several sheet steps name a setting without the full path to it; X32 ratio steps are not snapped because the list is unverified; lower-priority wording items in the troubleshooting trees.
