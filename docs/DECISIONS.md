@@ -38,3 +38,5 @@ These were needed to proceed and are flagged for review.
 24. **Main bus limiter is an FX insert on both consoles** (Precision Limiter), because neither manual documents a built-in main limiter. It takes an FX slot after the de-esser.
 25. **Initial state:** the band starts empty and an "Example lineup (placeholder names)" template is seeded. No real names are ever committed.
 26. **Sass, print:** the print stylesheet lives in `src/_print.scss`. One sheet section per page; the "if you hear" appendix starts a new page.
+27. **State is saved on every change, synchronously.** An earlier version saved on a later tick and lost a change made just before a reload.
+28. **Troubleshooter:** trees are typed data with conditions and text tokens; console control names come only from profile facts. During a service, rehearsal-only checks are skipped and rehearsal-only fixes are replaced by a safe alternative or an "after the service" note. Frequencies and amounts in the trees are typical starting values written for the trees, not taken from the knowledge base.

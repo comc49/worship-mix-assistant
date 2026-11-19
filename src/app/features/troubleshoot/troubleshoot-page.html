@@ -1,0 +1,239 @@
+<div class="page">
+  <h1>Fix a problem</h1>
+
+  <fieldset class="situation">
+    <legend>What is happening right now?</legend>
+    <div class="situation__buttons">
+      <button
+        type="button"
+        class="btn situation__button"
+        data-testid="situation-rehearsal"
+        [attr.aria-pressed]="situation() === 'rehearsal'"
+        (click)="setSituation('rehearsal')"
+      >
+        Rehearsal
+      </button>
+      <button
+        type="button"
+        class="btn situation__button"
+        data-testid="situation-service"
+        [attr.aria-pressed]="situation() === 'service'"
+        (click)="setSituation('service')"
+      >
+        Service
+      </button>
+    </div>
+  </fieldset>
+
+  @if (situation() === 'service') {
+    <p class="notice notice--info" data-testid="service-notice">
+      Service: only steps that are safe while people are listening are shown. No preamp gain
+      increases, no phantom power, no routing changes and no scene loads.
+    </p>
+  } @else {
+    <p class="lead" data-testid="rehearsal-notice">
+      Rehearsal: every step is shown, also the ones that are not safe during a service.
+    </p>
+  }
+
+  @if (walk(); as state) {
+    <section class="walker" aria-labelledby="walker-symptom">
+      <div class="walker__top">
+        <h2 id="walker-symptom" class="walker__symptom" data-testid="walker-symptom">
+          {{ resolvedTree()?.symptom }}
+        </h2>
+        <button
+          type="button"
+          class="btn"
+          data-testid="walker-change-symptom"
+          (click)="changeSymptom()"
+        >
+          Other problem
+        </button>
+      </div>
+
+      @if (targetOptions().length > 0) {
+        <fieldset class="targets">
+          <legend>Which channel? <span class="dim">(optional)</span></legend>
+          <div class="targets__list">
+            @for (option of targetOptions(); track option.id) {
+              <button
+                type="button"
+                class="btn targets__option"
+                data-testid="target-option"
+                [attr.aria-pressed]="selectedTargetId() === option.id"
+                (click)="toggleTarget(option.id)"
+              >
+                {{ option.label }}
+              </button>
+            }
+          </div>
+        </fieldset>
+      }
+
+      @if (state.trail.length > 0) {
+        <div class="trail">
+          <h3 class="trail__title">So far</h3>
+          <ol class="trail__list" data-testid="walker-trail">
+            @for (entry of state.trail; track entry.nodeId) {
+              <li class="trail__entry">
+                <span class="trail__question">{{ entry.question }}</span>
+                <span class="badge badge--accent">{{ answerLabel(entry.answer) }}</span>
+              </li>
+            }
+          </ol>
+        </div>
+      }
+
+      @if (currentCheck(); as check) {
+        <div class="card step" data-testid="walker-step">
+          <div class="step__badges">
+            <span
+              class="badge"
+              [class.badge--ok]="check.safety === 'safeDuringService'"
+              [class.badge--warn]="check.safety === 'rehearsalOnly'"
+              data-testid="safety-badge"
+            >
+              {{ safetyLabel(check.safety) }}
+            </span>
+            @if (check.checkOnConsole) {
+              <span class="badge badge--warn" data-testid="check-on-console"
+                >Check on your console</span
+              >
+            }
+          </div>
+          <p class="step__action" data-testid="walker-action">{{ check.action }}</p>
+          <h3 #stepHeading tabindex="-1" class="step__question" data-testid="walker-question">
+            {{ check.question }}
+          </h3>
+          @if (check.checkOnConsole) {
+            <p class="dim step__console-note">
+              A control name in this step was not confirmed in the {{ consoleName() }} manual. Check
+              it on your console.
+            </p>
+          }
+          <div class="step__answers">
+            <button
+              type="button"
+              class="btn btn--primary step__answer"
+              data-testid="answer-yes"
+              (click)="answer('yes')"
+            >
+              Yes
+            </button>
+            <button
+              type="button"
+              class="btn step__answer"
+              data-testid="answer-no"
+              (click)="answer('no')"
+            >
+              No
+            </button>
+          </div>
+        </div>
+      }
+      @if (currentFix(); as fix) {
+        <div class="card step step--fix" data-testid="walker-fix">
+          <div class="step__badges">
+            <span
+              class="badge"
+              [class.badge--ok]="fix.safety === 'safeDuringService'"
+              [class.badge--warn]="fix.safety === 'rehearsalOnly'"
+              data-testid="safety-badge"
+            >
+              {{ safetyLabel(fix.safety) }}
+            </span>
+            @if (fix.checkOnConsole) {
+              <span class="badge badge--warn" data-testid="check-on-console"
+                >Check on your console</span
+              >
+            }
+          </div>
+          <h3 #stepHeading tabindex="-1" class="step__question">
+            @if (fix.deferredUntilAfterService) {
+              Do this after the service
+            } @else {
+              Try this
+            }
+          </h3>
+          @if (fix.arrangementAdvice !== null) {
+            <div class="step__advice" data-testid="walker-arrangement-advice">
+              <p class="step__label">First, with the band</p>
+              <p>{{ fix.arrangementAdvice }}</p>
+            </div>
+            <p class="step__label">Then, on the console</p>
+          }
+          <p class="step__action" data-testid="walker-fix-text">{{ fix.text }}</p>
+          @if (fix.controlRefs.length > 0) {
+            <p class="step__label">Where to find it on the {{ consoleName() }}</p>
+            <ul class="step__controls">
+              @for (control of fix.controlRefs; track control.key) {
+                <li>
+                  <strong>{{ control.label }}:</strong> {{ control.text }}
+                  @if (!control.verified) {
+                    <span class="badge badge--warn">Check on your console</span>
+                  }
+                </li>
+              }
+            </ul>
+          }
+          @if (fix.checkOnConsole) {
+            <p class="dim step__console-note">
+              A control name in this fix was not confirmed in the {{ consoleName() }} manual. Check
+              it on your console.
+            </p>
+          }
+          <p class="dim step__footnote">Values are typical starting points. Your ears decide.</p>
+        </div>
+      }
+      @if (currentHelp(); as help) {
+        <div class="card step step--help" data-testid="walker-ask-for-help">
+          <div class="step__badges">
+            <span class="badge badge--ok" data-testid="safety-badge">{{
+              safetyLabel(help.safety)
+            }}</span>
+          </div>
+          <h3 #stepHeading tabindex="-1" class="step__question">Ask for help</h3>
+          <p class="step__action">{{ help.text }}</p>
+        </div>
+      }
+
+      <div class="walker__nav">
+        <button type="button" class="btn" data-testid="walker-back" (click)="back()">Back</button>
+        <button
+          type="button"
+          class="btn"
+          data-testid="walker-restart"
+          [disabled]="state.trail.length === 0"
+          (click)="restart()"
+        >
+          Start over
+        </button>
+      </div>
+    </section>
+  } @else {
+    <section aria-labelledby="picker-heading">
+      <h2 id="picker-heading" #pickerHeading tabindex="-1" class="picker__heading">
+        What is wrong?
+      </h2>
+      @for (entry of symptomGroups; track entry.group.id) {
+        <div class="picker__group" data-testid="symptom-group">
+          <h3 class="picker__title">{{ entry.group.title }}</h3>
+          <div class="picker__buttons">
+            @for (tree of entry.trees; track tree.id) {
+              <button
+                type="button"
+                class="btn picker__button"
+                data-testid="symptom-button"
+                [attr.data-symptom-id]="tree.id"
+                (click)="selectSymptom(tree.id)"
+              >
+                {{ tree.symptom }}
+              </button>
+            }
+          </div>
+        </div>
+      }
+    </section>
+  }
+</div>

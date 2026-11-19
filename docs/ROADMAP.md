@@ -11,8 +11,8 @@ Status values: not started, in progress, built (awaiting Brian's hands-on check)
 | 4 | Console adapters | built (awaiting Brian's check of the X32 bus layout) |
 | 5 | Input UI and storage | built (not yet tried on the real tablet) |
 | 6 | Output UI | built (not yet tried at the desk) |
-| 7 | Troubleshooter | in progress: troubleshooter was still being built when the session stopped |
-| 8 | Backup, print and offline | mostly built: backup, print and PWA are in; offline test and print page breaks not yet run |
+| 7 | Troubleshooter | built (awaiting Brian's review of docs/troubleshooting-review.md) |
+| 8 | Backup, print and offline | built (not yet installed on the real tablet or printed on paper) |
 | 9 | Accuracy review | not started |
 
 Each phase has two checks: what was verified with tests and screenshots, and what Brian checks by hand on the real tablet or console. A phase is "complete" only after the second.

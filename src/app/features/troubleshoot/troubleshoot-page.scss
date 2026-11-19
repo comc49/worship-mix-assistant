@@ -1,0 +1,195 @@
+/* Tablet first (820px). Everything stacks to one column on a phone (390px). Global variables only. */
+
+.situation {
+  margin-bottom: var(--space-3);
+}
+
+.situation__buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.situation__button {
+  min-height: 56px;
+  font-size: 1.05rem;
+}
+
+/* --- Symptom picker ------------------------------------------------------ */
+
+.picker__heading {
+  margin-top: var(--space-4);
+}
+
+.picker__group {
+  margin-bottom: var(--space-4);
+}
+
+.picker__title {
+  color: var(--text-dim);
+  margin-bottom: var(--space-2);
+}
+
+.picker__buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+}
+
+.picker__button {
+  min-height: 64px;
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+  line-height: 1.25;
+}
+
+/* --- Walker -------------------------------------------------------------- */
+
+.walker__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin: var(--space-4) 0 var(--space-3);
+}
+
+.walker__symptom {
+  margin: 0;
+}
+
+.targets {
+  margin-bottom: var(--space-4);
+}
+
+.targets__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.targets__option {
+  font-weight: 400;
+}
+
+.trail {
+  margin-bottom: var(--space-4);
+}
+
+.trail__title {
+  color: var(--text-dim);
+  margin-bottom: var(--space-2);
+}
+
+.trail__list {
+  margin: 0;
+  padding-left: var(--space-5);
+  color: var(--text-dim);
+}
+
+.trail__entry {
+  margin-bottom: var(--space-1);
+}
+
+.trail__question {
+  margin-right: var(--space-2);
+}
+
+.step__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.step__action {
+  font-size: 1.1rem;
+}
+
+.step__question {
+  font-size: 1.35rem;
+  margin: var(--space-4) 0;
+}
+
+.step__label {
+  color: var(--text-dim);
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: var(--space-1);
+}
+
+.step__advice {
+  border-left: 4px solid var(--accent);
+  background: var(--surface-2);
+  border-radius: var(--radius);
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.step__advice p:last-child {
+  margin-bottom: 0;
+}
+
+.step__controls {
+  margin: 0 0 var(--space-3);
+  padding-left: var(--space-5);
+}
+
+.step__controls li {
+  margin-bottom: var(--space-2);
+}
+
+.step__footnote {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.step__answers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.step__answer {
+  min-height: 72px;
+  font-size: 1.3rem;
+}
+
+.step--fix {
+  border-color: var(--ok);
+}
+
+.step--help {
+  border-color: var(--warn);
+}
+
+.walker__nav {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.walker__nav .btn {
+  flex: 1;
+}
+
+@media (max-width: 700px) {
+  .picker__buttons {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 430px) {
+  .picker__buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .picker__button {
+    min-height: var(--tap);
+  }
+
+  .walker__top {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
