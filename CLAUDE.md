@@ -21,10 +21,10 @@ A web app for volunteer sound mixers at a church. Most are not trained engineers
   - The UI depends on these layers. They never depend on the UI.
 - **One value per setting on the sheet.** Tapping it shows the usable range, the reason and a "listen for" note. Values are typical starting values, not measurements of our rooms; the app says so once at the top of each sheet.
 - **EQ in three tiers:** low cut is a fixed step; at most three conservative suggested cuts per role, shown as optional; everything else is "if you hear X, try Y".
-- **Skill level changes dynamics, level, low cut and coaching notes. Never tonal EQ.**
+- **Skill level changes dynamics, level and low cut. Never tonal EQ.** Tips for the player and notes for the mixer are written per role and shown for every rating, so a note never reveals a named person's rating.
 - **Musical limits per role are applied before console limits.**
 - **No backend, no accounts.** All `localStorage` access goes through one storage service. Backup and restore as JSON.
-- **Privacy:** skill ratings describe real volunteers. Never show a skill label next to a name on any output screen, printout or PDF. Test fixtures and every committed file use placeholder names only.
+- **Privacy:** skill ratings describe real volunteers. The "how we got to this value" trail is on screen only and never prints. Never show a skill label next to a name on any output screen, printout or PDF. Test fixtures and every committed file use placeholder names only.
 - **Console facts are never written from memory.** Every profile fact carries its manual source or an `UNVERIFIED` flag (`docs/console-sources.md`).
 
 ## Stack

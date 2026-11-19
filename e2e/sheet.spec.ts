@@ -78,9 +78,17 @@ test('saves the sheet as a PDF with no rating wording', async ({ page }, testInf
   await page.goto('/sheet');
   await expect(page.getByTestId('sheet-section')).toHaveCount(SECTION_IDS.length);
 
+  // Open a value's detail first: even an open panel must not put the "how we got here" trail on paper.
+  const dynamicsStep = page.locator('[data-section-id="dynamics"] [data-testid="sheet-step"]').first();
+  await dynamicsStep.getByTestId('step-value').click();
+  await expect(dynamicsStep.getByTestId('step-provenance')).toBeVisible();
+
   await page.emulateMedia({ media: 'print' });
+  await expect(dynamicsStep.getByTestId('step-provenance')).toBeHidden();
   const printedText = await page.locator('body').innerText();
   expect(printedText).not.toMatch(SKILL_WORDS);
+  expect(printedText).not.toMatch(/Player:/);
+  await dynamicsStep.getByTestId('step-value').click();
   await expect(page.getByRole('navigation', { name: 'Main' })).toBeHidden();
 
   await page.pdf({ path: 'docs/screenshots/sheet-x32-fixture-band.pdf', format: 'A4', printBackground: false });

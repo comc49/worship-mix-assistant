@@ -369,7 +369,7 @@ export const OVERHEADS_PROFILE: InstrumentProfile = {
   params: {
     lowCutHz: num(150, 100, 300, 'Hz', 'With close mics on kick and snare, the overheads are for cymbals. Their lows only add room rumble.', 'Cymbals stay clear; the kit does not get boomy when overheads come up.'),
     levelDb: num(-6, -15, 0, 'dB', 'Acoustic cymbals are loud in the room already.', 'In a small room the overheads may stay almost off.'),
-    monitorSendDb: num(-20, -20, -6, 'dB', 'Cymbals are already loud on stage.', 'Leave out of wedges.'),
+    monitorSendDb: num(-20, -20, -6, 'dB', 'Cymbals are already loud on stage.', 'Leave out of the monitors.'),
   },
   gateThreshold: null,
   makeupGain: null,

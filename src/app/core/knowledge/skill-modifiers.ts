@@ -4,7 +4,11 @@ import { SkillDescriptions, SkillModifier } from './types';
 
 /**
  * What changes at beginner and at advanced. Intermediate is the baseline with no modifier.
- * Skill changes dynamics, level, low cut and coaching notes. It never chooses tonal EQ.
+ * Skill changes dynamics, level and low cut. It never chooses tonal EQ.
+ *
+ * Privacy: the tip for the player and the notes for the mixer are written once per role, on the
+ * 'beginner' entry, and the engine shows them for EVERY player of that role whatever their rating.
+ * A note that appeared only for some ratings would let a reader work out a named person's rating.
  */
 
 const STEREO_KIT = ['electronicDrums.stereo'];
@@ -32,8 +36,6 @@ function drumPieceModifiers(role: Role, hasCompressor: boolean): SkillModifier[]
       level: 'advanced',
       why: 'A consistent drummer controls their own dynamics, so the console does less.',
       adjustments: advancedAdjustments,
-      coaching: 'Your dynamics are coming through as played. Build the song with them.',
-      mixerNotes: [],
     },
   ];
 }
@@ -58,8 +60,6 @@ export const SKILL_MODIFIERS: SkillModifier[] = [
       skillAdd('compRatio', -1, 'A lighter ratio keeps their dynamics.'),
       skillAdd('compGainReductionDb', -1, 'Less reduction is needed.'),
     ],
-    coaching: 'Your dynamics are coming through as you sing them. Keep working the mic the way you do.',
-    mixerNotes: [],
   },
   {
     role: 'harmonyVocal',
@@ -82,8 +82,6 @@ export const SKILL_MODIFIERS: SkillModifier[] = [
       skillAdd('compRatio', -0.5, 'A lighter ratio keeps their dynamics.'),
       skillAdd('compGainReductionDb', -1, 'Less reduction is needed.'),
     ],
-    coaching: 'Your blend is coming through as you sing it.',
-    mixerNotes: [],
   },
   {
     role: 'bassGuitar',
@@ -104,8 +102,6 @@ export const SKILL_MODIFIERS: SkillModifier[] = [
       skillAdd('compRatio', -1, 'A gentler ratio lets their dynamics through.'),
       skillAdd('compGainReductionDb', -2, 'Less reduction is needed.'),
     ],
-    coaching: 'Your dynamics are coming through. Use them to build the song.',
-    mixerNotes: [],
   },
   {
     role: 'synthBass',
@@ -120,8 +116,6 @@ export const SKILL_MODIFIERS: SkillModifier[] = [
     level: 'advanced',
     why: 'Patches are levelled and played evenly.',
     adjustments: [skillAdd('compGainReductionDb', -1, 'Less control is needed.')],
-    coaching: 'Your levels are consistent. Thank you.',
-    mixerNotes: [],
   },
   {
     role: 'acousticGuitar',
@@ -140,8 +134,6 @@ export const SKILL_MODIFIERS: SkillModifier[] = [
     level: 'advanced',
     why: 'They control their own dynamics with their right hand.',
     adjustments: [skillAdd('compGainReductionDb', -1, 'Less reduction keeps their dynamics.')],
-    coaching: 'Your dynamics are coming through as played.',
-    mixerNotes: [],
   },
   {
     role: 'electricGuitar',
@@ -161,8 +153,6 @@ export const SKILL_MODIFIERS: SkillModifier[] = [
     level: 'advanced',
     why: 'Patches are levelled and dynamics are deliberate.',
     adjustments: [skillAdd('compGainReductionDb', -1, 'Less control is needed.')],
-    coaching: 'Your patch levels are consistent. Thank you.',
-    mixerNotes: [],
   },
   {
     role: 'keys',
@@ -182,8 +172,6 @@ export const SKILL_MODIFIERS: SkillModifier[] = [
     level: 'advanced',
     why: 'They leave space for the bass and control their own dynamics.',
     adjustments: [skillAdd('compGainReductionDb', -1, 'Less control keeps their dynamics.')],
-    coaching: 'The space you leave for the bass is working.',
-    mixerNotes: [],
   },
   {
     role: 'padSynth',
@@ -198,8 +186,6 @@ export const SKILL_MODIFIERS: SkillModifier[] = [
     level: 'advanced',
     why: 'They ride their own volume with the song.',
     adjustments: [skillAdd('levelDb', 1, 'Their swells can be trusted, so the pad can start a little higher.')],
-    coaching: 'Your swells are coming through as played.',
-    mixerNotes: [],
   },
   {
     role: 'electronicDrums',
@@ -222,8 +208,6 @@ export const SKILL_MODIFIERS: SkillModifier[] = [
     level: 'advanced',
     why: 'Hits are even and the module is balanced.',
     adjustments: [skillAdd('compGainReductionDb', -1, 'Less control lets their dynamics through.')],
-    coaching: 'Your dynamics are coming through as played.',
-    mixerNotes: [],
   },
   ...drumPieceModifiers('kick', true),
   ...drumPieceModifiers('snare', true),
@@ -244,8 +228,6 @@ export const SKILL_MODIFIERS: SkillModifier[] = [
     level: 'advanced',
     why: 'Tracks are pre-produced, so the operator\'s skill does not change the sound.',
     adjustments: [],
-    coaching: 'No changes needed.',
-    mixerNotes: [],
   },
   {
     role: 'click',
@@ -260,8 +242,6 @@ export const SKILL_MODIFIERS: SkillModifier[] = [
     level: 'advanced',
     why: 'A click is a machine. Skill does not apply.',
     adjustments: [],
-    coaching: 'No changes needed.',
-    mixerNotes: [],
   },
 ];
 
@@ -297,3 +277,12 @@ export const SKILL_DESCRIPTIONS: SkillDescriptions[] = [
   { role: 'backingTracks', ...OPERATOR_DESCRIPTIONS },
   { role: 'click', ...OPERATOR_DESCRIPTIONS },
 ];
+
+/** The tip and mixer notes for a role. The same for every player of the role, whatever their rating. */
+export function findRoleNotes(role: Role): { coaching: string; mixerNotes: { text: string; onlyProfileIds: string[] }[] } {
+  const entry = SKILL_MODIFIERS.find((modifier) => modifier.role === role && modifier.level === 'beginner');
+  if (entry === undefined) {
+    return { coaching: '', mixerNotes: [] };
+  }
+  return { coaching: entry.coaching ?? '', mixerNotes: entry.mixerNotes ?? [] };
+}

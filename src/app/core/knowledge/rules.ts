@@ -214,6 +214,9 @@ export const MONITOR_RULES = {
   inEarCompressionNote: 'With in-ears, it does not matter for feedback whether the monitor send is taken before or after the compressor.',
 };
 
+export const CLICK_WITH_WEDGES_WARNING =
+  'Click: wedges are on stage, so the click is not sent to any monitor mix. A click in a wedge is heard by the room. Give it only to players on in-ears or headphones, by hand.';
+
 export const SUBWOOFER_RULES = {
   ownBusWhy: 'The subwoofer has its own feed. Only kick, bass guitar and synth bass are sent to it, so nothing else can make the low end muddy.',
   mainThroughCrossoverWhy: 'The subwoofer is fed from the main mix through a crossover, so there is no sub send. The channel low cuts do the work of keeping other sources out of the sub.',

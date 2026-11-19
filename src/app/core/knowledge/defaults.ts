@@ -69,7 +69,7 @@ export const MONITOR_FOLDBACK_BY_ROLE: Partial<Record<Role, NumDefault>> = {
   keys: num(-10, -20, 0, 'dB', 'Singers use the keys for pitch.', 'Add only where someone asks for pitch reference.'),
   acousticGuitar: num(-12, -20, 0, 'dB', 'A rhythm and pitch reference for singers.', 'Add only where someone asks.'),
   electronicDrums: num(-8, -20, 0, 'dB', 'Electronic drums make no sound on stage, so everyone needs some for timing.', 'Ask each musician.'),
-  click: num(-6, -20, 6, 'dB', 'Players who follow the click need it in their mix.', 'In-ears only. A click in a wedge is heard by the room.'),
+  click: num(-6, -20, 6, 'dB', 'Players who follow the click need it in their mix.', 'In-ears or headphones only. From a stage speaker, the room hears it.'),
   backingTracks: num(-8, -20, 0, 'dB', 'The band has to stay with the tracks.', 'Ask each musician.'),
 };
 

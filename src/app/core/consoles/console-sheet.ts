@@ -66,6 +66,8 @@ export interface ChannelAssignment {
   channelId: string;
   /** One number for a mono channel, two for a linked stereo pair. */
   consoleChannels: number[];
+  /** The physical input sockets the source plugs into. A stereo source always uses two. */
+  inputSockets: number[];
   label: string;
   stereo: boolean;
 }

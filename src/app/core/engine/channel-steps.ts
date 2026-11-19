@@ -4,6 +4,7 @@ import {
   ENSEMBLE_RULES,
   EnsembleRule,
   findProfiles,
+  findRoleNotes,
   FOUNDATION_ROLES,
   getMusicalLimit,
   InstrumentProfile,
@@ -203,6 +204,8 @@ function skillAdjustmentApplies(adjustment: SkillAdjustment, channel: ChannelDra
 
 export function applySkillModifiers(channels: ChannelDraft[], rolesInBand: Role[]): void {
   for (const channel of channels) {
+    attachRoleNotes(channel);
+
     const skill = channel.memberRole.skill;
     if (skill === 'intermediate') {
       continue;
@@ -218,13 +221,22 @@ export function applySkillModifiers(channels: ChannelDraft[], rolesInBand: Role[
       }
       applyAdjustment(channel, adjustment, 'Player');
     }
+  }
+}
 
-    channel.coachingNotes.push(modifier.coaching);
-    for (const note of modifier.mixerNotes) {
-      const noteApplies = note.onlyProfileIds.length === 0 || note.onlyProfileIds.includes(channel.profile.id);
-      if (noteApplies) {
-        channel.mixerNotes.push(note.text);
-      }
+/**
+ * The tip for the player and the notes for the mixer depend on the role only, never on the
+ * rating, so nothing on a sheet shows which rating a named person was given.
+ */
+function attachRoleNotes(channel: ChannelDraft): void {
+  const notes = findRoleNotes(channel.memberRole.role);
+  if (notes.coaching.length > 0) {
+    channel.coachingNotes.push(notes.coaching);
+  }
+  for (const note of notes.mixerNotes) {
+    const noteApplies = note.onlyProfileIds.length === 0 || note.onlyProfileIds.includes(channel.profile.id);
+    if (noteApplies) {
+      channel.mixerNotes.push(note.text);
     }
   }
 }

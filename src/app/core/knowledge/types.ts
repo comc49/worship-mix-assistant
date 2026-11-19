@@ -83,10 +83,13 @@ export interface SkillModifier {
   level: Exclude<SkillLevel, 'intermediate'>;
   why: string;
   adjustments: SkillAdjustment[];
-  /** A note the mixer can pass to the musician. */
-  coaching: string;
-  /** Notes for the mixer. `onlyProfileIds` empty means every profile of the role. */
-  mixerNotes: { text: string; onlyProfileIds: string[] }[];
+  /**
+   * A tip the mixer can pass to the musician. Written on the 'beginner' entry only, and shown
+   * for every player of the role whatever their rating (see findRoleNotes).
+   */
+  coaching?: string;
+  /** Notes for the mixer, under the same rule. `onlyProfileIds` empty means every profile of the role. */
+  mixerNotes?: { text: string; onlyProfileIds: string[] }[];
 }
 
 export interface SkillDescriptions {

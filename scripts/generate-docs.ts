@@ -130,7 +130,7 @@ function writeKnowledgeReview(): void {
   lines.push('', '## Mic models', '', '| Mic | Low cut offset | Wedge note | Why |', '| --- | --- | --- | --- |');
   MIC_MODELS.forEach((mic) => lines.push(`| ${mic.label} | ${mic.lowCutOffsetHz} Hz | ${cell(mic.wedgeNote)} | ${cell(mic.why)} |`));
 
-  lines.push('', '## Skill modifiers', '', 'Intermediate is the baseline. Skill never chooses tonal EQ.', '', '| Role | Level | Changes | Why | Coaching note |', '| --- | --- | --- | --- | --- |');
+  lines.push('', '## Skill modifiers', '', 'Intermediate is the baseline. Skill never chooses tonal EQ.', '', '| Role | Level | Changes | Why | Tip for the player (shown for every rating) |', '| --- | --- | --- | --- | --- |');
   for (const modifier of SKILL_MODIFIERS) {
     const changes = modifier.adjustments
       .map((adjustment) => {
@@ -139,7 +139,7 @@ function writeKnowledgeReview(): void {
         return `${adjustment.param} ${adjustment.amount >= 0 ? '+' : ''}${adjustment.amount}${only}${requires}`;
       })
       .join('; ');
-    lines.push(`| ${modifier.role} | ${modifier.level} | ${cell(changes || 'none')} | ${cell(modifier.why)} | ${cell(modifier.coaching)} |`);
+    lines.push(`| ${modifier.role} | ${modifier.level} | ${cell(changes || 'none')} | ${cell(modifier.why)} | ${cell(modifier.coaching ?? '(same tip as every player of this role)')} |`);
   }
   lines.push('', '### Behavior descriptions shown instead of skill labels', '', '| Role | Lowest | Middle | Highest |', '| --- | --- | --- | --- |');
   SKILL_DESCRIPTIONS.forEach((entry) => lines.push(`| ${entry.role} | ${entry.beginner} | ${entry.intermediate} | ${entry.advanced} |`));

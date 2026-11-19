@@ -25,6 +25,9 @@ export const X32_PROFILE: ConsoleProfile = {
     stereoChannels: verified('linkAdjacentPair', '7.2.1 Home Screen: Home Tab', 46, 'Tap the 1st encoder to link the channel with its adjacent channel.'),
     stereoLinkPairRule: unverified('An odd channel links with the next even channel (1+2, 3+4)', 'The manual only says "adjacent channel". The odd/even rule was in the brief\'s checked list but is not stated in this manual.'),
     stereoBuses: verified('linkAdjacentPair', '4. FX Descriptions', 21, 'when the left and right signal are to be altered together (e.g. on linked stereo', 'Supported by the "Link" control on the bus config screenshot (p11) and the block diagram\'s Mix 1,3...15 / Mix 2,4...16 send pairs. A bus-link procedure is not written out.'),
+    busLinkProcedure: unverified('Select the first bus of the pair, open the Home screen config tab and switch on Link', 'A "Link" control is visible on the bus config tab in a screenshot (p11), but the manual writes out no procedure for linking two buses.'),
+    stereoSourceProcedure: verified(null, '7.2.1 Home Screen: Home Tab', 46, 'Tap the 1st encoder to link the channel with its adjacent channel.', 'A stereo source uses two linked channels on this console.'),
+    assignSourceToChannel: unverified(null, 'This sheet assumes input socket N feeds channel N. The manual\'s default input patch was not checked.'),
     mixBusCount: verified(16, '1. Operational Overview (Input Channel Banks)', 6, 'the 16 Mix Bus Masters, which is useful when you wish to include Bus Masters'),
     matrixCount: verified(6, '1. Operational Overview (Routing I/O)', 11, 'Bus sends to 6 matrices'),
     mainBuses: verified(['Main LR (stereo)', 'Mono Bus (center)'], '1. Operational Overview (Routing I/O)', 11, 'Main Bus Channels LR/C are always available and independent from Mix Buses.'),
@@ -46,6 +49,8 @@ export const X32_PROFILE: ConsoleProfile = {
       'One FX slot cannot be inserted on more than one channel.',
     ),
 
+    sendTapIsPerBusPair: verified(true, '7.2.6 Home Screen: Sends Tab', 49, 'for the first two sends of the currently focused four sends', 'The place a send is taken from is chosen for two buses at a time (1+2, 3+4, ...).'),
+    groupSendDefaultState: unverified(null, 'The manual confirms each send can be muted (p49) but does not say whether a send is on or off by default once its pair is set to Sub-Group. Check on the console which channels feed the group.'),
     sendTapPoints: verified(['Pre-EQ', 'Post-EQ', 'Pre-Fader', 'Post-Fader', 'Sub-Group'], '7.2.6 Home Screen: Sends Tab', 49, 'Adjust the 1st encoder to select where in the signal chain the send is', 'The manual gives three slightly different lists and never prints the abbreviated labels shown on the console screen.'),
     monitorSendTap: verified('Pre-Fader', '7.2.6 Home Screen: Sends Tab', 49, 'Adjust the 1st encoder to select where in the signal chain the send is'),
     defaultSendTap: unverified(null, 'The manual never says which tap a send uses by default.'),
@@ -93,7 +98,7 @@ export const X32_PROFILE: ConsoleProfile = {
     limiterEffects: verified(['Precision Limiter'], '4. FX Descriptions', 21, 'Stereo Precision Limiter allows you to set a precise volume limit,', 'No built-in main bus limiter is documented; this effect has to be inserted from an FX slot.'),
 
     setBusAsGroup: verified(
-      'Select the channel, open the Home screen sends tab, and for that bus choose "Sub-Group" as the place the send is taken from.',
+      'Select the channel, open the Home screen sends tab, and for the pair of buses that holds this bus choose "Sub-Group" as the place the send is taken from.',
       '5.9 Mix Buses, Sub Groups and DCA Groups',
       32,
       'of buses and groups for the 16 mix outputs of the console. This setting can later',

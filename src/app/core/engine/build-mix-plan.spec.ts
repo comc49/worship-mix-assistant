@@ -246,3 +246,42 @@ describe('buildMixPlan: safety', () => {
     expect(fullLive().subwoofer.sendChannelIds).toEqual([]);
   });
 });
+
+describe('buildMixPlan: click', () => {
+  const bandWithClick: BandMember[] = [
+    ...FIXTURE_FULL_BAND,
+    { id: 'm-click', name: 'Click', roles: [{ role: 'click', skill: 'intermediate', connection: 'monoDi', vocal: null }] },
+  ];
+
+  it('never sends the click to a monitor mix when wedges are on stage, and says so', () => {
+    for (const monitorType of ['wedges', 'mixed'] as const) {
+      const plan = buildMixPlan(bandWithClick, FIXTURE_LIVE_ROOM, { ...FIXTURE_WEDGES, monitorType });
+      expect(findChannel(plan, 'click.di').monitorSends).toEqual([]);
+      expect(findChannel(plan, 'click.di').routeToMain).toBe(false);
+      expect(plan.warnings.some((warning) => warning.message.startsWith('Click:'))).toBe(true);
+    }
+  });
+
+  it('sends the click to monitor mixes with in-ears', () => {
+    const plan = buildMixPlan(bandWithClick, FIXTURE_LIVE_ROOM, FIXTURE_IN_EARS);
+    expect(findChannel(plan, 'click.di').monitorSends.length).toBeGreaterThan(0);
+    expect(plan.warnings.some((warning) => warning.message.startsWith('Click:'))).toBe(false);
+  });
+});
+
+describe('buildMixPlan: privacy', () => {
+  it('gives every player of a role the same notes whatever their rating, so a note never reveals a rating', () => {
+    const skills: SkillLevel[] = ['beginner', 'intermediate', 'advanced'];
+    const notesBySkill = skills.map((skill) => {
+      const band = FIXTURE_FULL_BAND.map((member) => withSkill([member], member.id, skill)[0]);
+      const plan = buildMixPlan(band, FIXTURE_LIVE_ROOM, FIXTURE_WEDGES);
+      return plan.channels.map((channel) => ({ id: channel.id, mixerNotes: channel.mixerNotes, coachingNotes: channel.coachingNotes }));
+    });
+    expect(notesBySkill[0]).toEqual(notesBySkill[1]);
+    expect(notesBySkill[2]).toEqual(notesBySkill[1]);
+    // And every channel has a tip, so the absence of one says nothing either.
+    for (const entry of notesBySkill[1]) {
+      expect(entry.coachingNotes.length, entry.id).toBeGreaterThan(0);
+    }
+  });
+});

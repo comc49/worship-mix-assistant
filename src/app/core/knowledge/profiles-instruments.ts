@@ -54,7 +54,7 @@ export const BASS_GUITAR_PROFILE: InstrumentProfile = {
     compReleaseMs: num(150, 100, 250, 'ms', 'Recovers between notes without pumping.', 'If the level swells after each note, lengthen the release.'),
     compGainReductionDb: num(5, 3, 8, 'dB', 'About 5 dB on the loudest notes evens the line out.', 'Loud notes should stop jumping out. The bass should still breathe.'),
     levelDb: num(0, -4, 3, 'dB', 'Kick and bass are set first; the rest of the band is built on them.', 'You should feel the bass with the kick, not hear it as a separate boom.'),
-    monitorSendDb: num(-5, -15, 3, 'dB', 'Bass carries on stage by itself; wedges need little of it.', 'Ask the player.'),
+    monitorSendDb: num(-5, -15, 3, 'dB', 'Bass carries on stage by itself; monitors need little of it.', 'Ask the player.'),
   },
   gateThreshold: null,
   makeupGain: MATCH_BYPASS,
@@ -169,7 +169,7 @@ export const ACOUSTIC_GUITAR_MIC_PROFILE: InstrumentProfile = {
   params: {
     ...ACOUSTIC_GUITAR_DI_PROFILE.params,
     lowCutHz: num(100, 80, 140, 'Hz', 'An open mic on a guitar also hears the stage rumble.', 'Raise it until the guitar starts to sound small, then back off a little.'),
-    monitorSendDb: num(-6, -15, 0, 'dB', 'A miked acoustic in a wedge feeds back easily.', 'Raise in small steps and stop at the first ring.'),
+    monitorSendDb: num(-6, -15, 0, 'dB', 'A miked acoustic guitar feeds back easily through a stage monitor.', 'Raise in small steps and stop at the first ring.'),
   },
   noGateWhy: 'A gate would chop quiet picked passages. Mute the channel between songs instead.',
 };
@@ -384,5 +384,5 @@ export const CLICK_PROFILE: InstrumentProfile = {
   groupBus: null,
   sendToSubBus: false,
   routeToMain: false,
-  mixerNotes: ['Take the click off the main mix. It goes to monitors only. With wedges, the room will hear it: use in-ears for click.'],
+  mixerNotes: ['The click never goes to the main mix or to a wedge: the room would hear it. It goes only to in-ears or headphones.'],
 };

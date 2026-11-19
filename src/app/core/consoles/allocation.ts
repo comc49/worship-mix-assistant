@@ -20,24 +20,43 @@ export function allocateChannels(plan: MixPlan, profile: ConsoleProfile): Channe
   const stereoNeedsLinkedPair = profile.facts.stereoChannels.value === 'linkAdjacentPair';
   const assignments: ChannelAssignment[] = [];
   let nextChannel = 1;
+  // Input sockets are counted separately: on a console with stereo channels a stereo source
+  // takes one channel but still two sockets.
+  let nextSocket = 1;
 
   for (const channel of plan.channels) {
     const label = describeChannel(channel);
     const needsPair = channel.stereo && stereoNeedsLinkedPair;
 
-    if (!needsPair) {
-      assignments.push({ channelId: channel.id, consoleChannels: [nextChannel], label, stereo: channel.stereo });
-      nextChannel = nextChannel + 1;
+    if (needsPair) {
+      // A linked pair starts on an odd channel. Skip one channel if we are on an even one.
+      const isEven = nextChannel % 2 === 0;
+      if (isEven) {
+        nextChannel = nextChannel + 1;
+      }
+      const pair = [nextChannel, nextChannel + 1];
+      assignments.push({ channelId: channel.id, consoleChannels: pair, inputSockets: pair, label, stereo: true });
+      nextChannel = nextChannel + 2;
+      nextSocket = nextChannel;
       continue;
     }
 
-    // A linked pair starts on an odd channel. Skip one channel if we are on an even one.
-    const isEven = nextChannel % 2 === 0;
-    if (isEven) {
+    if (stereoNeedsLinkedPair) {
+      // On this console a channel is a socket.
+      assignments.push({ channelId: channel.id, consoleChannels: [nextChannel], inputSockets: [nextChannel], label, stereo: false });
       nextChannel = nextChannel + 1;
+      nextSocket = nextChannel;
+      continue;
     }
-    assignments.push({ channelId: channel.id, consoleChannels: [nextChannel, nextChannel + 1], label, stereo: true });
-    nextChannel = nextChannel + 2;
+
+    const socketCount = channel.stereo ? 2 : 1;
+    const inputSockets: number[] = [];
+    for (let offset = 0; offset < socketCount; offset = offset + 1) {
+      inputSockets.push(nextSocket + offset);
+    }
+    assignments.push({ channelId: channel.id, consoleChannels: [nextChannel], inputSockets, label, stereo: channel.stereo });
+    nextChannel = nextChannel + 1;
+    nextSocket = nextSocket + socketCount;
   }
   return assignments;
 }
@@ -66,35 +85,59 @@ export interface Allocation {
   subUsesMainBus: string | null;
 }
 
+/**
+ * What a bus's sends are set to. On a console where that setting covers two neighbouring buses
+ * at once, both buses of a pair must be used the same way.
+ */
+type BusUse = 'preFader' | 'postFader' | 'group';
+
 class BusPool {
   private readonly taken = new Set<number>();
+  private readonly useByPair = new Map<number, BusUse>();
 
-  constructor(private readonly busCount: number) {}
+  constructor(
+    private readonly busCount: number,
+    private readonly tapIsPerPair: boolean,
+  ) {}
 
-  isFree(bus: number): boolean {
-    return bus >= 1 && bus <= this.busCount && !this.taken.has(bus);
+  private pairOf(bus: number): number {
+    return Math.ceil(bus / 2);
   }
 
-  take(buses: number[]): void {
+  /** True when the bus is free and, where taps are set per pair, its pair is unused or used the same way. */
+  canUse(bus: number, use: BusUse): boolean {
+    const inRange = bus >= 1 && bus <= this.busCount;
+    if (!inRange || this.taken.has(bus)) {
+      return false;
+    }
+    if (!this.tapIsPerPair) {
+      return true;
+    }
+    const pairUse = this.useByPair.get(this.pairOf(bus));
+    return pairUse === undefined || pairUse === use;
+  }
+
+  take(buses: number[], use: BusUse): void {
     for (const bus of buses) {
       this.taken.add(bus);
+      this.useByPair.set(this.pairOf(bus), use);
     }
   }
 
-  /** The lowest free bus, or null. */
-  findSingle(): number | null {
+  /** The lowest usable bus, or null. */
+  findSingle(use: BusUse): number | null {
     for (let bus = 1; bus <= this.busCount; bus = bus + 1) {
-      if (this.isFree(bus)) {
+      if (this.canUse(bus, use)) {
         return bus;
       }
     }
     return null;
   }
 
-  /** The lowest free odd/even pair (1+2, 3+4, ...), or null. */
-  findLinkablePair(): number[] | null {
+  /** The lowest usable odd/even pair (1+2, 3+4, ...), or null. */
+  findLinkablePair(use: BusUse): number[] | null {
     for (let bus = 1; bus < this.busCount; bus = bus + 2) {
-      if (this.isFree(bus) && this.isFree(bus + 1)) {
+      if (this.canUse(bus, use) && this.canUse(bus + 1, use)) {
         return [bus, bus + 1];
       }
     }
@@ -109,12 +152,14 @@ function isReverbOrDelay(wish: EffectWish): boolean {
 /**
  * Allocates buses in priority order: monitor mixes, send effects, stream mix, subwoofer,
  * then group buses from the wish list until the console runs out.
+ * Where a console sets the send tap for two buses at once, a pair is never shared between
+ * monitor (pre-fader), effect (post-fader) and group use.
  * Every wish that is dropped becomes a warning.
  */
 export function allocateBusesAndFx(plan: MixPlan, profile: ConsoleProfile): Allocation {
   const facts = profile.facts;
   const busesAreStereo = facts.stereoBuses.value === 'native';
-  const pool = new BusPool(facts.mixBusCount.value);
+  const pool = new BusPool(facts.mixBusCount.value, facts.sendTapIsPerBusPair.value);
   const busMap: BusAssignment[] = [];
   const fxMap: FxAssignment[] = [];
   const warnings: SheetWarning[] = [];
@@ -122,12 +167,12 @@ export function allocateBusesAndFx(plan: MixPlan, profile: ConsoleProfile): Allo
 
   // 1. Monitor mixes.
   for (const mix of plan.monitorMixes) {
-    const bus = pool.findSingle();
+    const bus = pool.findSingle('preFader');
     if (bus === null) {
       warnings.push({ kind: 'droppedWish', message: `No bus left for ${mix.label}. This console cannot serve that many monitor mixes.` });
       continue;
     }
-    pool.take([bus]);
+    pool.take([bus], 'preFader');
     busMap.push({ busNumbers: [bus], purpose: 'monitor', label: mix.label, planId: mix.id });
   }
 
@@ -154,18 +199,18 @@ export function allocateBusesAndFx(plan: MixPlan, profile: ConsoleProfile): Allo
       // This console wires fixed buses to its send-capable slots.
       const slotIndex = sendSlots.indexOf(slot);
       const feedBus = defaultFeedBuses[slotIndex];
-      if (feedBus !== undefined && pool.isFree(feedBus)) {
+      if (feedBus !== undefined && pool.canUse(feedBus, 'postFader')) {
         bus = feedBus;
       }
     } else {
-      bus = pool.findSingle();
+      bus = pool.findSingle('postFader');
     }
     if (bus === null) {
       warnings.push({ kind: 'droppedWish', message: `No bus left to feed ${wish.label}. It is left out because monitor mixes come first.` });
       continue;
     }
 
-    pool.take([bus]);
+    pool.take([bus], 'postFader');
     usedSlots.add(slot);
     busMap.push({ busNumbers: [bus], purpose: 'sendEffect', label: wish.label, planId: wish.id });
     fxMap.push({ slot, effectName, role: 'send', label: wish.label, planId: wish.id });
@@ -173,11 +218,11 @@ export function allocateBusesAndFx(plan: MixPlan, profile: ConsoleProfile): Allo
 
   // 3. Stream mix: a stereo, post-fader bus.
   if (plan.stream.enabled) {
-    const streamBuses = busesAreStereo ? wrapSingle(pool.findSingle()) : pool.findLinkablePair();
+    const streamBuses = busesAreStereo ? wrapSingle(pool.findSingle('postFader')) : pool.findLinkablePair('postFader');
     if (streamBuses === null) {
       warnings.push({ kind: 'droppedWish', message: 'No bus left for a separate stream mix. Feed the stream from the main mix instead.' });
     } else {
-      pool.take(streamBuses);
+      pool.take(streamBuses, 'postFader');
       busMap.push({ busNumbers: streamBuses, purpose: 'stream', label: 'Stream mix', planId: 'stream' });
     }
   }
@@ -189,11 +234,11 @@ export function allocateBusesAndFx(plan: MixPlan, profile: ConsoleProfile): Allo
     if (monoMain !== undefined) {
       subUsesMainBus = monoMain;
     } else {
-      const bus = pool.findSingle();
+      const bus = pool.findSingle('postFader');
       if (bus === null) {
         warnings.push({ kind: 'droppedWish', message: 'No bus left for the subwoofer feed. Feed the sub from the main mix through its crossover instead.' });
       } else {
-        pool.take([bus]);
+        pool.take([bus], 'postFader');
         busMap.push({ busNumbers: [bus], purpose: 'subwoofer', label: 'Subwoofer', planId: 'subwoofer' });
       }
     }
@@ -204,19 +249,19 @@ export function allocateBusesAndFx(plan: MixPlan, profile: ConsoleProfile): Allo
   for (const wish of sortedGroupWishes) {
     let buses: number[] | null;
     if (busesAreStereo) {
-      buses = wrapSingle(pool.findSingle());
+      buses = wrapSingle(pool.findSingle('group'));
     } else if (wish.monoIsAcceptable) {
       // On a console with mono buses a stereo group costs two, so groups that work in mono use one.
-      buses = wrapSingle(pool.findSingle());
+      buses = wrapSingle(pool.findSingle('group'));
     } else {
-      buses = pool.findLinkablePair();
+      buses = pool.findLinkablePair('group');
     }
 
     if (buses === null) {
       warnings.push({ kind: 'droppedWish', message: `No bus left for the ${wish.label} group. Use the DCA alone for those channels.` });
       continue;
     }
-    pool.take(buses);
+    pool.take(buses, 'group');
     busMap.push({ busNumbers: buses, purpose: 'group', label: `${wish.label} group`, planId: wish.id });
   }
 

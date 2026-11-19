@@ -40,3 +40,16 @@ These were needed to proceed and are flagged for review.
 26. **Sass, print:** the print stylesheet lives in `src/_print.scss`. One sheet section per page; the "if you hear" appendix starts a new page.
 27. **State is saved on every change, synchronously.** An earlier version saved on a later tick and lost a change made just before a reload.
 28. **Troubleshooter:** trees are typed data with conditions and text tokens; console control names come only from profile facts. During a service, rehearsal-only checks are skipped and rehearsal-only fixes are replaced by a safe alternative or an "after the service" note. Frequencies and amounts in the trees are typical starting values written for the trees, not taken from the knowledge base.
+
+## 2026-11-19: fixes approved by Brian after the phase 9 accuracy review
+
+29. **A click never gets a monitor send when wedges are on stage** (wedges or mixed), and the plan carries a warning. The room would hear it.
+30. **X32 buses are allocated by odd/even pair.** The manual (p49) sets the send tap for two buses at once, so a pair is never shared between monitor (pre-fader), effect (post-fader) and group use. Two mono groups may share a pair; the group step then says which sends to switch on and off. Whether a send is on or off by default in Sub-Group mode is UNVERIFIED, so those steps are flagged "check on your console".
+31. **A stereo group on the X32 gets a "link the two buses" sub-step.** The link procedure is UNVERIFIED (seen only in a screenshot).
+32. **WING Compact: input sockets are listed separately from channels,** with one step for assigning inputs to channels and a sub-step for grouping two inputs as a stereo Source (manual p39, p40). This is the one routing change the sheet asks for.
+33. **The monitor section starts with every mix master down and ends with masters up and the ring-out.** With in-ears it adds "packs at minimum" and a limiter step, and uses no wedge wording.
+34. **Feedback trees:** the wedge test keeps a finger on mute and re-mutes at once; the fix lowers the send with the channel muted and says which mix (nearest wedge, or all of them).
+35. **Tips and mixer notes are per role, not per rating,** and every channel gets a tip. This changes decision 5: skill no longer changes coaching notes, because a note that appears only for some ratings reveals the rating of a named person on the printed sheet. The praise lines for the highest rating were removed.
+36. **The value trail never prints,** even when a detail panel is open. It stays on screen, where the mixer who entered the ratings is the reader.
+
+Not fixed in this round (from the same review, still open): the "no sound" tree skipping phantom and gain looks in a service; beginner electric guitar threshold wording; headphone-solo wording on the WING; cable check before muting; trees shown for instruments the band lacks; WING limiter on the pre-fader insert; dry-room vocal low cuts and reverb; tom low cut; jargon and naming consistency; fixture placeholders named after roles.

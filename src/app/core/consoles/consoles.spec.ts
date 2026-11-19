@@ -207,4 +207,64 @@ describe('console adapters', () => {
     const text = JSON.stringify(sheet);
     expect(text).not.toMatch(/beginner|intermediate|advanced/i);
   });
+
+  it('X32: never mixes monitor, effect and group buses inside one odd/even pair, for any number of monitor mixes', () => {
+    for (let monitorMixCount = 0; monitorMixCount <= 8; monitorMixCount = monitorMixCount + 1) {
+      const plan = buildMixPlan(FIXTURE_FULL_BAND, FIXTURE_LIVE_ROOM, { ...FIXTURE_WEDGES, monitorMixCount });
+      const sheet = expectSheet(toX32(plan));
+      const useByPair = new Map<number, string>();
+      for (const bus of sheet.busMap) {
+        const use = bus.purpose === 'monitor' ? 'preFader' : bus.purpose === 'group' ? 'group' : 'postFader';
+        for (const busNumber of bus.busNumbers) {
+          const pair = Math.ceil(busNumber / 2);
+          const existing = useByPair.get(pair);
+          expect(existing === undefined || existing === use, `mixes ${monitorMixCount}, bus ${busNumber}`).toBe(true);
+          useByPair.set(pair, use);
+        }
+      }
+    }
+  });
+
+  it('X32: a group step says which sends to switch on and off, links a stereo pair, and is flagged to check', () => {
+    const sheet = expectSheet(toX32(fullLive()));
+    const steps = sheet.sections.flatMap((section) => section.steps);
+    const vocals = steps.find((step) => step.id === 'group:vocals:route');
+    expect(vocals?.checkOnConsole).not.toBeNull();
+    expect(vocals?.subSteps.join(' ')).toContain('switch the send to bus 5 on');
+    expect(vocals?.subSteps.join(' ')).toContain('send to bus 6 off');
+    const keys = steps.find((step) => step.id === 'group:keys:route');
+    expect(keys?.subSteps[0]).toContain('link buses 7 and 8');
+  });
+
+  it('WING Compact: names input sockets separately from channels and adds the stereo Source step', () => {
+    const plan = fullLive();
+    const sheet = expectSheet(toWingCompact(plan));
+    const drums = sheet.channelMap[0];
+    const bass = sheet.channelMap[1];
+    expect(drums.consoleChannels).toEqual([1]);
+    expect(drums.inputSockets).toEqual([1, 2]);
+    expect(bass.consoleChannels).toEqual([2]);
+    expect(bass.inputSockets).toEqual([3]);
+    const steps = sheet.sections.flatMap((section) => section.steps);
+    expect(steps.some((step) => step.id === 'patch:sources')).toBe(true);
+    const drumsStep = steps.find((step) => step.id === `patch:${drums.channelId}`);
+    expect(drumsStep?.instruction).toContain('inputs 1 and 2');
+    expect(drumsStep?.subSteps[0]).toContain('stereo Source');
+  });
+
+  it('puts the monitor master, ring-out and in-ear safety steps on the sheet', () => {
+    const wedgeSteps = expectSheet(toX32(fullLive())).sections.find((section) => section.id === 'monitors')?.steps ?? [];
+    const wedgeIds = wedgeSteps.map((step) => step.id);
+    expect(wedgeIds[0]).toBe('monitors:masters');
+    expect(wedgeIds).toContain('monitors:ring-out');
+    expect(wedgeIds).not.toContain('monitors:inear-limiter');
+
+    const inEarPlan = buildMixPlan(FIXTURE_FULL_BAND, FIXTURE_LIVE_ROOM, { ...FIXTURE_WEDGES, monitorType: 'inEars' });
+    const inEarSection = expectSheet(toX32(inEarPlan)).sections.find((section) => section.id === 'monitors');
+    const inEarIds = (inEarSection?.steps ?? []).map((step) => step.id);
+    expect(inEarIds).toContain('monitors:inear-packs');
+    expect(inEarIds).toContain('monitors:inear-limiter');
+    expect(inEarIds).not.toContain('monitors:ring-out');
+    expect(JSON.stringify(inEarSection)).not.toMatch(/wedge/i);
+  });
 });

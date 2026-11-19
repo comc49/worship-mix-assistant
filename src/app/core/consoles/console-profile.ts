@@ -59,6 +59,12 @@ export interface ConsoleFacts {
   stereoChannels: Fact<StereoHandling>;
   stereoLinkPairRule: Fact<string | null>;
   stereoBuses: Fact<StereoHandling>;
+  /** How two buses are linked into a stereo bus. null on a console whose buses are already stereo. */
+  busLinkProcedure: Fact<string | null>;
+  /** How a stereo source is set up on a console where a channel is not a socket. null where two channels are linked instead. */
+  stereoSourceProcedure: Fact<string | null>;
+  /** How an input is assigned to a channel, on a console where a channel is not a socket. null otherwise. */
+  assignSourceToChannel: Fact<string | null>;
   mixBusCount: Fact<number>;
   matrixCount: Fact<number>;
   mainBuses: Fact<string[]>;
@@ -77,6 +83,10 @@ export interface ConsoleFacts {
   fxScreen: Fact<string>;
   fxInsertProcedure: Fact<string>;
 
+  /** True when the place a send is taken from is set for two neighbouring buses at once (1+2, 3+4, ...). */
+  sendTapIsPerBusPair: Fact<boolean>;
+  /** Whether a channel's send to a bus is on or off before anyone touches it. null when unknown. */
+  groupSendDefaultState: Fact<string | null>;
   sendTapPoints: Fact<string[]>;
   /** The tap to choose for a pre-fader monitor send, by its on-console name. */
   monitorSendTap: Fact<string>;

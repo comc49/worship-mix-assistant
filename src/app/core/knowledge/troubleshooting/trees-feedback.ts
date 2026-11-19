@@ -51,8 +51,8 @@ function buildFeedbackTree(band: FeedbackBand): TroubleshootingTree {
     wedgeTest: {
       kind: 'check',
       when: { condition: { kind: 'wedgesInUse' }, otherwise: 'cheapCheck' },
-      action: 'Find out whether the ring is in a wedge before you touch the main mix. Pull the channel fader all the way down, then unmute the channel. The fader does not change what a pre-fader monitor send feeds to the wedge.',
-      question: 'Does the ringing come back with the fader down?',
+      action: 'Find out whether the ring is in a wedge before you touch the main mix. Pull the channel fader all the way down. Keep a finger on the mute button, then unmute the channel for a second or two. If it starts to ring, mute it again at once. The fader does not change what a pre-fader monitor send feeds to the wedge.',
+      question: 'Did the ringing start again with the fader down?',
       yes: 'fixWedgeSend',
       no: 'cheapCheck',
       safety: 'safeDuringService',
@@ -60,7 +60,7 @@ function buildFeedbackTree(band: FeedbackBand): TroubleshootingTree {
     fixWedgeSend: {
       kind: 'fix',
       arrangementAdvice: band.stageAdvice,
-      text: `The ring is in the wedge, not in the room. Open the sends of that channel ({control:sendsScreen}) and turn its send to that monitor mix down 3 dB at a time until the ringing is gone. Then bring the channel fader back up for the room. ${MONITOR_RULES.wedgeCompressionNote}`,
+      text: `The ring is in a wedge, not in the room. Keep the channel muted while you work. Open the sends of that channel ({control:sendsScreen}) and turn its send down 3 dB to the monitor mix of the wedge nearest that mic. If you are not sure which mix that is, turn its send down 3 dB to every monitor mix. Unmute for a second or two with a finger on mute. If it still rings, mute again and take off another 3 dB. When it stays quiet, bring the channel fader back up for the room. ${MONITOR_RULES.wedgeCompressionNote}`,
       safety: 'safeDuringService',
       controlRefs: ['sendsScreen'],
     },

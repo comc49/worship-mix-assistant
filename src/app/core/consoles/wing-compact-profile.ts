@@ -24,6 +24,9 @@ export const WING_COMPACT_PROFILE: ConsoleProfile = {
     stereoChannels: verified('native', '2.2 40 Input Channels and 8 Aux Channels', 7, 'without requiring adjacent channel linking', 'Mono or stereo is a property of the Source (ROUTING, SOURCES); the channel adopts it.'),
     stereoLinkPairRule: verified(null, '2.2 40 Input Channels and 8 Aux Channels', 7, 'without requiring adjacent channel linking', 'No linking is needed.'),
     stereoBuses: verified('native', '2.4 16 Stereo Buses', 7, 'WING provides 16 stereo buses (B1-B16)'),
+    busLinkProcedure: verified(null, '2.4 16 Stereo Buses', 7, 'WING provides 16 stereo buses (B1-B16)', 'Buses are already stereo.'),
+    stereoSourceProcedure: verified('Press ROUTING, open SOURCES, select the two inputs and group them as one stereo Source in the right panel', '5.4 ROUTING - SOURCES', 40, 'two input channels must be grouped', 'Full sentence: "To assign a stereo or mid/side Source to a single channel, two input channels must be grouped as a single stereo or mid/side Source in the right panel."'),
+    assignSourceToChannel: verified('Press ROUTING, open CHANNELS, click the channel, then click the Source you want on it', '5.4 ROUTING - CHANNELS', 39, 'Click on the Source you want to assign to that channel.'),
     mixBusCount: verified(16, '2.4 16 Stereo Buses', 7, 'WING provides 16 stereo buses (B1-B16)'),
     matrixCount: verified(8, '2.5 8 Matrix Buses', 8, 'The 8 Matrix buses (MX1 - MX8)'),
     mainBuses: verified(['MAIN 1', 'MAIN 2', 'MAIN 3', 'MAIN 4'], '2.3 4 Stereo Main Buses', 7, 'WING features 4 stereo Main buses (M1-M4)'),
@@ -44,6 +47,8 @@ export const WING_COMPACT_PROFILE: ConsoleProfile = {
       'Load the desired effect into the insert point of a Bus',
     ),
 
+    sendTapIsPerBusPair: verified(false, '2.4 16 Stereo Buses', 8, 'GROUP: The send level to the bus is deactivated', 'The mode is chosen for each send on its own.'),
+    groupSendDefaultState: unverified(null, 'The manual documents a send on/off setting ("Send Enable", p36) but does not say whether a send is on by default. Check that each channel\'s send to the group bus is switched on.'),
     sendTapPoints: verified(['TAP', 'POST', 'GROUP'], '2.4 16 Stereo Buses / 6.1 BUS/MATRIX SENDS', 68, 'The following TAP point positions are available', 'There is no bus send mode named PRE. A pre-fader send is TAP mode with the channel\'s TAP point at PRE FDR.'),
     monitorSendTap: verified('TAP, with the channel TAP point at PRE FDR', '6.1 INPUT Channels', 68, 'PRE FDR: Between the fourth processing slot and the channel fader'),
     defaultSendTap: unverified(null, 'The manual does not state the factory default send mode or TAP point position.'),

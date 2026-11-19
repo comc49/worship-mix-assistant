@@ -92,12 +92,19 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
         1,
         2,
       ],
+      "inputSockets": [
+        1,
+        2,
+      ],
       "label": "Electronic drums (stereo) (Drums)",
       "stereo": true,
     },
     {
       "channelId": "m-bass:bassGuitar.di",
       "consoleChannels": [
+        3,
+      ],
+      "inputSockets": [
         3,
       ],
       "label": "Bass guitar",
@@ -108,6 +115,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "consoleChannels": [
         4,
       ],
+      "inputSockets": [
+        4,
+      ],
       "label": "Acoustic guitar (Vocalist A)",
       "stereo": false,
     },
@@ -116,12 +126,19 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "consoleChannels": [
         5,
       ],
+      "inputSockets": [
+        5,
+      ],
       "label": "Electric guitar",
       "stereo": false,
     },
     {
       "channelId": "m-keys:keys.di",
       "consoleChannels": [
+        7,
+        8,
+      ],
+      "inputSockets": [
         7,
         8,
       ],
@@ -134,12 +151,19 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
         9,
         10,
       ],
+      "inputSockets": [
+        9,
+        10,
+      ],
       "label": "Pad",
       "stereo": true,
     },
     {
       "channelId": "m-vocalist-a:leadVocal.mic",
       "consoleChannels": [
+        11,
+      ],
+      "inputSockets": [
         11,
       ],
       "label": "Lead vocal (Vocalist A)",
@@ -150,12 +174,18 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "consoleChannels": [
         12,
       ],
+      "inputSockets": [
+        12,
+      ],
       "label": "Harmony vocal (Vocalist B)",
       "stereo": false,
     },
     {
       "channelId": "m-vocalist-c:harmonyVocal.mic",
       "consoleChannels": [
+        13,
+      ],
+      "inputSockets": [
         13,
       ],
       "label": "Harmony vocal (Vocalist C)",
@@ -212,7 +242,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
   "reference": [
     {
       "channelId": "m-drums:electronicDrums.stereo",
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Aim for even hits. In the module, check the kick and snare are balanced and the pad sensitivity suits how hard you play.",
+      ],
       "ifYouHear": [
         {
           "hear": "Kick too quiet or too loud against the rest of the kit",
@@ -234,6 +266,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "mixerNotes": [
         "The balance between kick, snare and cymbals is set inside the drum module, not on the console.",
         "If the module has a spare output, a separate kick output gives you real control of the low end. Consider it.",
+        "Uneven kick and snare cannot be fixed on a stereo pair. Fix the balance and pad sensitivity in the module, and ask for a separate kick output.",
       ],
       "subject": "Ch 1+2 · Electronic drums (stereo) (Drums)",
     },
@@ -267,7 +300,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
     },
     {
       "channelId": "m-vocalist-a:acousticGuitar.di",
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Strum lighter than feels natural. The PA makes it big.",
+      ],
       "ifYouHear": [
         {
           "hear": "Boomy or humming on certain notes",
@@ -291,7 +326,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
     },
     {
       "channelId": "m-electric:electricGuitar.modeler",
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Set every patch to the same volume at home, with the lead patch only a little louder.",
+      ],
       "ifYouHear": [
         {
           "hear": "Harsh or fizzy",
@@ -310,7 +347,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "tryThis": "Ask one of them to move to a different register before using EQ.",
         },
       ],
-      "mixerNotes": [],
+      "mixerNotes": [
+        "Watch for volume jumps when the guitarist changes sounds, and ride the fader between songs.",
+      ],
       "subject": "Ch 5 · Electric guitar",
     },
     {
@@ -341,7 +380,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
     },
     {
       "channelId": "m-pad:padSynth.di",
-      "coachingNotes": [],
+      "coachingNotes": [
+        "A pad should be felt more than heard. If you can clearly hear it on stage, it is probably too loud.",
+      ],
       "ifYouHear": [
         {
           "hear": "The whole mix sounds cloudy",
@@ -357,7 +398,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
     },
     {
       "channelId": "m-vocalist-a:leadVocal.mic",
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Keep the mic one fist from your mouth, and keep it there when you get louder.",
+      ],
       "ifYouHear": [
         {
           "hear": "Muddy or woolly",
@@ -393,6 +436,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
         },
       ],
       "mixerNotes": [
+        "Keep a finger on this fader and ride it: push up quiet phrases, pull back loud ones.",
         "Cardioid: put the wedge directly behind the mic, in line with the handle.",
       ],
       "subject": "Ch 11 · Lead vocal (Vocalist A)",
@@ -444,7 +488,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
     {
       "channelId": "m-vocalist-c:harmonyVocal.mic",
       "coachingNotes": [
-        "Your blend is coming through as you sing it.",
+        "Keep the mic one fist from your mouth, and listen for the lead vocal in your monitor to blend with.",
       ],
       "ifYouHear": [
         {
@@ -2036,13 +2080,15 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "busNumbers": [
             5,
           ],
-          "checkOnConsole": null,
+          "checkOnConsole": "The manual confirms each send can be muted (p49) but does not say whether a send is on or off by default once its pair is set to Sub-Group. Check on the console which channels feed the group.",
           "controlRefs": [
             "setBusAsGroup",
             "mixBusCount",
+            "groupSendDefaultState",
+            "sendTapIsPerBusPair",
           ],
           "detail": {
-            "listenFor": "Pulling the group fader down should pull all of these down together.",
+            "listenFor": "Pulling the group fader down should pull all of these down together, and nothing else. Mute the group: none of these channels should be heard, and every other channel should be unchanged.",
             "provenance": [],
             "range": null,
             "why": "One place to control all vocals together.",
@@ -2055,7 +2101,10 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "safety": "rehearsalOnly",
           "sectionId": "groups",
           "subSteps": [
-            "Select the channel, open the Home screen sends tab, and for that bus choose "Sub-Group" as the place the send is taken from.",
+            "Select the channel, open the Home screen sends tab, and for the pair of buses that holds this bus choose "Sub-Group" as the place the send is taken from.",
+            "That setting covers buses 5 and 6 together.",
+            "On each of these channels, switch the send to bus 5 on, and switch the send to bus 6 off unless the channel belongs to that group too.",
+            "On every other channel, make sure the send to bus 5 is off.",
           ],
           "subject": "Vocals group · bus 5",
           "value": "Lead vocal (Vocalist A), Harmony vocal (Vocalist B), Harmony vocal (Vocalist C)",
@@ -2116,13 +2165,15 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "busNumbers": [
             6,
           ],
-          "checkOnConsole": null,
+          "checkOnConsole": "The manual confirms each send can be muted (p49) but does not say whether a send is on or off by default once its pair is set to Sub-Group. Check on the console which channels feed the group.",
           "controlRefs": [
             "setBusAsGroup",
             "mixBusCount",
+            "groupSendDefaultState",
+            "sendTapIsPerBusPair",
           ],
           "detail": {
-            "listenFor": "Pulling the group fader down should pull all of these down together.",
+            "listenFor": "Pulling the group fader down should pull all of these down together, and nothing else. Mute the group: none of these channels should be heard, and every other channel should be unchanged.",
             "provenance": [],
             "range": null,
             "why": "One place to control the guitars.",
@@ -2135,7 +2186,10 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "safety": "rehearsalOnly",
           "sectionId": "groups",
           "subSteps": [
-            "Select the channel, open the Home screen sends tab, and for that bus choose "Sub-Group" as the place the send is taken from.",
+            "Select the channel, open the Home screen sends tab, and for the pair of buses that holds this bus choose "Sub-Group" as the place the send is taken from.",
+            "That setting covers buses 5 and 6 together.",
+            "On each of these channels, switch the send to bus 6 on, and switch the send to bus 5 off unless the channel belongs to that group too.",
+            "On every other channel, make sure the send to bus 6 is off.",
           ],
           "subject": "Guitars group · bus 6",
           "value": "Acoustic guitar (Vocalist A), Electric guitar",
@@ -2197,13 +2251,16 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
             7,
             8,
           ],
-          "checkOnConsole": null,
+          "checkOnConsole": "The manual confirms each send can be muted (p49) but does not say whether a send is on or off by default once its pair is set to Sub-Group. Check on the console which channels feed the group.",
           "controlRefs": [
             "setBusAsGroup",
             "mixBusCount",
+            "groupSendDefaultState",
+            "busLinkProcedure",
+            "sendTapIsPerBusPair",
           ],
           "detail": {
-            "listenFor": "Pulling the group fader down should pull all of these down together.",
+            "listenFor": "Pulling the group fader down should pull all of these down together, and nothing else. Mute the group: none of these channels should be heard, and every other channel should be unchanged.",
             "provenance": [],
             "range": null,
             "why": "One place to control keys and pads, keeping their stereo spread.",
@@ -2216,7 +2273,11 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "safety": "rehearsalOnly",
           "sectionId": "groups",
           "subSteps": [
-            "Select the channel, open the Home screen sends tab, and for that bus choose "Sub-Group" as the place the send is taken from.",
+            "First link buses 7 and 8 as a stereo bus: Select the first bus of the pair, open the Home screen config tab and switch on Link.",
+            "Select the channel, open the Home screen sends tab, and for the pair of buses that holds this bus choose "Sub-Group" as the place the send is taken from.",
+            "That setting covers buses 7 and 8 together.",
+            "On each of these channels, switch the send to buses 7+8 on.",
+            "On every other channel, make sure the send to buses 7+8 is off.",
           ],
           "subject": "Keys group · buses 7+8",
           "value": "Keys, Pad",
@@ -4036,10 +4097,34 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "busNumbers": [],
           "checkOnConsole": null,
           "controlRefs": [
+            "mixBusCount",
+          ],
+          "detail": {
+            "listenFor": "Nothing should come out of any monitor yet.",
+            "provenance": [],
+            "range": null,
+            "why": "The send levels on this sheet assume the mix master starts closed. You bring it up at the end, slowly, with the mics open.",
+          },
+          "effectName": null,
+          "fxSlot": null,
+          "id": "monitors:masters",
+          "instruction": "Before setting any send: pull the master fader of every monitor mix all the way down",
+          "optional": false,
+          "safety": "rehearsalOnly",
+          "sectionId": "monitors",
+          "subSteps": [],
+          "subject": "All monitor mixes",
+          "value": "All the way down",
+        },
+        {
+          "busNumbers": [],
+          "checkOnConsole": null,
+          "controlRefs": [
             "monitorSendTap",
             "sendTapPoints",
             "preFaderSendIsAfterDynamics",
             "sendsScreen",
+            "sendTapIsPerBusPair",
           ],
           "detail": {
             "listenFor": "Move a channel fader: that musician's monitor level must not change.",
@@ -4050,12 +4135,12 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "monitors:tap",
-          "instruction": "Set every monitor send to be taken at: Pre-Fader",
+          "instruction": "Set every monitor send to be taken at: Pre-Fader. On this console the setting is made for two buses at a time (1+2, 3+4, and so on).",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "monitors",
           "subSteps": [],
-          "subject": "All monitor sends",
+          "subject": "All monitor mixes",
           "value": "Pre-Fader",
         },
         {
@@ -4068,7 +4153,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
             "listenFor": "Whether the wedge goes silent when the channel is muted.",
             "provenance": [],
             "range": null,
-            "why": "During feedback you need to know whether muting the channel also silences the monitor.",
+            "why": "When something goes wrong you need to know whether muting the channel also silences the monitor.",
           },
           "effectName": null,
           "fxSlot": null,
@@ -4078,7 +4163,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "safety": "rehearsalOnly",
           "sectionId": "monitors",
           "subSteps": [],
-          "subject": "All monitor sends",
+          "subject": "All monitor mixes",
           "value": "Expected: the monitor goes silent too",
         },
         {
@@ -4208,7 +4293,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
             "sendsScreen",
           ],
           "detail": {
-            "listenFor": "Ask the singer, then raise in small steps. Loud wedges are the first cause of feedback.",
+            "listenFor": "Ask the singer, then raise in small steps. Loud monitors are the first cause of feedback.",
             "provenance": [
               {
                 "description": "Lead vocal baseline: 0 dB",
@@ -4695,7 +4780,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
               },
             ],
             "range": "-15 dB to 3 dB",
-            "why": "Bass carries on stage by itself; wedges need little of it.",
+            "why": "Bass carries on stage by itself; monitors need little of it.",
           },
           "effectName": null,
           "fxSlot": null,
@@ -4832,6 +4917,52 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "subject": "Monitor 4: Band · bus 4",
           "value": "-6 dB",
         },
+        {
+          "busNumbers": [],
+          "checkOnConsole": null,
+          "controlRefs": [
+            "mixBusCount",
+          ],
+          "detail": {
+            "listenFor": "Stop at the first hint of ringing and back off 3 dB.",
+            "provenance": [],
+            "range": null,
+            "why": "The quietest monitor that works is the safest one.",
+          },
+          "effectName": null,
+          "fxSlot": null,
+          "id": "monitors:masters-up",
+          "instruction": "With the mics open, bring each monitor mix master up slowly until the musician says it is enough, and stop there",
+          "optional": false,
+          "safety": "rehearsalOnly",
+          "sectionId": "monitors",
+          "subSteps": [],
+          "subject": "When every send is set",
+          "value": "Only as loud as asked for",
+        },
+        {
+          "busNumbers": [],
+          "checkOnConsole": null,
+          "controlRefs": [
+            "busEqBandCount",
+          ],
+          "detail": {
+            "listenFor": "After two or three narrow cuts the wedge should get noticeably louder before it rings.",
+            "provenance": [],
+            "range": null,
+            "why": "Finding each wedge's first ringing frequencies now means they do not find you during the service.",
+          },
+          "effectName": null,
+          "fxSlot": null,
+          "id": "monitors:ring-out",
+          "instruction": "Ring out the vocal mics. Before the band plays: with each vocal mic open on stage, slowly raise its wedge send until it just starts to ring, then cut that frequency 3 dB with a narrow EQ on the monitor bus and back the send off 3 dB. Stop after two or three cuts per wedge.",
+          "optional": false,
+          "safety": "rehearsalOnly",
+          "sectionId": "monitors",
+          "subSteps": [],
+          "subject": "When every send is set",
+          "value": null,
+        },
       ],
       "title": "Monitor sends",
     },
@@ -4940,7 +5071,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
   "warnings": [
     {
       "kind": "unverified",
-      "message": "44 steps are marked "check on your console": the manual does not confirm the exact name or behavior they rely on.",
+      "message": "47 steps are marked "check on your console": the manual does not confirm the exact name or behavior they rely on.",
     },
   ],
 }
@@ -5036,6 +5167,10 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "consoleChannels": [
         1,
       ],
+      "inputSockets": [
+        1,
+        2,
+      ],
       "label": "Electronic drums (stereo) (Drums)",
       "stereo": true,
     },
@@ -5043,6 +5178,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "channelId": "m-bass:bassGuitar.di",
       "consoleChannels": [
         2,
+      ],
+      "inputSockets": [
+        3,
       ],
       "label": "Bass guitar",
       "stereo": false,
@@ -5052,6 +5190,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "consoleChannels": [
         3,
       ],
+      "inputSockets": [
+        4,
+      ],
       "label": "Acoustic guitar (Vocalist A)",
       "stereo": false,
     },
@@ -5059,6 +5200,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "channelId": "m-electric:electricGuitar.modeler",
       "consoleChannels": [
         4,
+      ],
+      "inputSockets": [
+        5,
       ],
       "label": "Electric guitar",
       "stereo": false,
@@ -5068,6 +5212,10 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "consoleChannels": [
         5,
       ],
+      "inputSockets": [
+        6,
+        7,
+      ],
       "label": "Keys",
       "stereo": true,
     },
@@ -5075,6 +5223,10 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "channelId": "m-pad:padSynth.di",
       "consoleChannels": [
         6,
+      ],
+      "inputSockets": [
+        8,
+        9,
       ],
       "label": "Pad",
       "stereo": true,
@@ -5084,6 +5236,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "consoleChannels": [
         7,
       ],
+      "inputSockets": [
+        10,
+      ],
       "label": "Lead vocal (Vocalist A)",
       "stereo": false,
     },
@@ -5092,6 +5247,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "consoleChannels": [
         8,
       ],
+      "inputSockets": [
+        11,
+      ],
       "label": "Harmony vocal (Vocalist B)",
       "stereo": false,
     },
@@ -5099,6 +5257,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "channelId": "m-vocalist-c:harmonyVocal.mic",
       "consoleChannels": [
         9,
+      ],
+      "inputSockets": [
+        12,
       ],
       "label": "Harmony vocal (Vocalist C)",
       "stereo": false,
@@ -5154,7 +5315,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
   "reference": [
     {
       "channelId": "m-drums:electronicDrums.stereo",
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Aim for even hits. In the module, check the kick and snare are balanced and the pad sensitivity suits how hard you play.",
+      ],
       "ifYouHear": [
         {
           "hear": "Kick too quiet or too loud against the rest of the kit",
@@ -5176,6 +5339,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "mixerNotes": [
         "The balance between kick, snare and cymbals is set inside the drum module, not on the console.",
         "If the module has a spare output, a separate kick output gives you real control of the low end. Consider it.",
+        "Uneven kick and snare cannot be fixed on a stereo pair. Fix the balance and pad sensitivity in the module, and ask for a separate kick output.",
       ],
       "subject": "Ch 1 · Electronic drums (stereo) (Drums)",
     },
@@ -5209,7 +5373,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
     },
     {
       "channelId": "m-vocalist-a:acousticGuitar.di",
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Strum lighter than feels natural. The PA makes it big.",
+      ],
       "ifYouHear": [
         {
           "hear": "Boomy or humming on certain notes",
@@ -5233,7 +5399,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
     },
     {
       "channelId": "m-electric:electricGuitar.modeler",
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Set every patch to the same volume at home, with the lead patch only a little louder.",
+      ],
       "ifYouHear": [
         {
           "hear": "Harsh or fizzy",
@@ -5252,7 +5420,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "tryThis": "Ask one of them to move to a different register before using EQ.",
         },
       ],
-      "mixerNotes": [],
+      "mixerNotes": [
+        "Watch for volume jumps when the guitarist changes sounds, and ride the fader between songs.",
+      ],
       "subject": "Ch 4 · Electric guitar",
     },
     {
@@ -5283,7 +5453,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
     },
     {
       "channelId": "m-pad:padSynth.di",
-      "coachingNotes": [],
+      "coachingNotes": [
+        "A pad should be felt more than heard. If you can clearly hear it on stage, it is probably too loud.",
+      ],
       "ifYouHear": [
         {
           "hear": "The whole mix sounds cloudy",
@@ -5299,7 +5471,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
     },
     {
       "channelId": "m-vocalist-a:leadVocal.mic",
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Keep the mic one fist from your mouth, and keep it there when you get louder.",
+      ],
       "ifYouHear": [
         {
           "hear": "Muddy or woolly",
@@ -5335,6 +5509,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
         },
       ],
       "mixerNotes": [
+        "Keep a finger on this fader and ride it: push up quiet phrases, pull back loud ones.",
         "Cardioid: put the wedge directly behind the mic, in line with the handle.",
       ],
       "subject": "Ch 7 · Lead vocal (Vocalist A)",
@@ -5386,7 +5561,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
     {
       "channelId": "m-vocalist-c:harmonyVocal.mic",
       "coachingNotes": [
-        "Your blend is coming through as you sing it.",
+        "Keep the mic one fist from your mouth, and listen for the lead vocal in your monitor to blend with.",
       ],
       "ifYouHear": [
         {
@@ -5471,8 +5646,34 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "busNumbers": [],
           "checkOnConsole": null,
           "controlRefs": [
+            "assignSourceToChannel",
+          ],
+          "detail": {
+            "listenFor": "Each channel meter should move when its own source plays, and no other.",
+            "provenance": [],
+            "range": null,
+            "why": "A stereo source uses two sockets but one channel, so sockets and channels stop matching after the first stereo source. This is the one routing change this sheet asks for.",
+          },
+          "effectName": null,
+          "fxSlot": null,
+          "id": "patch:sources",
+          "instruction": "On this console a channel number is not a socket number. Each step below names the input sockets to use. After plugging in, assign each input to its channel",
+          "optional": false,
+          "safety": "rehearsalOnly",
+          "sectionId": "patch",
+          "subSteps": [
+            "Press ROUTING, open CHANNELS, click the channel, then click the Source you want on it",
+          ],
+          "subject": "Before you plug in",
+          "value": null,
+        },
+        {
+          "busNumbers": [],
+          "checkOnConsole": null,
+          "controlRefs": [
             "nameChannel",
             "stereoChannels",
+            "stereoSourceProcedure",
           ],
           "detail": {
             "listenFor": "Nothing to listen for.",
@@ -5483,11 +5684,12 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "patch:m-drums:electronicDrums.stereo",
-          "instruction": "Plug in channel 1 as a stereo source and name it: Electronic drums (stereo) (Drums)",
+          "instruction": "Plug left and right into inputs 1 and 2, group those two inputs as one stereo Source, assign it to channel 1 and name it: Electronic drums (stereo) (Drums)",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "patch",
           "subSteps": [
+            "Press ROUTING, open SOURCES, select the two inputs and group them as one stereo Source in the right panel",
             "Select the channel and press HOME.",
             "Open the NAME/ICON/COLOR window.",
             "On the Name tab, type the name.",
@@ -5521,6 +5723,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "checkOnConsole": null,
           "controlRefs": [
             "nameChannel",
+            "assignSourceToChannel",
           ],
           "detail": {
             "listenFor": "Nothing to listen for.",
@@ -5531,7 +5734,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "patch:m-bass:bassGuitar.di",
-          "instruction": "Plug in and name channel 2: Bass guitar",
+          "instruction": "Plug into input 3, assign that input to channel 2 and name it: Bass guitar",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "patch",
@@ -5565,6 +5768,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "checkOnConsole": null,
           "controlRefs": [
             "nameChannel",
+            "assignSourceToChannel",
           ],
           "detail": {
             "listenFor": "Nothing to listen for.",
@@ -5575,7 +5779,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "patch:m-vocalist-a:acousticGuitar.di",
-          "instruction": "Plug in and name channel 3: Acoustic guitar (Vocalist A)",
+          "instruction": "Plug into input 4, assign that input to channel 3 and name it: Acoustic guitar (Vocalist A)",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "patch",
@@ -5609,6 +5813,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "checkOnConsole": null,
           "controlRefs": [
             "nameChannel",
+            "assignSourceToChannel",
           ],
           "detail": {
             "listenFor": "Nothing to listen for.",
@@ -5619,7 +5824,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "patch:m-electric:electricGuitar.modeler",
-          "instruction": "Plug in and name channel 4: Electric guitar",
+          "instruction": "Plug into input 5, assign that input to channel 4 and name it: Electric guitar",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "patch",
@@ -5654,6 +5859,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "controlRefs": [
             "nameChannel",
             "stereoChannels",
+            "stereoSourceProcedure",
           ],
           "detail": {
             "listenFor": "Nothing to listen for.",
@@ -5664,11 +5870,13 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "patch:m-keys:keys.di",
-          "instruction": "Plug in channel 5 as a stereo source and name it: Keys",
+          "instruction": "Plug left and right into inputs 6 and 7, group those two inputs as one stereo Source, assign it to channel 5 and name it: Keys",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "patch",
-          "subSteps": [],
+          "subSteps": [
+            "Press ROUTING, open SOURCES, select the two inputs and group them as one stereo Source in the right panel",
+          ],
           "subject": "Ch 5 · Keys",
           "value": null,
         },
@@ -5699,6 +5907,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "controlRefs": [
             "nameChannel",
             "stereoChannels",
+            "stereoSourceProcedure",
           ],
           "detail": {
             "listenFor": "Nothing to listen for.",
@@ -5709,11 +5918,13 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "patch:m-pad:padSynth.di",
-          "instruction": "Plug in channel 6 as a stereo source and name it: Pad",
+          "instruction": "Plug left and right into inputs 8 and 9, group those two inputs as one stereo Source, assign it to channel 6 and name it: Pad",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "patch",
-          "subSteps": [],
+          "subSteps": [
+            "Press ROUTING, open SOURCES, select the two inputs and group them as one stereo Source in the right panel",
+          ],
           "subject": "Ch 6 · Pad",
           "value": null,
         },
@@ -5743,6 +5954,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "checkOnConsole": null,
           "controlRefs": [
             "nameChannel",
+            "assignSourceToChannel",
           ],
           "detail": {
             "listenFor": "Nothing to listen for.",
@@ -5753,7 +5965,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "patch:m-vocalist-a:leadVocal.mic",
-          "instruction": "Plug in and name channel 7: Lead vocal (Vocalist A)",
+          "instruction": "Plug into input 10, assign that input to channel 7 and name it: Lead vocal (Vocalist A)",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "patch",
@@ -5787,6 +5999,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "checkOnConsole": null,
           "controlRefs": [
             "nameChannel",
+            "assignSourceToChannel",
           ],
           "detail": {
             "listenFor": "Nothing to listen for.",
@@ -5797,7 +6010,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "patch:m-vocalist-b:harmonyVocal.mic",
-          "instruction": "Plug in and name channel 8: Harmony vocal (Vocalist B)",
+          "instruction": "Plug into input 11, assign that input to channel 8 and name it: Harmony vocal (Vocalist B)",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "patch",
@@ -5831,6 +6044,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "checkOnConsole": null,
           "controlRefs": [
             "nameChannel",
+            "assignSourceToChannel",
           ],
           "detail": {
             "listenFor": "Nothing to listen for.",
@@ -5841,7 +6055,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "patch:m-vocalist-c:harmonyVocal.mic",
-          "instruction": "Plug in and name channel 9: Harmony vocal (Vocalist C)",
+          "instruction": "Plug into input 12, assign that input to channel 9 and name it: Harmony vocal (Vocalist C)",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "patch",
@@ -6975,13 +7189,14 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "busNumbers": [
             8,
           ],
-          "checkOnConsole": null,
+          "checkOnConsole": "The manual documents a send on/off setting ("Send Enable", p36) but does not say whether a send is on by default. Check that each channel's send to the group bus is switched on.",
           "controlRefs": [
             "setBusAsGroup",
             "mixBusCount",
+            "groupSendDefaultState",
           ],
           "detail": {
-            "listenFor": "Pulling the group fader down should pull all of these down together.",
+            "listenFor": "Pulling the group fader down should pull all of these down together, and nothing else. Mute the group: none of these channels should be heard, and every other channel should be unchanged.",
             "provenance": [],
             "range": null,
             "why": "One place to control all vocals together.",
@@ -6995,6 +7210,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "sectionId": "groups",
           "subSteps": [
             "Select the channel, open HOME, BUS/MATRIX SENDS, click the Pan knob of that bus and set MODE to GROUP.",
+            "On each of these channels, make sure the send to bus 8 is switched on.",
           ],
           "subject": "Vocals group · bus 8",
           "value": "Lead vocal (Vocalist A), Harmony vocal (Vocalist B), Harmony vocal (Vocalist C)",
@@ -7055,13 +7271,14 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "busNumbers": [
             9,
           ],
-          "checkOnConsole": null,
+          "checkOnConsole": "The manual documents a send on/off setting ("Send Enable", p36) but does not say whether a send is on by default. Check that each channel's send to the group bus is switched on.",
           "controlRefs": [
             "setBusAsGroup",
             "mixBusCount",
+            "groupSendDefaultState",
           ],
           "detail": {
-            "listenFor": "Pulling the group fader down should pull all of these down together.",
+            "listenFor": "Pulling the group fader down should pull all of these down together, and nothing else. Mute the group: none of these channels should be heard, and every other channel should be unchanged.",
             "provenance": [],
             "range": null,
             "why": "One place to control the guitars.",
@@ -7075,6 +7292,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "sectionId": "groups",
           "subSteps": [
             "Select the channel, open HOME, BUS/MATRIX SENDS, click the Pan knob of that bus and set MODE to GROUP.",
+            "On each of these channels, make sure the send to bus 9 is switched on.",
           ],
           "subject": "Guitars group · bus 9",
           "value": "Acoustic guitar (Vocalist A), Electric guitar",
@@ -7135,13 +7353,14 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "busNumbers": [
             10,
           ],
-          "checkOnConsole": null,
+          "checkOnConsole": "The manual documents a send on/off setting ("Send Enable", p36) but does not say whether a send is on by default. Check that each channel's send to the group bus is switched on.",
           "controlRefs": [
             "setBusAsGroup",
             "mixBusCount",
+            "groupSendDefaultState",
           ],
           "detail": {
-            "listenFor": "Pulling the group fader down should pull all of these down together.",
+            "listenFor": "Pulling the group fader down should pull all of these down together, and nothing else. Mute the group: none of these channels should be heard, and every other channel should be unchanged.",
             "provenance": [],
             "range": null,
             "why": "One place to control keys and pads, keeping their stereo spread.",
@@ -7155,6 +7374,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "sectionId": "groups",
           "subSteps": [
             "Select the channel, open HOME, BUS/MATRIX SENDS, click the Pan knob of that bus and set MODE to GROUP.",
+            "On each of these channels, make sure the send to bus 10 is switched on.",
           ],
           "subject": "Keys group · bus 10",
           "value": "Keys, Pad",
@@ -8975,10 +9195,34 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "busNumbers": [],
           "checkOnConsole": null,
           "controlRefs": [
+            "mixBusCount",
+          ],
+          "detail": {
+            "listenFor": "Nothing should come out of any monitor yet.",
+            "provenance": [],
+            "range": null,
+            "why": "The send levels on this sheet assume the mix master starts closed. You bring it up at the end, slowly, with the mics open.",
+          },
+          "effectName": null,
+          "fxSlot": null,
+          "id": "monitors:masters",
+          "instruction": "Before setting any send: pull the master fader of every monitor mix all the way down",
+          "optional": false,
+          "safety": "rehearsalOnly",
+          "sectionId": "monitors",
+          "subSteps": [],
+          "subject": "All monitor mixes",
+          "value": "All the way down",
+        },
+        {
+          "busNumbers": [],
+          "checkOnConsole": null,
+          "controlRefs": [
             "monitorSendTap",
             "sendTapPoints",
             "preFaderSendIsAfterDynamics",
             "sendsScreen",
+            "sendTapIsPerBusPair",
           ],
           "detail": {
             "listenFor": "Move a channel fader: that musician's monitor level must not change.",
@@ -8989,12 +9233,12 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "monitors:tap",
-          "instruction": "Set every monitor send to be taken at: TAP, with the channel TAP point at PRE FDR",
+          "instruction": "Set every monitor send to be taken at: TAP, with the channel TAP point at PRE FDR.",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "monitors",
           "subSteps": [],
-          "subject": "All monitor sends",
+          "subject": "All monitor mixes",
           "value": "TAP, with the channel TAP point at PRE FDR",
         },
         {
@@ -9007,7 +9251,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
             "listenFor": "Whether the wedge goes silent when the channel is muted.",
             "provenance": [],
             "range": null,
-            "why": "During feedback you need to know whether muting the channel also silences the monitor.",
+            "why": "When something goes wrong you need to know whether muting the channel also silences the monitor.",
           },
           "effectName": null,
           "fxSlot": null,
@@ -9017,7 +9261,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "safety": "rehearsalOnly",
           "sectionId": "monitors",
           "subSteps": [],
-          "subject": "All monitor sends",
+          "subject": "All monitor mixes",
           "value": "Expected: the monitor goes silent too",
         },
         {
@@ -9147,7 +9391,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
             "sendsScreen",
           ],
           "detail": {
-            "listenFor": "Ask the singer, then raise in small steps. Loud wedges are the first cause of feedback.",
+            "listenFor": "Ask the singer, then raise in small steps. Loud monitors are the first cause of feedback.",
             "provenance": [
               {
                 "description": "Lead vocal baseline: 0 dB",
@@ -9634,7 +9878,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
               },
             ],
             "range": "-15 dB to 3 dB",
-            "why": "Bass carries on stage by itself; wedges need little of it.",
+            "why": "Bass carries on stage by itself; monitors need little of it.",
           },
           "effectName": null,
           "fxSlot": null,
@@ -9771,6 +10015,52 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "subject": "Monitor 4: Band · bus 4",
           "value": "-6 dB",
         },
+        {
+          "busNumbers": [],
+          "checkOnConsole": null,
+          "controlRefs": [
+            "mixBusCount",
+          ],
+          "detail": {
+            "listenFor": "Stop at the first hint of ringing and back off 3 dB.",
+            "provenance": [],
+            "range": null,
+            "why": "The quietest monitor that works is the safest one.",
+          },
+          "effectName": null,
+          "fxSlot": null,
+          "id": "monitors:masters-up",
+          "instruction": "With the mics open, bring each monitor mix master up slowly until the musician says it is enough, and stop there",
+          "optional": false,
+          "safety": "rehearsalOnly",
+          "sectionId": "monitors",
+          "subSteps": [],
+          "subject": "When every send is set",
+          "value": "Only as loud as asked for",
+        },
+        {
+          "busNumbers": [],
+          "checkOnConsole": null,
+          "controlRefs": [
+            "busEqBandCount",
+          ],
+          "detail": {
+            "listenFor": "After two or three narrow cuts the wedge should get noticeably louder before it rings.",
+            "provenance": [],
+            "range": null,
+            "why": "Finding each wedge's first ringing frequencies now means they do not find you during the service.",
+          },
+          "effectName": null,
+          "fxSlot": null,
+          "id": "monitors:ring-out",
+          "instruction": "Ring out the vocal mics. Before the band plays: with each vocal mic open on stage, slowly raise its wedge send until it just starts to ring, then cut that frequency 3 dB with a narrow EQ on the monitor bus and back the send off 3 dB. Stop after two or three cuts per wedge.",
+          "optional": false,
+          "safety": "rehearsalOnly",
+          "sectionId": "monitors",
+          "subSteps": [],
+          "subject": "When every send is set",
+          "value": null,
+        },
       ],
       "title": "Monitor sends",
     },
@@ -9879,7 +10169,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
   "warnings": [
     {
       "kind": "unverified",
-      "message": "21 steps are marked "check on your console": the manual does not confirm the exact name or behavior they rely on.",
+      "message": "24 steps are marked "check on your console": the manual does not confirm the exact name or behavior they rely on.",
     },
   ],
 }
@@ -9977,12 +10267,19 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
         1,
         2,
       ],
+      "inputSockets": [
+        1,
+        2,
+      ],
       "label": "Electronic drums (stereo) (Drums)",
       "stereo": true,
     },
     {
       "channelId": "m-bass:bassGuitar.di",
       "consoleChannels": [
+        3,
+      ],
+      "inputSockets": [
         3,
       ],
       "label": "Bass guitar",
@@ -9993,6 +10290,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "consoleChannels": [
         4,
       ],
+      "inputSockets": [
+        4,
+      ],
       "label": "Acoustic guitar (Vocalist A)",
       "stereo": false,
     },
@@ -10001,12 +10301,19 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "consoleChannels": [
         5,
       ],
+      "inputSockets": [
+        5,
+      ],
       "label": "Electric guitar",
       "stereo": false,
     },
     {
       "channelId": "m-keys:keys.di",
       "consoleChannels": [
+        7,
+        8,
+      ],
+      "inputSockets": [
         7,
         8,
       ],
@@ -10019,12 +10326,19 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
         9,
         10,
       ],
+      "inputSockets": [
+        9,
+        10,
+      ],
       "label": "Pad",
       "stereo": true,
     },
     {
       "channelId": "m-vocalist-a:leadVocal.mic",
       "consoleChannels": [
+        11,
+      ],
+      "inputSockets": [
         11,
       ],
       "label": "Lead vocal (Vocalist A)",
@@ -10035,12 +10349,18 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "consoleChannels": [
         12,
       ],
+      "inputSockets": [
+        12,
+      ],
       "label": "Harmony vocal (Vocalist B)",
       "stereo": false,
     },
     {
       "channelId": "m-vocalist-c:harmonyVocal.mic",
       "consoleChannels": [
+        13,
+      ],
+      "inputSockets": [
         13,
       ],
       "label": "Harmony vocal (Vocalist C)",
@@ -10097,7 +10417,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
   "reference": [
     {
       "channelId": "m-drums:electronicDrums.stereo",
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Aim for even hits. In the module, check the kick and snare are balanced and the pad sensitivity suits how hard you play.",
+      ],
       "ifYouHear": [
         {
           "hear": "Kick too quiet or too loud against the rest of the kit",
@@ -10119,6 +10441,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "mixerNotes": [
         "The balance between kick, snare and cymbals is set inside the drum module, not on the console.",
         "If the module has a spare output, a separate kick output gives you real control of the low end. Consider it.",
+        "Uneven kick and snare cannot be fixed on a stereo pair. Fix the balance and pad sensitivity in the module, and ask for a separate kick output.",
       ],
       "subject": "Ch 1+2 · Electronic drums (stereo) (Drums)",
     },
@@ -10152,7 +10475,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
     },
     {
       "channelId": "m-vocalist-a:acousticGuitar.di",
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Strum lighter than feels natural. The PA makes it big.",
+      ],
       "ifYouHear": [
         {
           "hear": "Boomy or humming on certain notes",
@@ -10176,7 +10501,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
     },
     {
       "channelId": "m-electric:electricGuitar.modeler",
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Set every patch to the same volume at home, with the lead patch only a little louder.",
+      ],
       "ifYouHear": [
         {
           "hear": "Harsh or fizzy",
@@ -10195,7 +10522,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "tryThis": "Ask one of them to move to a different register before using EQ.",
         },
       ],
-      "mixerNotes": [],
+      "mixerNotes": [
+        "Watch for volume jumps when the guitarist changes sounds, and ride the fader between songs.",
+      ],
       "subject": "Ch 5 · Electric guitar",
     },
     {
@@ -10226,7 +10555,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
     },
     {
       "channelId": "m-pad:padSynth.di",
-      "coachingNotes": [],
+      "coachingNotes": [
+        "A pad should be felt more than heard. If you can clearly hear it on stage, it is probably too loud.",
+      ],
       "ifYouHear": [
         {
           "hear": "The whole mix sounds cloudy",
@@ -10242,7 +10573,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
     },
     {
       "channelId": "m-vocalist-a:leadVocal.mic",
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Keep the mic one fist from your mouth, and keep it there when you get louder.",
+      ],
       "ifYouHear": [
         {
           "hear": "Muddy or woolly",
@@ -10278,6 +10611,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
         },
       ],
       "mixerNotes": [
+        "Keep a finger on this fader and ride it: push up quiet phrases, pull back loud ones.",
         "Cardioid: put the wedge directly behind the mic, in line with the handle.",
       ],
       "subject": "Ch 11 · Lead vocal (Vocalist A)",
@@ -10329,7 +10663,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
     {
       "channelId": "m-vocalist-c:harmonyVocal.mic",
       "coachingNotes": [
-        "Your blend is coming through as you sing it.",
+        "Keep the mic one fist from your mouth, and listen for the lead vocal in your monitor to blend with.",
       ],
       "ifYouHear": [
         {
@@ -11906,13 +12240,15 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "busNumbers": [
             5,
           ],
-          "checkOnConsole": null,
+          "checkOnConsole": "The manual confirms each send can be muted (p49) but does not say whether a send is on or off by default once its pair is set to Sub-Group. Check on the console which channels feed the group.",
           "controlRefs": [
             "setBusAsGroup",
             "mixBusCount",
+            "groupSendDefaultState",
+            "sendTapIsPerBusPair",
           ],
           "detail": {
-            "listenFor": "Pulling the group fader down should pull all of these down together.",
+            "listenFor": "Pulling the group fader down should pull all of these down together, and nothing else. Mute the group: none of these channels should be heard, and every other channel should be unchanged.",
             "provenance": [],
             "range": null,
             "why": "One place to control all vocals together.",
@@ -11925,7 +12261,10 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "safety": "rehearsalOnly",
           "sectionId": "groups",
           "subSteps": [
-            "Select the channel, open the Home screen sends tab, and for that bus choose "Sub-Group" as the place the send is taken from.",
+            "Select the channel, open the Home screen sends tab, and for the pair of buses that holds this bus choose "Sub-Group" as the place the send is taken from.",
+            "That setting covers buses 5 and 6 together.",
+            "On each of these channels, switch the send to bus 5 on, and switch the send to bus 6 off unless the channel belongs to that group too.",
+            "On every other channel, make sure the send to bus 5 is off.",
           ],
           "subject": "Vocals group · bus 5",
           "value": "Lead vocal (Vocalist A), Harmony vocal (Vocalist B), Harmony vocal (Vocalist C)",
@@ -11961,13 +12300,15 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "busNumbers": [
             6,
           ],
-          "checkOnConsole": null,
+          "checkOnConsole": "The manual confirms each send can be muted (p49) but does not say whether a send is on or off by default once its pair is set to Sub-Group. Check on the console which channels feed the group.",
           "controlRefs": [
             "setBusAsGroup",
             "mixBusCount",
+            "groupSendDefaultState",
+            "sendTapIsPerBusPair",
           ],
           "detail": {
-            "listenFor": "Pulling the group fader down should pull all of these down together.",
+            "listenFor": "Pulling the group fader down should pull all of these down together, and nothing else. Mute the group: none of these channels should be heard, and every other channel should be unchanged.",
             "provenance": [],
             "range": null,
             "why": "One place to control the guitars.",
@@ -11980,7 +12321,10 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "safety": "rehearsalOnly",
           "sectionId": "groups",
           "subSteps": [
-            "Select the channel, open the Home screen sends tab, and for that bus choose "Sub-Group" as the place the send is taken from.",
+            "Select the channel, open the Home screen sends tab, and for the pair of buses that holds this bus choose "Sub-Group" as the place the send is taken from.",
+            "That setting covers buses 5 and 6 together.",
+            "On each of these channels, switch the send to bus 6 on, and switch the send to bus 5 off unless the channel belongs to that group too.",
+            "On every other channel, make sure the send to bus 6 is off.",
           ],
           "subject": "Guitars group · bus 6",
           "value": "Acoustic guitar (Vocalist A), Electric guitar",
@@ -12017,13 +12361,16 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
             7,
             8,
           ],
-          "checkOnConsole": null,
+          "checkOnConsole": "The manual confirms each send can be muted (p49) but does not say whether a send is on or off by default once its pair is set to Sub-Group. Check on the console which channels feed the group.",
           "controlRefs": [
             "setBusAsGroup",
             "mixBusCount",
+            "groupSendDefaultState",
+            "busLinkProcedure",
+            "sendTapIsPerBusPair",
           ],
           "detail": {
-            "listenFor": "Pulling the group fader down should pull all of these down together.",
+            "listenFor": "Pulling the group fader down should pull all of these down together, and nothing else. Mute the group: none of these channels should be heard, and every other channel should be unchanged.",
             "provenance": [],
             "range": null,
             "why": "One place to control keys and pads, keeping their stereo spread.",
@@ -12036,7 +12383,11 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "safety": "rehearsalOnly",
           "sectionId": "groups",
           "subSteps": [
-            "Select the channel, open the Home screen sends tab, and for that bus choose "Sub-Group" as the place the send is taken from.",
+            "First link buses 7 and 8 as a stereo bus: Select the first bus of the pair, open the Home screen config tab and switch on Link.",
+            "Select the channel, open the Home screen sends tab, and for the pair of buses that holds this bus choose "Sub-Group" as the place the send is taken from.",
+            "That setting covers buses 7 and 8 together.",
+            "On each of these channels, switch the send to buses 7+8 on.",
+            "On every other channel, make sure the send to buses 7+8 is off.",
           ],
           "subject": "Keys group · buses 7+8",
           "value": "Keys, Pad",
@@ -13820,10 +14171,34 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "busNumbers": [],
           "checkOnConsole": null,
           "controlRefs": [
+            "mixBusCount",
+          ],
+          "detail": {
+            "listenFor": "Nothing should come out of any monitor yet.",
+            "provenance": [],
+            "range": null,
+            "why": "The send levels on this sheet assume the mix master starts closed. You bring it up at the end, slowly, with the mics open.",
+          },
+          "effectName": null,
+          "fxSlot": null,
+          "id": "monitors:masters",
+          "instruction": "Before setting any send: pull the master fader of every monitor mix all the way down",
+          "optional": false,
+          "safety": "rehearsalOnly",
+          "sectionId": "monitors",
+          "subSteps": [],
+          "subject": "All monitor mixes",
+          "value": "All the way down",
+        },
+        {
+          "busNumbers": [],
+          "checkOnConsole": null,
+          "controlRefs": [
             "monitorSendTap",
             "sendTapPoints",
             "preFaderSendIsAfterDynamics",
             "sendsScreen",
+            "sendTapIsPerBusPair",
           ],
           "detail": {
             "listenFor": "Move a channel fader: that musician's monitor level must not change.",
@@ -13834,12 +14209,12 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "monitors:tap",
-          "instruction": "Set every monitor send to be taken at: Pre-Fader",
+          "instruction": "Set every monitor send to be taken at: Pre-Fader. On this console the setting is made for two buses at a time (1+2, 3+4, and so on).",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "monitors",
           "subSteps": [],
-          "subject": "All monitor sends",
+          "subject": "All monitor mixes",
           "value": "Pre-Fader",
         },
         {
@@ -13852,7 +14227,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
             "listenFor": "Whether the wedge goes silent when the channel is muted.",
             "provenance": [],
             "range": null,
-            "why": "During feedback you need to know whether muting the channel also silences the monitor.",
+            "why": "When something goes wrong you need to know whether muting the channel also silences the monitor.",
           },
           "effectName": null,
           "fxSlot": null,
@@ -13862,7 +14237,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "safety": "rehearsalOnly",
           "sectionId": "monitors",
           "subSteps": [],
-          "subject": "All monitor sends",
+          "subject": "All monitor mixes",
           "value": "Expected: the monitor goes silent too",
         },
         {
@@ -13992,7 +14367,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
             "sendsScreen",
           ],
           "detail": {
-            "listenFor": "Ask the singer, then raise in small steps. Loud wedges are the first cause of feedback.",
+            "listenFor": "Ask the singer, then raise in small steps. Loud monitors are the first cause of feedback.",
             "provenance": [
               {
                 "description": "Lead vocal baseline: 0 dB",
@@ -14479,7 +14854,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
               },
             ],
             "range": "-15 dB to 3 dB",
-            "why": "Bass carries on stage by itself; wedges need little of it.",
+            "why": "Bass carries on stage by itself; monitors need little of it.",
           },
           "effectName": null,
           "fxSlot": null,
@@ -14616,6 +14991,52 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "subject": "Monitor 4: Band · bus 4",
           "value": "-6 dB",
         },
+        {
+          "busNumbers": [],
+          "checkOnConsole": null,
+          "controlRefs": [
+            "mixBusCount",
+          ],
+          "detail": {
+            "listenFor": "Stop at the first hint of ringing and back off 3 dB.",
+            "provenance": [],
+            "range": null,
+            "why": "The quietest monitor that works is the safest one.",
+          },
+          "effectName": null,
+          "fxSlot": null,
+          "id": "monitors:masters-up",
+          "instruction": "With the mics open, bring each monitor mix master up slowly until the musician says it is enough, and stop there",
+          "optional": false,
+          "safety": "rehearsalOnly",
+          "sectionId": "monitors",
+          "subSteps": [],
+          "subject": "When every send is set",
+          "value": "Only as loud as asked for",
+        },
+        {
+          "busNumbers": [],
+          "checkOnConsole": null,
+          "controlRefs": [
+            "busEqBandCount",
+          ],
+          "detail": {
+            "listenFor": "After two or three narrow cuts the wedge should get noticeably louder before it rings.",
+            "provenance": [],
+            "range": null,
+            "why": "Finding each wedge's first ringing frequencies now means they do not find you during the service.",
+          },
+          "effectName": null,
+          "fxSlot": null,
+          "id": "monitors:ring-out",
+          "instruction": "Ring out the vocal mics. Before the band plays: with each vocal mic open on stage, slowly raise its wedge send until it just starts to ring, then cut that frequency 3 dB with a narrow EQ on the monitor bus and back the send off 3 dB. Stop after two or three cuts per wedge.",
+          "optional": false,
+          "safety": "rehearsalOnly",
+          "sectionId": "monitors",
+          "subSteps": [],
+          "subject": "When every send is set",
+          "value": null,
+        },
       ],
       "title": "Monitor sends",
     },
@@ -14724,7 +15145,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
   "warnings": [
     {
       "kind": "unverified",
-      "message": "44 steps are marked "check on your console": the manual does not confirm the exact name or behavior they rely on.",
+      "message": "47 steps are marked "check on your console": the manual does not confirm the exact name or behavior they rely on.",
     },
   ],
 }
@@ -14820,6 +15241,10 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "consoleChannels": [
         1,
       ],
+      "inputSockets": [
+        1,
+        2,
+      ],
       "label": "Electronic drums (stereo) (Drums)",
       "stereo": true,
     },
@@ -14827,6 +15252,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "channelId": "m-bass:bassGuitar.di",
       "consoleChannels": [
         2,
+      ],
+      "inputSockets": [
+        3,
       ],
       "label": "Bass guitar",
       "stereo": false,
@@ -14836,6 +15264,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "consoleChannels": [
         3,
       ],
+      "inputSockets": [
+        4,
+      ],
       "label": "Acoustic guitar (Vocalist A)",
       "stereo": false,
     },
@@ -14843,6 +15274,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "channelId": "m-electric:electricGuitar.modeler",
       "consoleChannels": [
         4,
+      ],
+      "inputSockets": [
+        5,
       ],
       "label": "Electric guitar",
       "stereo": false,
@@ -14852,6 +15286,10 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "consoleChannels": [
         5,
       ],
+      "inputSockets": [
+        6,
+        7,
+      ],
       "label": "Keys",
       "stereo": true,
     },
@@ -14859,6 +15297,10 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "channelId": "m-pad:padSynth.di",
       "consoleChannels": [
         6,
+      ],
+      "inputSockets": [
+        8,
+        9,
       ],
       "label": "Pad",
       "stereo": true,
@@ -14868,6 +15310,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "consoleChannels": [
         7,
       ],
+      "inputSockets": [
+        10,
+      ],
       "label": "Lead vocal (Vocalist A)",
       "stereo": false,
     },
@@ -14876,6 +15321,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "consoleChannels": [
         8,
       ],
+      "inputSockets": [
+        11,
+      ],
       "label": "Harmony vocal (Vocalist B)",
       "stereo": false,
     },
@@ -14883,6 +15331,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "channelId": "m-vocalist-c:harmonyVocal.mic",
       "consoleChannels": [
         9,
+      ],
+      "inputSockets": [
+        12,
       ],
       "label": "Harmony vocal (Vocalist C)",
       "stereo": false,
@@ -14938,7 +15389,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
   "reference": [
     {
       "channelId": "m-drums:electronicDrums.stereo",
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Aim for even hits. In the module, check the kick and snare are balanced and the pad sensitivity suits how hard you play.",
+      ],
       "ifYouHear": [
         {
           "hear": "Kick too quiet or too loud against the rest of the kit",
@@ -14960,6 +15413,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "mixerNotes": [
         "The balance between kick, snare and cymbals is set inside the drum module, not on the console.",
         "If the module has a spare output, a separate kick output gives you real control of the low end. Consider it.",
+        "Uneven kick and snare cannot be fixed on a stereo pair. Fix the balance and pad sensitivity in the module, and ask for a separate kick output.",
       ],
       "subject": "Ch 1 · Electronic drums (stereo) (Drums)",
     },
@@ -14993,7 +15447,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
     },
     {
       "channelId": "m-vocalist-a:acousticGuitar.di",
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Strum lighter than feels natural. The PA makes it big.",
+      ],
       "ifYouHear": [
         {
           "hear": "Boomy or humming on certain notes",
@@ -15017,7 +15473,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
     },
     {
       "channelId": "m-electric:electricGuitar.modeler",
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Set every patch to the same volume at home, with the lead patch only a little louder.",
+      ],
       "ifYouHear": [
         {
           "hear": "Harsh or fizzy",
@@ -15036,7 +15494,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "tryThis": "Ask one of them to move to a different register before using EQ.",
         },
       ],
-      "mixerNotes": [],
+      "mixerNotes": [
+        "Watch for volume jumps when the guitarist changes sounds, and ride the fader between songs.",
+      ],
       "subject": "Ch 4 · Electric guitar",
     },
     {
@@ -15067,7 +15527,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
     },
     {
       "channelId": "m-pad:padSynth.di",
-      "coachingNotes": [],
+      "coachingNotes": [
+        "A pad should be felt more than heard. If you can clearly hear it on stage, it is probably too loud.",
+      ],
       "ifYouHear": [
         {
           "hear": "The whole mix sounds cloudy",
@@ -15083,7 +15545,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
     },
     {
       "channelId": "m-vocalist-a:leadVocal.mic",
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Keep the mic one fist from your mouth, and keep it there when you get louder.",
+      ],
       "ifYouHear": [
         {
           "hear": "Muddy or woolly",
@@ -15119,6 +15583,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
         },
       ],
       "mixerNotes": [
+        "Keep a finger on this fader and ride it: push up quiet phrases, pull back loud ones.",
         "Cardioid: put the wedge directly behind the mic, in line with the handle.",
       ],
       "subject": "Ch 7 · Lead vocal (Vocalist A)",
@@ -15170,7 +15635,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
     {
       "channelId": "m-vocalist-c:harmonyVocal.mic",
       "coachingNotes": [
-        "Your blend is coming through as you sing it.",
+        "Keep the mic one fist from your mouth, and listen for the lead vocal in your monitor to blend with.",
       ],
       "ifYouHear": [
         {
@@ -15255,8 +15720,34 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "busNumbers": [],
           "checkOnConsole": null,
           "controlRefs": [
+            "assignSourceToChannel",
+          ],
+          "detail": {
+            "listenFor": "Each channel meter should move when its own source plays, and no other.",
+            "provenance": [],
+            "range": null,
+            "why": "A stereo source uses two sockets but one channel, so sockets and channels stop matching after the first stereo source. This is the one routing change this sheet asks for.",
+          },
+          "effectName": null,
+          "fxSlot": null,
+          "id": "patch:sources",
+          "instruction": "On this console a channel number is not a socket number. Each step below names the input sockets to use. After plugging in, assign each input to its channel",
+          "optional": false,
+          "safety": "rehearsalOnly",
+          "sectionId": "patch",
+          "subSteps": [
+            "Press ROUTING, open CHANNELS, click the channel, then click the Source you want on it",
+          ],
+          "subject": "Before you plug in",
+          "value": null,
+        },
+        {
+          "busNumbers": [],
+          "checkOnConsole": null,
+          "controlRefs": [
             "nameChannel",
             "stereoChannels",
+            "stereoSourceProcedure",
           ],
           "detail": {
             "listenFor": "Nothing to listen for.",
@@ -15267,11 +15758,12 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "patch:m-drums:electronicDrums.stereo",
-          "instruction": "Plug in channel 1 as a stereo source and name it: Electronic drums (stereo) (Drums)",
+          "instruction": "Plug left and right into inputs 1 and 2, group those two inputs as one stereo Source, assign it to channel 1 and name it: Electronic drums (stereo) (Drums)",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "patch",
           "subSteps": [
+            "Press ROUTING, open SOURCES, select the two inputs and group them as one stereo Source in the right panel",
             "Select the channel and press HOME.",
             "Open the NAME/ICON/COLOR window.",
             "On the Name tab, type the name.",
@@ -15305,6 +15797,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "checkOnConsole": null,
           "controlRefs": [
             "nameChannel",
+            "assignSourceToChannel",
           ],
           "detail": {
             "listenFor": "Nothing to listen for.",
@@ -15315,7 +15808,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "patch:m-bass:bassGuitar.di",
-          "instruction": "Plug in and name channel 2: Bass guitar",
+          "instruction": "Plug into input 3, assign that input to channel 2 and name it: Bass guitar",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "patch",
@@ -15349,6 +15842,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "checkOnConsole": null,
           "controlRefs": [
             "nameChannel",
+            "assignSourceToChannel",
           ],
           "detail": {
             "listenFor": "Nothing to listen for.",
@@ -15359,7 +15853,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "patch:m-vocalist-a:acousticGuitar.di",
-          "instruction": "Plug in and name channel 3: Acoustic guitar (Vocalist A)",
+          "instruction": "Plug into input 4, assign that input to channel 3 and name it: Acoustic guitar (Vocalist A)",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "patch",
@@ -15393,6 +15887,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "checkOnConsole": null,
           "controlRefs": [
             "nameChannel",
+            "assignSourceToChannel",
           ],
           "detail": {
             "listenFor": "Nothing to listen for.",
@@ -15403,7 +15898,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "patch:m-electric:electricGuitar.modeler",
-          "instruction": "Plug in and name channel 4: Electric guitar",
+          "instruction": "Plug into input 5, assign that input to channel 4 and name it: Electric guitar",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "patch",
@@ -15438,6 +15933,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "controlRefs": [
             "nameChannel",
             "stereoChannels",
+            "stereoSourceProcedure",
           ],
           "detail": {
             "listenFor": "Nothing to listen for.",
@@ -15448,11 +15944,13 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "patch:m-keys:keys.di",
-          "instruction": "Plug in channel 5 as a stereo source and name it: Keys",
+          "instruction": "Plug left and right into inputs 6 and 7, group those two inputs as one stereo Source, assign it to channel 5 and name it: Keys",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "patch",
-          "subSteps": [],
+          "subSteps": [
+            "Press ROUTING, open SOURCES, select the two inputs and group them as one stereo Source in the right panel",
+          ],
           "subject": "Ch 5 · Keys",
           "value": null,
         },
@@ -15483,6 +15981,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "controlRefs": [
             "nameChannel",
             "stereoChannels",
+            "stereoSourceProcedure",
           ],
           "detail": {
             "listenFor": "Nothing to listen for.",
@@ -15493,11 +15992,13 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "patch:m-pad:padSynth.di",
-          "instruction": "Plug in channel 6 as a stereo source and name it: Pad",
+          "instruction": "Plug left and right into inputs 8 and 9, group those two inputs as one stereo Source, assign it to channel 6 and name it: Pad",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "patch",
-          "subSteps": [],
+          "subSteps": [
+            "Press ROUTING, open SOURCES, select the two inputs and group them as one stereo Source in the right panel",
+          ],
           "subject": "Ch 6 · Pad",
           "value": null,
         },
@@ -15527,6 +16028,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "checkOnConsole": null,
           "controlRefs": [
             "nameChannel",
+            "assignSourceToChannel",
           ],
           "detail": {
             "listenFor": "Nothing to listen for.",
@@ -15537,7 +16039,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "patch:m-vocalist-a:leadVocal.mic",
-          "instruction": "Plug in and name channel 7: Lead vocal (Vocalist A)",
+          "instruction": "Plug into input 10, assign that input to channel 7 and name it: Lead vocal (Vocalist A)",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "patch",
@@ -15571,6 +16073,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "checkOnConsole": null,
           "controlRefs": [
             "nameChannel",
+            "assignSourceToChannel",
           ],
           "detail": {
             "listenFor": "Nothing to listen for.",
@@ -15581,7 +16084,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "patch:m-vocalist-b:harmonyVocal.mic",
-          "instruction": "Plug in and name channel 8: Harmony vocal (Vocalist B)",
+          "instruction": "Plug into input 11, assign that input to channel 8 and name it: Harmony vocal (Vocalist B)",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "patch",
@@ -15615,6 +16118,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "checkOnConsole": null,
           "controlRefs": [
             "nameChannel",
+            "assignSourceToChannel",
           ],
           "detail": {
             "listenFor": "Nothing to listen for.",
@@ -15625,7 +16129,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "patch:m-vocalist-c:harmonyVocal.mic",
-          "instruction": "Plug in and name channel 9: Harmony vocal (Vocalist C)",
+          "instruction": "Plug into input 12, assign that input to channel 9 and name it: Harmony vocal (Vocalist C)",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "patch",
@@ -16744,13 +17248,14 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "busNumbers": [
             8,
           ],
-          "checkOnConsole": null,
+          "checkOnConsole": "The manual documents a send on/off setting ("Send Enable", p36) but does not say whether a send is on by default. Check that each channel's send to the group bus is switched on.",
           "controlRefs": [
             "setBusAsGroup",
             "mixBusCount",
+            "groupSendDefaultState",
           ],
           "detail": {
-            "listenFor": "Pulling the group fader down should pull all of these down together.",
+            "listenFor": "Pulling the group fader down should pull all of these down together, and nothing else. Mute the group: none of these channels should be heard, and every other channel should be unchanged.",
             "provenance": [],
             "range": null,
             "why": "One place to control all vocals together.",
@@ -16764,6 +17269,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "sectionId": "groups",
           "subSteps": [
             "Select the channel, open HOME, BUS/MATRIX SENDS, click the Pan knob of that bus and set MODE to GROUP.",
+            "On each of these channels, make sure the send to bus 8 is switched on.",
           ],
           "subject": "Vocals group · bus 8",
           "value": "Lead vocal (Vocalist A), Harmony vocal (Vocalist B), Harmony vocal (Vocalist C)",
@@ -16799,13 +17305,14 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "busNumbers": [
             9,
           ],
-          "checkOnConsole": null,
+          "checkOnConsole": "The manual documents a send on/off setting ("Send Enable", p36) but does not say whether a send is on by default. Check that each channel's send to the group bus is switched on.",
           "controlRefs": [
             "setBusAsGroup",
             "mixBusCount",
+            "groupSendDefaultState",
           ],
           "detail": {
-            "listenFor": "Pulling the group fader down should pull all of these down together.",
+            "listenFor": "Pulling the group fader down should pull all of these down together, and nothing else. Mute the group: none of these channels should be heard, and every other channel should be unchanged.",
             "provenance": [],
             "range": null,
             "why": "One place to control the guitars.",
@@ -16819,6 +17326,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "sectionId": "groups",
           "subSteps": [
             "Select the channel, open HOME, BUS/MATRIX SENDS, click the Pan knob of that bus and set MODE to GROUP.",
+            "On each of these channels, make sure the send to bus 9 is switched on.",
           ],
           "subject": "Guitars group · bus 9",
           "value": "Acoustic guitar (Vocalist A), Electric guitar",
@@ -16854,13 +17362,14 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "busNumbers": [
             10,
           ],
-          "checkOnConsole": null,
+          "checkOnConsole": "The manual documents a send on/off setting ("Send Enable", p36) but does not say whether a send is on by default. Check that each channel's send to the group bus is switched on.",
           "controlRefs": [
             "setBusAsGroup",
             "mixBusCount",
+            "groupSendDefaultState",
           ],
           "detail": {
-            "listenFor": "Pulling the group fader down should pull all of these down together.",
+            "listenFor": "Pulling the group fader down should pull all of these down together, and nothing else. Mute the group: none of these channels should be heard, and every other channel should be unchanged.",
             "provenance": [],
             "range": null,
             "why": "One place to control keys and pads, keeping their stereo spread.",
@@ -16874,6 +17383,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "sectionId": "groups",
           "subSteps": [
             "Select the channel, open HOME, BUS/MATRIX SENDS, click the Pan knob of that bus and set MODE to GROUP.",
+            "On each of these channels, make sure the send to bus 10 is switched on.",
           ],
           "subject": "Keys group · bus 10",
           "value": "Keys, Pad",
@@ -18659,10 +19169,34 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "busNumbers": [],
           "checkOnConsole": null,
           "controlRefs": [
+            "mixBusCount",
+          ],
+          "detail": {
+            "listenFor": "Nothing should come out of any monitor yet.",
+            "provenance": [],
+            "range": null,
+            "why": "The send levels on this sheet assume the mix master starts closed. You bring it up at the end, slowly, with the mics open.",
+          },
+          "effectName": null,
+          "fxSlot": null,
+          "id": "monitors:masters",
+          "instruction": "Before setting any send: pull the master fader of every monitor mix all the way down",
+          "optional": false,
+          "safety": "rehearsalOnly",
+          "sectionId": "monitors",
+          "subSteps": [],
+          "subject": "All monitor mixes",
+          "value": "All the way down",
+        },
+        {
+          "busNumbers": [],
+          "checkOnConsole": null,
+          "controlRefs": [
             "monitorSendTap",
             "sendTapPoints",
             "preFaderSendIsAfterDynamics",
             "sendsScreen",
+            "sendTapIsPerBusPair",
           ],
           "detail": {
             "listenFor": "Move a channel fader: that musician's monitor level must not change.",
@@ -18673,12 +19207,12 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "monitors:tap",
-          "instruction": "Set every monitor send to be taken at: TAP, with the channel TAP point at PRE FDR",
+          "instruction": "Set every monitor send to be taken at: TAP, with the channel TAP point at PRE FDR.",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "monitors",
           "subSteps": [],
-          "subject": "All monitor sends",
+          "subject": "All monitor mixes",
           "value": "TAP, with the channel TAP point at PRE FDR",
         },
         {
@@ -18691,7 +19225,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
             "listenFor": "Whether the wedge goes silent when the channel is muted.",
             "provenance": [],
             "range": null,
-            "why": "During feedback you need to know whether muting the channel also silences the monitor.",
+            "why": "When something goes wrong you need to know whether muting the channel also silences the monitor.",
           },
           "effectName": null,
           "fxSlot": null,
@@ -18701,7 +19235,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "safety": "rehearsalOnly",
           "sectionId": "monitors",
           "subSteps": [],
-          "subject": "All monitor sends",
+          "subject": "All monitor mixes",
           "value": "Expected: the monitor goes silent too",
         },
         {
@@ -18831,7 +19365,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
             "sendsScreen",
           ],
           "detail": {
-            "listenFor": "Ask the singer, then raise in small steps. Loud wedges are the first cause of feedback.",
+            "listenFor": "Ask the singer, then raise in small steps. Loud monitors are the first cause of feedback.",
             "provenance": [
               {
                 "description": "Lead vocal baseline: 0 dB",
@@ -19318,7 +19852,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
               },
             ],
             "range": "-15 dB to 3 dB",
-            "why": "Bass carries on stage by itself; wedges need little of it.",
+            "why": "Bass carries on stage by itself; monitors need little of it.",
           },
           "effectName": null,
           "fxSlot": null,
@@ -19455,6 +19989,52 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "subject": "Monitor 4: Band · bus 4",
           "value": "-6 dB",
         },
+        {
+          "busNumbers": [],
+          "checkOnConsole": null,
+          "controlRefs": [
+            "mixBusCount",
+          ],
+          "detail": {
+            "listenFor": "Stop at the first hint of ringing and back off 3 dB.",
+            "provenance": [],
+            "range": null,
+            "why": "The quietest monitor that works is the safest one.",
+          },
+          "effectName": null,
+          "fxSlot": null,
+          "id": "monitors:masters-up",
+          "instruction": "With the mics open, bring each monitor mix master up slowly until the musician says it is enough, and stop there",
+          "optional": false,
+          "safety": "rehearsalOnly",
+          "sectionId": "monitors",
+          "subSteps": [],
+          "subject": "When every send is set",
+          "value": "Only as loud as asked for",
+        },
+        {
+          "busNumbers": [],
+          "checkOnConsole": null,
+          "controlRefs": [
+            "busEqBandCount",
+          ],
+          "detail": {
+            "listenFor": "After two or three narrow cuts the wedge should get noticeably louder before it rings.",
+            "provenance": [],
+            "range": null,
+            "why": "Finding each wedge's first ringing frequencies now means they do not find you during the service.",
+          },
+          "effectName": null,
+          "fxSlot": null,
+          "id": "monitors:ring-out",
+          "instruction": "Ring out the vocal mics. Before the band plays: with each vocal mic open on stage, slowly raise its wedge send until it just starts to ring, then cut that frequency 3 dB with a narrow EQ on the monitor bus and back the send off 3 dB. Stop after two or three cuts per wedge.",
+          "optional": false,
+          "safety": "rehearsalOnly",
+          "sectionId": "monitors",
+          "subSteps": [],
+          "subject": "When every send is set",
+          "value": null,
+        },
       ],
       "title": "Monitor sends",
     },
@@ -19563,7 +20143,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
   "warnings": [
     {
       "kind": "unverified",
-      "message": "21 steps are marked "check on your console": the manual does not confirm the exact name or behavior they rely on.",
+      "message": "24 steps are marked "check on your console": the manual does not confirm the exact name or behavior they rely on.",
     },
   ],
 }
@@ -19627,12 +20207,18 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "consoleChannels": [
         1,
       ],
+      "inputSockets": [
+        1,
+      ],
       "label": "Cajon",
       "stereo": false,
     },
     {
       "channelId": "m-vocalist-a:acousticGuitar.di",
       "consoleChannels": [
+        2,
+      ],
+      "inputSockets": [
         2,
       ],
       "label": "Acoustic guitar (Vocalist A)",
@@ -19644,12 +20230,19 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
         3,
         4,
       ],
+      "inputSockets": [
+        3,
+        4,
+      ],
       "label": "Keys",
       "stereo": true,
     },
     {
       "channelId": "m-vocalist-a:leadVocal.mic",
       "consoleChannels": [
+        5,
+      ],
+      "inputSockets": [
         5,
       ],
       "label": "Lead vocal (Vocalist A)",
@@ -19706,7 +20299,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
   "reference": [
     {
       "channelId": "m-cajon:cajon.mic",
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Play to the room, not to the kit: the loudest hit should be a choice, not the default.",
+      ],
       "ifYouHear": [
         {
           "hear": "No low end",
@@ -19722,7 +20317,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
     },
     {
       "channelId": "m-vocalist-a:acousticGuitar.di",
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Strum lighter than feels natural. The PA makes it big.",
+      ],
       "ifYouHear": [
         {
           "hear": "Boomy or humming on certain notes",
@@ -19772,7 +20369,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
     },
     {
       "channelId": "m-vocalist-a:leadVocal.mic",
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Keep the mic one fist from your mouth, and keep it there when you get louder.",
+      ],
       "ifYouHear": [
         {
           "hear": "Muddy or woolly",
@@ -19808,6 +20407,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
         },
       ],
       "mixerNotes": [
+        "Keep a finger on this fader and ride it: push up quiet phrases, pull back loud ones.",
         "Cardioid: put the wedge directly behind the mic, in line with the handle.",
       ],
       "subject": "Ch 5 · Lead vocal (Vocalist A)",
@@ -21702,10 +22302,34 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "busNumbers": [],
           "checkOnConsole": null,
           "controlRefs": [
+            "mixBusCount",
+          ],
+          "detail": {
+            "listenFor": "Nothing should come out of any monitor yet.",
+            "provenance": [],
+            "range": null,
+            "why": "The send levels on this sheet assume the mix master starts closed. You bring it up at the end, slowly, with the mics open.",
+          },
+          "effectName": null,
+          "fxSlot": null,
+          "id": "monitors:masters",
+          "instruction": "Before setting any send: pull the master fader of every monitor mix all the way down",
+          "optional": false,
+          "safety": "rehearsalOnly",
+          "sectionId": "monitors",
+          "subSteps": [],
+          "subject": "All monitor mixes",
+          "value": "All the way down",
+        },
+        {
+          "busNumbers": [],
+          "checkOnConsole": null,
+          "controlRefs": [
             "monitorSendTap",
             "sendTapPoints",
             "preFaderSendIsAfterDynamics",
             "sendsScreen",
+            "sendTapIsPerBusPair",
           ],
           "detail": {
             "listenFor": "Move a channel fader: that musician's monitor level must not change.",
@@ -21716,12 +22340,12 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "monitors:tap",
-          "instruction": "Set every monitor send to be taken at: Pre-Fader",
+          "instruction": "Set every monitor send to be taken at: Pre-Fader. On this console the setting is made for two buses at a time (1+2, 3+4, and so on).",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "monitors",
           "subSteps": [],
-          "subject": "All monitor sends",
+          "subject": "All monitor mixes",
           "value": "Pre-Fader",
         },
         {
@@ -21734,7 +22358,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
             "listenFor": "Whether the wedge goes silent when the channel is muted.",
             "provenance": [],
             "range": null,
-            "why": "During feedback you need to know whether muting the channel also silences the monitor.",
+            "why": "When something goes wrong you need to know whether muting the channel also silences the monitor.",
           },
           "effectName": null,
           "fxSlot": null,
@@ -21744,7 +22368,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "safety": "rehearsalOnly",
           "sectionId": "monitors",
           "subSteps": [],
-          "subject": "All monitor sends",
+          "subject": "All monitor mixes",
           "value": "Expected: the monitor goes silent too",
         },
         {
@@ -21843,7 +22467,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
             "sendsScreen",
           ],
           "detail": {
-            "listenFor": "Ask the singer, then raise in small steps. Loud wedges are the first cause of feedback.",
+            "listenFor": "Ask the singer, then raise in small steps. Loud monitors are the first cause of feedback.",
             "provenance": [
               {
                 "description": "Lead vocal baseline: 0 dB",
@@ -22132,6 +22756,52 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "subject": "Monitor 3: Cajon · bus 3",
           "value": "-6 dB",
         },
+        {
+          "busNumbers": [],
+          "checkOnConsole": null,
+          "controlRefs": [
+            "mixBusCount",
+          ],
+          "detail": {
+            "listenFor": "Stop at the first hint of ringing and back off 3 dB.",
+            "provenance": [],
+            "range": null,
+            "why": "The quietest monitor that works is the safest one.",
+          },
+          "effectName": null,
+          "fxSlot": null,
+          "id": "monitors:masters-up",
+          "instruction": "With the mics open, bring each monitor mix master up slowly until the musician says it is enough, and stop there",
+          "optional": false,
+          "safety": "rehearsalOnly",
+          "sectionId": "monitors",
+          "subSteps": [],
+          "subject": "When every send is set",
+          "value": "Only as loud as asked for",
+        },
+        {
+          "busNumbers": [],
+          "checkOnConsole": null,
+          "controlRefs": [
+            "busEqBandCount",
+          ],
+          "detail": {
+            "listenFor": "After two or three narrow cuts the wedge should get noticeably louder before it rings.",
+            "provenance": [],
+            "range": null,
+            "why": "Finding each wedge's first ringing frequencies now means they do not find you during the service.",
+          },
+          "effectName": null,
+          "fxSlot": null,
+          "id": "monitors:ring-out",
+          "instruction": "Ring out the vocal mics. Before the band plays: with each vocal mic open on stage, slowly raise its wedge send until it just starts to ring, then cut that frequency 3 dB with a narrow EQ on the monitor bus and back the send off 3 dB. Stop after two or three cuts per wedge.",
+          "optional": false,
+          "safety": "rehearsalOnly",
+          "sectionId": "monitors",
+          "subSteps": [],
+          "subject": "When every send is set",
+          "value": null,
+        },
       ],
       "title": "Monitor sends",
     },
@@ -22304,12 +22974,18 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "consoleChannels": [
         1,
       ],
+      "inputSockets": [
+        1,
+      ],
       "label": "Cajon",
       "stereo": false,
     },
     {
       "channelId": "m-vocalist-a:acousticGuitar.di",
       "consoleChannels": [
+        2,
+      ],
+      "inputSockets": [
         2,
       ],
       "label": "Acoustic guitar (Vocalist A)",
@@ -22320,6 +22996,10 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "consoleChannels": [
         3,
       ],
+      "inputSockets": [
+        3,
+        4,
+      ],
       "label": "Keys",
       "stereo": true,
     },
@@ -22327,6 +23007,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
       "channelId": "m-vocalist-a:leadVocal.mic",
       "consoleChannels": [
         4,
+      ],
+      "inputSockets": [
+        5,
       ],
       "label": "Lead vocal (Vocalist A)",
       "stereo": false,
@@ -22382,7 +23065,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
   "reference": [
     {
       "channelId": "m-cajon:cajon.mic",
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Play to the room, not to the kit: the loudest hit should be a choice, not the default.",
+      ],
       "ifYouHear": [
         {
           "hear": "No low end",
@@ -22398,7 +23083,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
     },
     {
       "channelId": "m-vocalist-a:acousticGuitar.di",
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Strum lighter than feels natural. The PA makes it big.",
+      ],
       "ifYouHear": [
         {
           "hear": "Boomy or humming on certain notes",
@@ -22448,7 +23135,9 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
     },
     {
       "channelId": "m-vocalist-a:leadVocal.mic",
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Keep the mic one fist from your mouth, and keep it there when you get louder.",
+      ],
       "ifYouHear": [
         {
           "hear": "Muddy or woolly",
@@ -22484,6 +23173,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
         },
       ],
       "mixerNotes": [
+        "Keep a finger on this fader and ride it: push up quiet phrases, pull back loud ones.",
         "Cardioid: put the wedge directly behind the mic, in line with the handle.",
       ],
       "subject": "Ch 4 · Lead vocal (Vocalist A)",
@@ -22532,7 +23222,33 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "busNumbers": [],
           "checkOnConsole": null,
           "controlRefs": [
+            "assignSourceToChannel",
+          ],
+          "detail": {
+            "listenFor": "Each channel meter should move when its own source plays, and no other.",
+            "provenance": [],
+            "range": null,
+            "why": "A stereo source uses two sockets but one channel, so sockets and channels stop matching after the first stereo source. This is the one routing change this sheet asks for.",
+          },
+          "effectName": null,
+          "fxSlot": null,
+          "id": "patch:sources",
+          "instruction": "On this console a channel number is not a socket number. Each step below names the input sockets to use. After plugging in, assign each input to its channel",
+          "optional": false,
+          "safety": "rehearsalOnly",
+          "sectionId": "patch",
+          "subSteps": [
+            "Press ROUTING, open CHANNELS, click the channel, then click the Source you want on it",
+          ],
+          "subject": "Before you plug in",
+          "value": null,
+        },
+        {
+          "busNumbers": [],
+          "checkOnConsole": null,
+          "controlRefs": [
             "nameChannel",
+            "assignSourceToChannel",
           ],
           "detail": {
             "listenFor": "Nothing to listen for.",
@@ -22543,7 +23259,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "patch:m-cajon:cajon.mic",
-          "instruction": "Plug in and name channel 1: Cajon",
+          "instruction": "Plug into input 1, assign that input to channel 1 and name it: Cajon",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "patch",
@@ -22581,6 +23297,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "checkOnConsole": null,
           "controlRefs": [
             "nameChannel",
+            "assignSourceToChannel",
           ],
           "detail": {
             "listenFor": "Nothing to listen for.",
@@ -22591,7 +23308,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "patch:m-vocalist-a:acousticGuitar.di",
-          "instruction": "Plug in and name channel 2: Acoustic guitar (Vocalist A)",
+          "instruction": "Plug into input 2, assign that input to channel 2 and name it: Acoustic guitar (Vocalist A)",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "patch",
@@ -22626,6 +23343,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "controlRefs": [
             "nameChannel",
             "stereoChannels",
+            "stereoSourceProcedure",
           ],
           "detail": {
             "listenFor": "Nothing to listen for.",
@@ -22636,11 +23354,13 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "patch:m-keys:keys.di",
-          "instruction": "Plug in channel 3 as a stereo source and name it: Keys",
+          "instruction": "Plug left and right into inputs 3 and 4, group those two inputs as one stereo Source, assign it to channel 3 and name it: Keys",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "patch",
-          "subSteps": [],
+          "subSteps": [
+            "Press ROUTING, open SOURCES, select the two inputs and group them as one stereo Source in the right panel",
+          ],
           "subject": "Ch 3 · Keys",
           "value": null,
         },
@@ -22670,6 +23390,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "checkOnConsole": null,
           "controlRefs": [
             "nameChannel",
+            "assignSourceToChannel",
           ],
           "detail": {
             "listenFor": "Nothing to listen for.",
@@ -22680,7 +23401,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "patch:m-vocalist-a:leadVocal.mic",
-          "instruction": "Plug in and name channel 4: Lead vocal (Vocalist A)",
+          "instruction": "Plug into input 5, assign that input to channel 4 and name it: Lead vocal (Vocalist A)",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "patch",
@@ -24380,10 +25101,34 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "busNumbers": [],
           "checkOnConsole": null,
           "controlRefs": [
+            "mixBusCount",
+          ],
+          "detail": {
+            "listenFor": "Nothing should come out of any monitor yet.",
+            "provenance": [],
+            "range": null,
+            "why": "The send levels on this sheet assume the mix master starts closed. You bring it up at the end, slowly, with the mics open.",
+          },
+          "effectName": null,
+          "fxSlot": null,
+          "id": "monitors:masters",
+          "instruction": "Before setting any send: pull the master fader of every monitor mix all the way down",
+          "optional": false,
+          "safety": "rehearsalOnly",
+          "sectionId": "monitors",
+          "subSteps": [],
+          "subject": "All monitor mixes",
+          "value": "All the way down",
+        },
+        {
+          "busNumbers": [],
+          "checkOnConsole": null,
+          "controlRefs": [
             "monitorSendTap",
             "sendTapPoints",
             "preFaderSendIsAfterDynamics",
             "sendsScreen",
+            "sendTapIsPerBusPair",
           ],
           "detail": {
             "listenFor": "Move a channel fader: that musician's monitor level must not change.",
@@ -24394,12 +25139,12 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "effectName": null,
           "fxSlot": null,
           "id": "monitors:tap",
-          "instruction": "Set every monitor send to be taken at: TAP, with the channel TAP point at PRE FDR",
+          "instruction": "Set every monitor send to be taken at: TAP, with the channel TAP point at PRE FDR.",
           "optional": false,
           "safety": "rehearsalOnly",
           "sectionId": "monitors",
           "subSteps": [],
-          "subject": "All monitor sends",
+          "subject": "All monitor mixes",
           "value": "TAP, with the channel TAP point at PRE FDR",
         },
         {
@@ -24412,7 +25157,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
             "listenFor": "Whether the wedge goes silent when the channel is muted.",
             "provenance": [],
             "range": null,
-            "why": "During feedback you need to know whether muting the channel also silences the monitor.",
+            "why": "When something goes wrong you need to know whether muting the channel also silences the monitor.",
           },
           "effectName": null,
           "fxSlot": null,
@@ -24422,7 +25167,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "safety": "rehearsalOnly",
           "sectionId": "monitors",
           "subSteps": [],
-          "subject": "All monitor sends",
+          "subject": "All monitor mixes",
           "value": "Expected: the monitor goes silent too",
         },
         {
@@ -24521,7 +25266,7 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
             "sendsScreen",
           ],
           "detail": {
-            "listenFor": "Ask the singer, then raise in small steps. Loud wedges are the first cause of feedback.",
+            "listenFor": "Ask the singer, then raise in small steps. Loud monitors are the first cause of feedback.",
             "provenance": [
               {
                 "description": "Lead vocal baseline: 0 dB",
@@ -24809,6 +25554,52 @@ exports[`console adapters > produce sheets for the three fixture plans on both c
           "subSteps": [],
           "subject": "Monitor 3: Cajon · bus 3",
           "value": "-6 dB",
+        },
+        {
+          "busNumbers": [],
+          "checkOnConsole": null,
+          "controlRefs": [
+            "mixBusCount",
+          ],
+          "detail": {
+            "listenFor": "Stop at the first hint of ringing and back off 3 dB.",
+            "provenance": [],
+            "range": null,
+            "why": "The quietest monitor that works is the safest one.",
+          },
+          "effectName": null,
+          "fxSlot": null,
+          "id": "monitors:masters-up",
+          "instruction": "With the mics open, bring each monitor mix master up slowly until the musician says it is enough, and stop there",
+          "optional": false,
+          "safety": "rehearsalOnly",
+          "sectionId": "monitors",
+          "subSteps": [],
+          "subject": "When every send is set",
+          "value": "Only as loud as asked for",
+        },
+        {
+          "busNumbers": [],
+          "checkOnConsole": null,
+          "controlRefs": [
+            "busEqBandCount",
+          ],
+          "detail": {
+            "listenFor": "After two or three narrow cuts the wedge should get noticeably louder before it rings.",
+            "provenance": [],
+            "range": null,
+            "why": "Finding each wedge's first ringing frequencies now means they do not find you during the service.",
+          },
+          "effectName": null,
+          "fxSlot": null,
+          "id": "monitors:ring-out",
+          "instruction": "Ring out the vocal mics. Before the band plays: with each vocal mic open on stage, slowly raise its wedge send until it just starts to ring, then cut that frequency 3 dB with a narrow EQ on the monitor bus and back the send off 3 dB. Stop after two or three cuts per wedge.",
+          "optional": false,
+          "safety": "rehearsalOnly",
+          "sectionId": "monitors",
+          "subSteps": [],
+          "subject": "When every send is set",
+          "value": null,
         },
       ],
       "title": "Monitor sends",

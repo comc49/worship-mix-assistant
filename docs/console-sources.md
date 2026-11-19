@@ -15,6 +15,9 @@ Manual: X32 Digital Mixer User Manual (Behringer, P0ASF, 75 pages)
 | stereoChannels | linkAdjacentPair | 7.2.1 Home Screen: Home Tab, p46 ✓ | "Tap the 1st encoder to link the channel with its adjacent channel." |
 | stereoLinkPairRule | An odd channel links with the next even channel (1+2, 3+4) | **UNVERIFIED** | The manual only says "adjacent channel". The odd/even rule was in the brief's checked list but is not stated in this manual. |
 | stereoBuses | linkAdjacentPair | 4. FX Descriptions, p21 ✓ | "when the left and right signal are to be altered together (e.g. on linked stereo" Supported by the "Link" control on the bus config screenshot (p11) and the block diagram's Mix 1,3...15 / Mix 2,4...16 send pairs. A bus-link procedure is not written out. |
+| busLinkProcedure | Select the first bus of the pair, open the Home screen config tab and switch on Link | **UNVERIFIED** | A "Link" control is visible on the bus config tab in a screenshot (p11), but the manual writes out no procedure for linking two buses. |
+| stereoSourceProcedure | null | 7.2.1 Home Screen: Home Tab, p46 ✓ | "Tap the 1st encoder to link the channel with its adjacent channel." A stereo source uses two linked channels on this console. |
+| assignSourceToChannel | null | **UNVERIFIED** | This sheet assumes input socket N feeds channel N. The manual's default input patch was not checked. |
 | mixBusCount | 16 | 1. Operational Overview (Input Channel Banks), p6 ✓ | "the 16 Mix Bus Masters, which is useful when you wish to include Bus Masters" |
 | matrixCount | 6 | 1. Operational Overview (Routing I/O), p11 ✓ | "Bus sends to 6 matrices" |
 | mainBuses | ["Main LR (stereo)","Mono Bus (center)"] | 1. Operational Overview (Routing I/O), p11 ✓ | "Main Bus Channels LR/C are always available and independent from Mix Buses." |
@@ -28,6 +31,8 @@ Manual: X32 Digital Mixer User Manual (Behringer, P0ASF, 75 pages)
 | fxDefaultFeedBuses | [13,14,15,16] | 5.4 How do I add one of the 8 internal effects to the sound?, p29 ✓ | "Bus masters 13-16 are connected to the effects inputs FX1-4." |
 | fxScreen | Effects | 7.1.1 Display and Navigation Controls, p43 ✓ | "immediately navigate to any of 8 master screens that address different sections" |
 | fxInsertProcedure | On the Effects screen, set both inputs of the slot to "Insert" and pick the effect. Then select the channel, open the Home screen config tab, choose the slot with the 6th encoder and press to connect. | 1. Operational Overview / 5.4, p30 ✓ | "As the effects on the left side are also able to handle complex send effects" One FX slot cannot be inserted on more than one channel. |
+| sendTapIsPerBusPair | true | 7.2.6 Home Screen: Sends Tab, p49 ✓ | "for the first two sends of the currently focused four sends" The place a send is taken from is chosen for two buses at a time (1+2, 3+4, ...). |
+| groupSendDefaultState | null | **UNVERIFIED** | The manual confirms each send can be muted (p49) but does not say whether a send is on or off by default once its pair is set to Sub-Group. Check on the console which channels feed the group. |
 | sendTapPoints | ["Pre-EQ","Post-EQ","Pre-Fader","Post-Fader","Sub-Group"] | 7.2.6 Home Screen: Sends Tab, p49 ✓ | "Adjust the 1st encoder to select where in the signal chain the send is" The manual gives three slightly different lists and never prints the abbreviated labels shown on the console screen. |
 | monitorSendTap | Pre-Fader | 7.2.6 Home Screen: Sends Tab, p49 ✓ | "Adjust the 1st encoder to select where in the signal chain the send is" |
 | defaultSendTap | null | **UNVERIFIED** | The manual never says which tap a send uses by default. |
@@ -55,7 +60,7 @@ Manual: X32 Digital Mixer User Manual (Behringer, P0ASF, 75 pages)
 | delayEffects | ["Stereo Delay","3-Tap Delay","Rhythm Delay","Modulation Delay"] | 7.7.1 Effects Screen: Home Tab, p59 ✓ | "3-Tap Delay" |
 | deEsserEffects | ["Dual DeEsser","Stereo DeEsser"] | 7.7.1 Effects Screen: Home Tab, p59 ✓ | "Dual DeEsser" Only listed; the manual has no description of the DeEsser. |
 | limiterEffects | ["Precision Limiter"] | 4. FX Descriptions, p21 ✓ | "Stereo Precision Limiter allows you to set a precise volume limit," No built-in main bus limiter is documented; this effect has to be inserted from an FX slot. |
-| setBusAsGroup | Select the channel, open the Home screen sends tab, and for that bus choose "Sub-Group" as the place the send is taken from. | 5.9 Mix Buses, Sub Groups and DCA Groups, p32 ✓ | "of buses and groups for the 16 mix outputs of the console. This setting can later" A console-wide preset of buses and groups is on the Setup screen, config tab. The manual names that location inconsistently. |
+| setBusAsGroup | Select the channel, open the Home screen sends tab, and for the pair of buses that holds this bus choose "Sub-Group" as the place the send is taken from. | 5.9 Mix Buses, Sub Groups and DCA Groups, p32 ✓ | "of buses and groups for the 16 mix outputs of the console. This setting can later" A console-wide preset of buses and groups is on the Setup screen, config tab. The manual names that location inconsistently. |
 | removeChannelFromMain | Select the channel, open the Home screen main tab, and tap the 1st encoder so the channel is no longer assigned to the main stereo output (or turn off the "Stereo Bus" button on the channel strip). | 7.2.7 Home Screen: Main Tab, p49 ✓ | "Tap the 1st encoder to assign the selected channel to the main stereo output." |
 | saveScene | ["Press the View button in the Scenes section and open the scenes tab.","Turn the 2nd encoder to an empty scene slot and press it to open the save screen.","Type a new name and save."] | 7.13.2 Scenes Screen: Scenes Tab, p65 ✓ | "Rotate the 2nd encoder to select a scene slot and press the encoder to bring" The manual does not say how the save screen is confirmed. |
 | nameChannel | ["Press Select on the channel.","Press Home and go to the config tab.","Press Utility, then choose a color and icon and type a name."] | 5.13 What kinds of Utilities are available?, p33 ✓ | "select a color, icon, and type in a name for the" |
@@ -69,7 +74,10 @@ Manual: X32 Digital Mixer User Manual (Behringer, P0ASF, 75 pages)
 ### Still UNVERIFIED on the Behringer X32
 
 - **stereoLinkPairRule**: The manual only says "adjacent channel". The odd/even rule was in the brief's checked list but is not stated in this manual.
+- **busLinkProcedure**: A "Link" control is visible on the bus config tab in a screenshot (p11), but the manual writes out no procedure for linking two buses.
+- **assignSourceToChannel**: This sheet assumes input socket N feeds channel N. The manual's default input patch was not checked.
 - **fxReverbDelaySlots**: No rule about which slots can load a reverb or delay is stated. The manual only advises using the left-side slots (1-4) for send effects like reverb.
+- **groupSendDefaultState**: The manual confirms each send can be muted (p49) but does not say whether a send is on or off by default once its pair is set to Sub-Group. Check on the console which channels feed the group.
 - **defaultSendTap**: The manual never says which tap a send uses by default.
 - **muteCutsPreFaderSends**: The text is silent. The block diagram (p70) draws each send's mute ganged to the channel mute, which suggests a channel mute also cuts its sends. Confirm on the console before relying on it.
 - **soloInPlaceExists**: Solo-in-place is not mentioned anywhere in this manual. Searched: "in place", "SIP", "solo in".
@@ -91,6 +99,9 @@ Manual: WING series User Manual (Behringer, 2025-10-20 edition, 167 pages)
 | stereoChannels | native | 2.2 40 Input Channels and 8 Aux Channels, p7 ✓ | "without requiring adjacent channel linking" Mono or stereo is a property of the Source (ROUTING, SOURCES); the channel adopts it. |
 | stereoLinkPairRule | null | 2.2 40 Input Channels and 8 Aux Channels, p7 ✓ | "without requiring adjacent channel linking" No linking is needed. |
 | stereoBuses | native | 2.4 16 Stereo Buses, p7 ✓ | "WING provides 16 stereo buses (B1-B16)" |
+| busLinkProcedure | null | 2.4 16 Stereo Buses, p7 ✓ | "WING provides 16 stereo buses (B1-B16)" Buses are already stereo. |
+| stereoSourceProcedure | Press ROUTING, open SOURCES, select the two inputs and group them as one stereo Source in the right panel | 5.4 ROUTING - SOURCES, p40 ✓ | "two input channels must be grouped" Full sentence: "To assign a stereo or mid/side Source to a single channel, two input channels must be grouped as a single stereo or mid/side Source in the right panel." |
+| assignSourceToChannel | Press ROUTING, open CHANNELS, click the channel, then click the Source you want on it | 5.4 ROUTING - CHANNELS, p39 ✓ | "Click on the Source you want to assign to that channel." |
 | mixBusCount | 16 | 2.4 16 Stereo Buses, p7 ✓ | "WING provides 16 stereo buses (B1-B16)" |
 | matrixCount | 8 | 2.5 8 Matrix Buses, p8 ✓ | "The 8 Matrix buses (MX1 - MX8)" |
 | mainBuses | ["MAIN 1","MAIN 2","MAIN 3","MAIN 4"] | 2.3 4 Stereo Main Buses, p7 ✓ | "WING features 4 stereo Main buses (M1-M4)" |
@@ -104,6 +115,8 @@ Manual: WING series User Manual (Behringer, 2025-10-20 edition, 167 pages)
 | fxDefaultFeedBuses | null | 6 Channel Processing, p68 ✓ | "instead of being set up through dedicated effect buses or returns" Any bus can host a send effect. |
 | fxScreen | EFFECTS | 5.2 EFFECTS, p36 ✓ | "overview of the 16 effect units that can be loaded into the" |
 | fxInsertProcedure | Select the channel or bus, press HOME, open the INS 1 slot and choose the FX slot there. | 5.2 EFFECTS / 6.1 INS 1 and INS 2, p37 ✓ | "Load the desired effect into the insert point of a Bus" |
+| sendTapIsPerBusPair | false | 2.4 16 Stereo Buses, p8 ✓ | "GROUP: The send level to the bus is deactivated" The mode is chosen for each send on its own. |
+| groupSendDefaultState | null | **UNVERIFIED** | The manual documents a send on/off setting ("Send Enable", p36) but does not say whether a send is on by default. Check that each channel's send to the group bus is switched on. |
 | sendTapPoints | ["TAP","POST","GROUP"] | 2.4 16 Stereo Buses / 6.1 BUS/MATRIX SENDS, p68 ✓ | "The following TAP point positions are available" There is no bus send mode named PRE. A pre-fader send is TAP mode with the channel's TAP point at PRE FDR. |
 | monitorSendTap | TAP, with the channel TAP point at PRE FDR | 6.1 INPUT Channels, p68 ✓ | "PRE FDR: Between the fourth processing slot and the channel fader" |
 | defaultSendTap | null | **UNVERIFIED** | The manual does not state the factory default send mode or TAP point position. |
@@ -144,6 +157,7 @@ Manual: WING series User Manual (Behringer, 2025-10-20 edition, 167 pages)
 
 ### Still UNVERIFIED on the Behringer WING Compact
 
+- **groupSendDefaultState**: The manual documents a send on/off setting ("Send Enable", p36) but does not say whether a send is on by default. Check that each channel's send to the group bus is switched on.
 - **defaultSendTap**: The manual does not state the factory default send mode or TAP point position.
 - **muteCutsPreFaderSends**: Implied, not stated: a TAP-mode option "IGNORE CHANNEL MUTE" exists ("the send remains active when the channel is muted", p74), but its default state is not given.
 - **subwooferFeedOptions**: The manual never mentions subwoofers. Only the building blocks are documented: 16 buses, 8 matrices and 4 independent Main buses.

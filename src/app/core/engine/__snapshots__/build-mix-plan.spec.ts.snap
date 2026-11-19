@@ -4,7 +4,9 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
 {
   "channels": [
     {
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Aim for even hits. In the module, check the kick and snare are balanced and the pad sensitivity suits how hard you play.",
+      ],
       "compressor": {
         "attackMs": {
           "listenFor": "If the kit loses punch, lengthen the attack.",
@@ -156,6 +158,7 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
       "mixerNotes": [
         "The balance between kick, snare and cymbals is set inside the drum module, not on the console.",
         "If the module has a spare output, a separate kick output gives you real control of the low end. Consider it.",
+        "Uneven kick and snare cannot be fixed on a stereo pair. Fix the balance and pad sensitivity in the module, and ask for a separate kick output.",
       ],
       "monitorSends": [
         {
@@ -441,7 +444,7 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
             },
             "unit": "dB",
             "value": -5,
-            "why": "Bass carries on stage by itself; wedges need little of it.",
+            "why": "Bass carries on stage by itself; monitors need little of it.",
           },
           "mixId": "monitor-4",
         },
@@ -477,7 +480,9 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
       ],
     },
     {
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Strum lighter than feels natural. The PA makes it big.",
+      ],
       "compressor": {
         "attackMs": {
           "listenFor": "If strums sound dull, lengthen the attack.",
@@ -775,7 +780,9 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
       ],
     },
     {
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Set every patch to the same volume at home, with the lead patch only a little louder.",
+      ],
       "compressor": {
         "attackMs": {
           "listenFor": "If clean parts sound dull, lengthen the attack.",
@@ -929,7 +936,9 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
       },
       "memberId": "m-electric",
       "memberName": "Electric guitar",
-      "mixerNotes": [],
+      "mixerNotes": [
+        "Watch for volume jumps when the guitarist changes sounds, and ride the fader between songs.",
+      ],
       "monitorSends": [
         {
           "levelDb": {
@@ -1294,7 +1303,9 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
       ],
     },
     {
-      "coachingNotes": [],
+      "coachingNotes": [
+        "A pad should be felt more than heard. If you can clearly hear it on stage, it is probably too loud.",
+      ],
       "compressor": null,
       "connection": "stereoDi",
       "dcaIds": [
@@ -1460,7 +1471,9 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
       ],
     },
     {
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Keep the mic one fist from your mouth, and keep it there when you get louder.",
+      ],
       "compressor": {
         "attackMs": {
           "listenFor": "If words sound dull at the start, lengthen the attack.",
@@ -1676,12 +1689,13 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
       "memberId": "m-vocalist-a",
       "memberName": "Vocalist A",
       "mixerNotes": [
+        "Keep a finger on this fader and ride it: push up quiet phrases, pull back loud ones.",
         "Cardioid: put the wedge directly behind the mic, in line with the handle.",
       ],
       "monitorSends": [
         {
           "levelDb": {
-            "listenFor": "Ask the singer, then raise in small steps. Loud wedges are the first cause of feedback.",
+            "listenFor": "Ask the singer, then raise in small steps. Loud monitors are the first cause of feedback.",
             "provenance": [
               {
                 "description": "Lead vocal baseline: 0 dB",
@@ -2065,7 +2079,7 @@ exports[`buildMixPlan: golden plans > full band, dry room 1`] = `
     },
     {
       "coachingNotes": [
-        "Your blend is coming through as you sing it.",
+        "Keep the mic one fist from your mouth, and listen for the lead vocal in your monitor to blend with.",
       ],
       "compressor": {
         "attackMs": {
@@ -2708,7 +2722,9 @@ exports[`buildMixPlan: golden plans > full band, live room, wedges 1`] = `
 {
   "channels": [
     {
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Aim for even hits. In the module, check the kick and snare are balanced and the pad sensitivity suits how hard you play.",
+      ],
       "compressor": {
         "attackMs": {
           "listenFor": "If the kit loses punch, lengthen the attack.",
@@ -2860,6 +2876,7 @@ exports[`buildMixPlan: golden plans > full band, live room, wedges 1`] = `
       "mixerNotes": [
         "The balance between kick, snare and cymbals is set inside the drum module, not on the console.",
         "If the module has a spare output, a separate kick output gives you real control of the low end. Consider it.",
+        "Uneven kick and snare cannot be fixed on a stereo pair. Fix the balance and pad sensitivity in the module, and ask for a separate kick output.",
       ],
       "monitorSends": [
         {
@@ -3145,7 +3162,7 @@ exports[`buildMixPlan: golden plans > full band, live room, wedges 1`] = `
             },
             "unit": "dB",
             "value": -5,
-            "why": "Bass carries on stage by itself; wedges need little of it.",
+            "why": "Bass carries on stage by itself; monitors need little of it.",
           },
           "mixId": "monitor-4",
         },
@@ -3181,7 +3198,9 @@ exports[`buildMixPlan: golden plans > full band, live room, wedges 1`] = `
       ],
     },
     {
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Strum lighter than feels natural. The PA makes it big.",
+      ],
       "compressor": {
         "attackMs": {
           "listenFor": "If strums sound dull, lengthen the attack.",
@@ -3479,7 +3498,9 @@ exports[`buildMixPlan: golden plans > full band, live room, wedges 1`] = `
       ],
     },
     {
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Set every patch to the same volume at home, with the lead patch only a little louder.",
+      ],
       "compressor": {
         "attackMs": {
           "listenFor": "If clean parts sound dull, lengthen the attack.",
@@ -3633,7 +3654,9 @@ exports[`buildMixPlan: golden plans > full band, live room, wedges 1`] = `
       },
       "memberId": "m-electric",
       "memberName": "Electric guitar",
-      "mixerNotes": [],
+      "mixerNotes": [
+        "Watch for volume jumps when the guitarist changes sounds, and ride the fader between songs.",
+      ],
       "monitorSends": [
         {
           "levelDb": {
@@ -3998,7 +4021,9 @@ exports[`buildMixPlan: golden plans > full band, live room, wedges 1`] = `
       ],
     },
     {
-      "coachingNotes": [],
+      "coachingNotes": [
+        "A pad should be felt more than heard. If you can clearly hear it on stage, it is probably too loud.",
+      ],
       "compressor": null,
       "connection": "stereoDi",
       "dcaIds": [
@@ -4159,7 +4184,9 @@ exports[`buildMixPlan: golden plans > full band, live room, wedges 1`] = `
       ],
     },
     {
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Keep the mic one fist from your mouth, and keep it there when you get louder.",
+      ],
       "compressor": {
         "attackMs": {
           "listenFor": "If words sound dull at the start, lengthen the attack.",
@@ -4385,12 +4412,13 @@ exports[`buildMixPlan: golden plans > full band, live room, wedges 1`] = `
       "memberId": "m-vocalist-a",
       "memberName": "Vocalist A",
       "mixerNotes": [
+        "Keep a finger on this fader and ride it: push up quiet phrases, pull back loud ones.",
         "Cardioid: put the wedge directly behind the mic, in line with the handle.",
       ],
       "monitorSends": [
         {
           "levelDb": {
-            "listenFor": "Ask the singer, then raise in small steps. Loud wedges are the first cause of feedback.",
+            "listenFor": "Ask the singer, then raise in small steps. Loud monitors are the first cause of feedback.",
             "provenance": [
               {
                 "description": "Lead vocal baseline: 0 dB",
@@ -4784,7 +4812,7 @@ exports[`buildMixPlan: golden plans > full band, live room, wedges 1`] = `
     },
     {
       "coachingNotes": [
-        "Your blend is coming through as you sing it.",
+        "Keep the mic one fist from your mouth, and listen for the lead vocal in your monitor to blend with.",
       ],
       "compressor": {
         "attackMs": {
@@ -5438,7 +5466,9 @@ exports[`buildMixPlan: golden plans > stripped set 1`] = `
 {
   "channels": [
     {
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Play to the room, not to the kit: the loudest hit should be a choice, not the default.",
+      ],
       "compressor": {
         "attackMs": {
           "listenFor": "If slaps sound dull, lengthen the attack.",
@@ -5633,7 +5663,9 @@ exports[`buildMixPlan: golden plans > stripped set 1`] = `
       ],
     },
     {
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Strum lighter than feels natural. The PA makes it big.",
+      ],
       "compressor": {
         "attackMs": {
           "listenFor": "If strums sound dull, lengthen the attack.",
@@ -6191,7 +6223,9 @@ exports[`buildMixPlan: golden plans > stripped set 1`] = `
       ],
     },
     {
-      "coachingNotes": [],
+      "coachingNotes": [
+        "Keep the mic one fist from your mouth, and keep it there when you get louder.",
+      ],
       "compressor": {
         "attackMs": {
           "listenFor": "If words sound dull at the start, lengthen the attack.",
@@ -6417,12 +6451,13 @@ exports[`buildMixPlan: golden plans > stripped set 1`] = `
       "memberId": "m-vocalist-a",
       "memberName": "Vocalist A",
       "mixerNotes": [
+        "Keep a finger on this fader and ride it: push up quiet phrases, pull back loud ones.",
         "Cardioid: put the wedge directly behind the mic, in line with the handle.",
       ],
       "monitorSends": [
         {
           "levelDb": {
-            "listenFor": "Ask the singer, then raise in small steps. Loud wedges are the first cause of feedback.",
+            "listenFor": "Ask the singer, then raise in small steps. Loud monitors are the first cause of feedback.",
             "provenance": [
               {
                 "description": "Lead vocal baseline: 0 dB",

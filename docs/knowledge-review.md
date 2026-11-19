@@ -274,7 +274,7 @@ Connections: monoDi, modelerDirect, dynamicMic. DCAs: lowEnd. Group bus: none. S
 | compReleaseMs | 150 ms | 100 to 250 | usable range | Recovers between notes without pumping. |
 | compGainReductionDb | 5 dB | 3 to 8 | 2 to 9 (More than 9 dB makes the bass sound choked.) | About 5 dB on the loudest notes evens the line out. |
 | levelDb | 0 dB | -4 to 3 | usable range | Kick and bass are set first; the rest of the band is built on them. |
-| monitorSendDb | -5 dB | -15 to 3 | usable range | Bass carries on stage by itself; wedges need little of it. |
+| monitorSendDb | -5 dB | -15 to 3 | usable range | Bass carries on stage by itself; monitors need little of it. |
 
 Gate: none. A direct source has no bleed from other instruments, so there is nothing for a gate to remove.
 
@@ -351,7 +351,7 @@ Connections: dynamicMic, condenserMic. DCAs: guitars. Group bus: guitars. Sub se
 | compReleaseMs | 150 ms | 100 to 250 | usable range | Recovers between strums. |
 | compGainReductionDb | 3 dB | 2 to 6 | usable range | About 3 dB on hard strums. |
 | levelDb | -2 dB | -8 to 2 | usable range | Supports the vocal in a full band. |
-| monitorSendDb | -6 dB | -15 to 0 | usable range | A miked acoustic in a wedge feeds back easily. |
+| monitorSendDb | -6 dB | -15 to 0 | usable range | A miked acoustic guitar feeds back easily through a stage monitor. |
 | fxSend.hall | -18 dB | -26 to -10 | usable range | A touch of hall takes the dryness off a pickup. |
 
 Gate: none. A gate would chop quiet picked passages. Mute the channel between songs instead.
@@ -581,42 +581,42 @@ If you hear:
 
 Intermediate is the baseline. Skill never chooses tonal EQ.
 
-| Role | Level | Changes | Why | Coaching note |
+| Role | Level | Changes | Why | Tip for the player (shown for every rating) |
 | --- | --- | --- | --- | --- |
 | leadVocal | beginner | compRatio +1; compGainReductionDb +2 | Mic distance and volume vary a lot, so the compressor does more and the mixer rides the fader. | Keep the mic one fist from your mouth, and keep it there when you get louder. |
-| leadVocal | advanced | compRatio -1; compGainReductionDb -1 | They control their own dynamics. Heavy compression would flatten them. | Your dynamics are coming through as you sing them. Keep working the mic the way you do. |
+| leadVocal | advanced | compRatio -1; compGainReductionDb -1 | They control their own dynamics. Heavy compression would flatten them. | (same tip as every player of this role) |
 | harmonyVocal | beginner | compRatio +1; compGainReductionDb +2; levelDb -2; fxSend.vocalPlate +2 | Volume and pitch are less steady, so the voice is controlled more and tucked a little lower in the blend. | Keep the mic one fist from your mouth, and listen for the lead vocal in your monitor to blend with. |
-| harmonyVocal | advanced | compRatio -0.5; compGainReductionDb -1 | They blend by ear and control their own volume. | Your blend is coming through as you sing it. |
+| harmonyVocal | advanced | compRatio -0.5; compGainReductionDb -1 | They blend by ear and control their own volume. | (same tip as every player of this role) |
 | bassGuitar | beginner | compRatio +2; compGainReductionDb +2 | Note volume is uneven, which makes the whole low end unsteady. | Aim for every note at the same strength. Playing a little softer overall makes that easier. |
-| bassGuitar | advanced | compRatio -1; compGainReductionDb -2 | They play evenly and use dynamics on purpose. | Your dynamics are coming through. Use them to build the song. |
+| bassGuitar | advanced | compRatio -1; compGainReductionDb -2 | They play evenly and use dynamics on purpose. | (same tip as every player of this role) |
 | synthBass | beginner | compGainReductionDb +1; levelDb -1 | Patch levels and velocity vary more. | Check that your bass patches are all at a similar volume. |
-| synthBass | advanced | compGainReductionDb -1 | Patches are levelled and played evenly. | Your levels are consistent. Thank you. |
+| synthBass | advanced | compGainReductionDb -1 | Patches are levelled and played evenly. | (same tip as every player of this role) |
 | acousticGuitar | beginner | compRatio +1; compGainReductionDb +2; levelDb -1 | Strumming strength varies a lot between sections. | Strum lighter than feels natural. The PA makes it big. |
-| acousticGuitar | advanced | compGainReductionDb -1 | They control their own dynamics with their right hand. | Your dynamics are coming through as played. |
+| acousticGuitar | advanced | compGainReductionDb -1 | They control their own dynamics with their right hand. | (same tip as every player of this role) |
 | electricGuitar | beginner | compRatio +6; compAttackMs -15; compGainReductionDb +2; levelDb -1 | Volume jumps between patches, so the compressor acts like a limiter that only catches the loud ones. | Set every patch to the same volume at home, with the lead patch only a little louder. |
-| electricGuitar | advanced | compGainReductionDb -1 | Patches are levelled and dynamics are deliberate. | Your patch levels are consistent. Thank you. |
+| electricGuitar | advanced | compGainReductionDb -1 | Patches are levelled and dynamics are deliberate. | (same tip as every player of this role) |
 | keys | beginner | lowCutHz +30 [only with bassGuitar in the band]; levelDb -2 [only with bassGuitar in the band]; compRatio +0.5; compGainReductionDb +1 | A busy left hand collides with the bass guitar, and big chords jump out. | When the bass guitar is playing, leave the low notes to them: play your left hand higher, or leave it out. |
-| keys | advanced | compGainReductionDb -1 | They leave space for the bass and control their own dynamics. | The space you leave for the bass is working. |
+| keys | advanced | compGainReductionDb -1 | They leave space for the bass and control their own dynamics. | (same tip as every player of this role) |
 | padSynth | beginner | levelDb -2 | Pads get held too loud and too long. | A pad should be felt more than heard. If you can clearly hear it on stage, it is probably too loud. |
-| padSynth | advanced | levelDb +1 | They ride their own volume with the song. | Your swells are coming through as played. |
+| padSynth | advanced | levelDb +1 | They ride their own volume with the song. | (same tip as every player of this role) |
 | electronicDrums | beginner | levelDb -2; compGainReductionDb +1 [only electronicDrums.stereo]; compAttackMs +10 [only electronicDrums.stereo]; compRatio +1 [only electronicDrums.kick, electronicDrums.snare]; compGainReductionDb +2 [only electronicDrums.kick, electronicDrums.snare] | Hit strength is uneven. How much the console can help depends on how the module is connected. | Aim for even hits. In the module, check the kick and snare are balanced and the pad sensitivity suits how hard you play. |
-| electronicDrums | advanced | compGainReductionDb -1 | Hits are even and the module is balanced. | Your dynamics are coming through as played. |
+| electronicDrums | advanced | compGainReductionDb -1 | Hits are even and the module is balanced. | (same tip as every player of this role) |
 | kick | beginner | levelDb -2; compRatio +1; compGainReductionDb +2 | A newer drummer hits unevenly and often too hard, so this drum is controlled more and starts lower. | Play to the room, not to the kit: the loudest hit should be a choice, not the default. |
-| kick | advanced | compGainReductionDb -1 | A consistent drummer controls their own dynamics, so the console does less. | Your dynamics are coming through as played. Build the song with them. |
+| kick | advanced | compGainReductionDb -1 | A consistent drummer controls their own dynamics, so the console does less. | (same tip as every player of this role) |
 | snare | beginner | levelDb -2; compRatio +1; compGainReductionDb +2 | A newer drummer hits unevenly and often too hard, so this drum is controlled more and starts lower. | Play to the room, not to the kit: the loudest hit should be a choice, not the default. |
-| snare | advanced | compGainReductionDb -1 | A consistent drummer controls their own dynamics, so the console does less. | Your dynamics are coming through as played. Build the song with them. |
+| snare | advanced | compGainReductionDb -1 | A consistent drummer controls their own dynamics, so the console does less. | (same tip as every player of this role) |
 | hiHat | beginner | levelDb -2 | A newer drummer hits unevenly and often too hard, so this drum is controlled more and starts lower. | Play to the room, not to the kit: the loudest hit should be a choice, not the default. |
-| hiHat | advanced | none | A consistent drummer controls their own dynamics, so the console does less. | Your dynamics are coming through as played. Build the song with them. |
+| hiHat | advanced | none | A consistent drummer controls their own dynamics, so the console does less. | (same tip as every player of this role) |
 | toms | beginner | levelDb -2 | A newer drummer hits unevenly and often too hard, so this drum is controlled more and starts lower. | Play to the room, not to the kit: the loudest hit should be a choice, not the default. |
-| toms | advanced | none | A consistent drummer controls their own dynamics, so the console does less. | Your dynamics are coming through as played. Build the song with them. |
+| toms | advanced | none | A consistent drummer controls their own dynamics, so the console does less. | (same tip as every player of this role) |
 | overheads | beginner | levelDb -2 | A newer drummer hits unevenly and often too hard, so this drum is controlled more and starts lower. | Play to the room, not to the kit: the loudest hit should be a choice, not the default. |
-| overheads | advanced | none | A consistent drummer controls their own dynamics, so the console does less. | Your dynamics are coming through as played. Build the song with them. |
+| overheads | advanced | none | A consistent drummer controls their own dynamics, so the console does less. | (same tip as every player of this role) |
 | cajon | beginner | levelDb -2; compRatio +1; compGainReductionDb +2 | A newer drummer hits unevenly and often too hard, so this drum is controlled more and starts lower. | Play to the room, not to the kit: the loudest hit should be a choice, not the default. |
-| cajon | advanced | compGainReductionDb -1 | A consistent drummer controls their own dynamics, so the console does less. | Your dynamics are coming through as played. Build the song with them. |
+| cajon | advanced | compGainReductionDb -1 | A consistent drummer controls their own dynamics, so the console does less. | (same tip as every player of this role) |
 | backingTracks | beginner | none | Tracks are pre-produced, so the operator's skill does not change the sound. | Check every track is at a similar volume before the service. |
-| backingTracks | advanced | none | Tracks are pre-produced, so the operator's skill does not change the sound. | No changes needed. |
+| backingTracks | advanced | none | Tracks are pre-produced, so the operator's skill does not change the sound. | (same tip as every player of this role) |
 | click | beginner | none | A click is a machine. Skill does not apply. | Start the click before counting in, every time. |
-| click | advanced | none | A click is a machine. Skill does not apply. | No changes needed. |
+| click | advanced | none | A click is a machine. Skill does not apply. | (same tip as every player of this role) |
 
 ### Behavior descriptions shown instead of skill labels
 

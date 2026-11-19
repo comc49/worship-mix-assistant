@@ -215,6 +215,24 @@ function buildPatchSection(context: BuildContext): SheetSection {
   const facts = context.profile.facts;
   const steps: SheetStep[] = [];
   const needsLinking = facts.stereoChannels.value === 'linkAdjacentPair';
+  const assignSource = facts.assignSourceToChannel.value;
+  const stereoSource = facts.stereoSourceProcedure.value;
+
+  if (assignSource !== null) {
+    // On this console a channel is not a socket: each input is a Source that is assigned to a channel.
+    steps.push(
+      makeStep(context, {
+        id: 'patch:sources',
+        sectionId: 'patch',
+        subject: 'Before you plug in',
+        instruction: 'On this console a channel number is not a socket number. Each step below names the input sockets to use. After plugging in, assign each input to its channel',
+        subSteps: [assignSource],
+        detail: plainDetail('A stereo source uses two sockets but one channel, so sockets and channels stop matching after the first stereo source. This is the one routing change this sheet asks for.', 'Each channel meter should move when its own source plays, and no other.'),
+        safety: 'rehearsalOnly',
+        refs: ['assignSourceToChannel'],
+      }),
+    );
+  }
 
   for (const channel of context.plan.channels) {
     const assignment = context.channelMap.find((entry) => entry.channelId === channel.id);
@@ -230,9 +248,15 @@ function buildPatchSection(context: BuildContext): SheetSection {
       instruction = `Plug left and right into channels ${assignment.consoleChannels[0]} and ${assignment.consoleChannels[1]}, link them as a stereo pair, and name them: ${assignment.label}`;
       refs.push('stereoChannels', 'stereoLinkPairRule');
     } else if (channel.stereo && !needsLinking) {
-      instruction = `Plug in channel ${assignment.consoleChannels[0]} as a stereo source and name it: ${assignment.label}`;
-      refs.push('stereoChannels');
+      instruction = `Plug left and right into inputs ${assignment.inputSockets[0]} and ${assignment.inputSockets[1]}, group those two inputs as one stereo Source, assign it to channel ${assignment.consoleChannels[0]} and name it: ${assignment.label}`;
+      refs.push('stereoChannels', 'stereoSourceProcedure');
+    } else if (assignSource !== null) {
+      instruction = `Plug into input ${assignment.inputSockets[0]}, assign that input to channel ${assignment.consoleChannels[0]} and name it: ${assignment.label}`;
+      refs.push('assignSourceToChannel');
     }
+    const stereoSourceSteps = channel.stereo && !needsLinking && stereoSource !== null ? [stereoSource] : [];
+    const isFirstChannel = context.plan.channels[0].id === channel.id;
+    const namingSteps = isFirstChannel ? facts.nameChannel.value : [];
 
     steps.push(
       makeStep(context, {
@@ -241,7 +265,7 @@ function buildPatchSection(context: BuildContext): SheetSection {
         subject,
         instruction,
         // The naming procedure is shown once, on the first channel.
-        subSteps: steps.length === 0 ? facts.nameChannel.value : [],
+        subSteps: [...stereoSourceSteps, ...namingSteps],
         detail: plainDetail('Named channels in a standard order (drums, bass, guitars, keys, pads, vocals) are faster to find under pressure.', 'Nothing to listen for.'),
         safety: 'rehearsalOnly',
         refs,
@@ -458,7 +482,31 @@ function buildGroupsSection(context: BuildContext): SheetSection {
     }
     const members = wish.memberChannelIds.map(labelOf).join(', ');
     const busText = describeBuses(bus.busNumbers);
-    const widthNote = bus.busNumbers.length === 1 && facts.stereoBuses.value === 'linkAdjacentPair' ? ' (mono, to save buses)' : '';
+    const busesNeedLinking = facts.stereoBuses.value === 'linkAdjacentPair';
+    const widthNote = bus.busNumbers.length === 1 && busesNeedLinking ? ' (mono, to save buses)' : '';
+
+    const routeSubSteps: string[] = [];
+    const routeRefs: ConsoleFactKey[] = ['setBusAsGroup', 'mixBusCount', 'groupSendDefaultState'];
+    const linkProcedure = facts.busLinkProcedure.value;
+    if (bus.busNumbers.length === 2 && busesNeedLinking && linkProcedure !== null) {
+      routeSubSteps.push(`First link buses ${bus.busNumbers[0]} and ${bus.busNumbers[1]} as a stereo bus: ${linkProcedure}.`);
+      routeRefs.push('busLinkProcedure');
+    }
+    routeSubSteps.push(facts.setBusAsGroup.value);
+    if (facts.sendTapIsPerBusPair.value) {
+      const firstOfPair = bus.busNumbers[0] % 2 === 1 ? bus.busNumbers[0] : bus.busNumbers[0] - 1;
+      routeSubSteps.push(`That setting covers buses ${firstOfPair} and ${firstOfPair + 1} together.`);
+      routeRefs.push('sendTapIsPerBusPair');
+      if (bus.busNumbers.length === 1) {
+        const neighbour = bus.busNumbers[0] === firstOfPair ? firstOfPair + 1 : firstOfPair;
+        routeSubSteps.push(`On each of these channels, switch the send to bus ${bus.busNumbers[0]} on, and switch the send to bus ${neighbour} off unless the channel belongs to that group too.`);
+      } else {
+        routeSubSteps.push(`On each of these channels, switch the send to ${busText} on.`);
+      }
+      routeSubSteps.push(`On every other channel, make sure the send to ${busText} is off.`);
+    } else {
+      routeSubSteps.push(`On each of these channels, make sure the send to ${busText} is switched on.`);
+    }
     steps.push(
       makeStep(context, {
         id: `group:${wish.id}:route`,
@@ -466,10 +514,10 @@ function buildGroupsSection(context: BuildContext): SheetSection {
         subject: `${wish.label} group · ${busText}`,
         instruction: `Route these channels through ${busText} as a group${widthNote}, and name the bus "${wish.label}"`,
         value: members,
-        subSteps: [facts.setBusAsGroup.value],
-        detail: plainDetail(wish.why, 'Pulling the group fader down should pull all of these down together.'),
+        subSteps: routeSubSteps,
+        detail: plainDetail(wish.why, 'Pulling the group fader down should pull all of these down together, and nothing else. Mute the group: none of these channels should be heard, and every other channel should be unchanged.'),
         safety: 'rehearsalOnly',
-        refs: ['setBusAsGroup', 'mixBusCount'],
+        refs: routeRefs,
         busNumbers: bus.busNumbers,
       }),
     );
@@ -706,33 +754,73 @@ function buildMonitorsSection(context: BuildContext): SheetSection {
   const facts = context.profile.facts;
   const plan = context.plan;
   const steps: SheetStep[] = [];
+  const inEarsOnly = plan.monitorGuidance.monitorType === 'inEars';
+  const monitorWord = inEarsOnly ? 'in-ear mix' : 'wedge';
 
   if (plan.monitorMixes.length > 0) {
+    steps.push(
+      makeStep(context, {
+        id: 'monitors:masters',
+        sectionId: 'monitors',
+        subject: 'All monitor mixes',
+        instruction: 'Before setting any send: pull the master fader of every monitor mix all the way down',
+        value: 'All the way down',
+        detail: plainDetail('The send levels on this sheet assume the mix master starts closed. You bring it up at the end, slowly, with the mics open.', 'Nothing should come out of any monitor yet.'),
+        safety: 'rehearsalOnly',
+        refs: ['mixBusCount'],
+      }),
+    );
+
+    if (inEarsOnly) {
+      steps.push(
+        makeStep(context, {
+          id: 'monitors:inear-packs',
+          sectionId: 'monitors',
+          subject: 'All monitor mixes',
+          instruction: 'Ask every musician to turn their in-ear pack all the way down before they put their in-ears in, and to turn it up themselves',
+          value: 'Packs at minimum',
+          detail: plainDetail('In-ears sit inside the ear. A sudden loud sound cannot be backed away from.', 'Nobody should flinch when a channel is unmuted.'),
+          safety: 'safeDuringService',
+        }),
+        makeStep(context, {
+          id: 'monitors:inear-limiter',
+          sectionId: 'monitors',
+          subject: 'All monitor mixes',
+          instruction: 'Put a limiter on every in-ear mix: use the compressor on each monitor bus at its highest ratio and fastest attack, with the threshold set so it does nothing in normal playing. If you are not sure how, ask before the band plugs in',
+          value: 'Only acts on accidents',
+          detail: plainDetail('A dropped mic or a feedback squeal goes straight into the ears. The limiter is the only thing in the way.', 'No reduction shows while the band plays normally.'),
+          safety: 'rehearsalOnly',
+          refs: ['compRatioValues'],
+        }),
+      );
+    }
+
     const afterDynamics = facts.preFaderSendIsAfterDynamics.value;
     let tapConsequence = 'Check on this console whether that tap is before or after the compressor.';
     if (afterDynamics === true) {
       tapConsequence = 'On this console that tap is after the channel compressor, so compression also reaches the monitors.';
     }
+    const pairNote = facts.sendTapIsPerBusPair.value ? ' On this console the setting is made for two buses at a time (1+2, 3+4, and so on).' : '';
     steps.push(
       makeStep(context, {
         id: 'monitors:tap',
         sectionId: 'monitors',
-        subject: 'All monitor sends',
-        instruction: `Set every monitor send to be taken at: ${facts.monitorSendTap.value}`,
+        subject: 'All monitor mixes',
+        instruction: `Set every monitor send to be taken at: ${facts.monitorSendTap.value}.${pairNote}`,
         value: facts.monitorSendTap.value,
         detail: plainDetail(`${plan.monitorGuidance.why} ${tapConsequence} ${plan.monitorGuidance.compressionNote}`, 'Move a channel fader: that musician\'s monitor level must not change.'),
         safety: 'rehearsalOnly',
-        refs: ['monitorSendTap', 'sendTapPoints', 'preFaderSendIsAfterDynamics', 'sendsScreen'],
+        refs: ['monitorSendTap', 'sendTapPoints', 'preFaderSendIsAfterDynamics', 'sendsScreen', 'sendTapIsPerBusPair'],
       }),
     );
     steps.push(
       makeStep(context, {
         id: 'monitors:mute',
         sectionId: 'monitors',
-        subject: 'All monitor sends',
-        instruction: 'Know what a channel mute does to the monitors: mute one vocal channel and listen to its wedge',
+        subject: 'All monitor mixes',
+        instruction: `Know what a channel mute does to the monitors: mute one vocal channel and listen to its ${monitorWord}`,
         value: facts.muteCutsPreFaderSends.value === true ? 'Expected: the monitor goes silent too' : 'Find out on this console',
-        detail: plainDetail('During feedback you need to know whether muting the channel also silences the monitor.', 'Whether the wedge goes silent when the channel is muted.'),
+        detail: plainDetail('When something goes wrong you need to know whether muting the channel also silences the monitor.', `Whether the ${monitorWord} goes silent when the channel is muted.`),
         safety: 'rehearsalOnly',
         refs: ['muteCutsPreFaderSends'],
       }),
@@ -779,10 +867,43 @@ function buildMonitorsSection(context: BuildContext): SheetSection {
     }
   }
 
+  if (plan.monitorMixes.length > 0) {
+    steps.push(
+      makeStep(context, {
+        id: 'monitors:masters-up',
+        sectionId: 'monitors',
+        subject: 'When every send is set',
+        instruction: 'With the mics open, bring each monitor mix master up slowly until the musician says it is enough, and stop there',
+        value: 'Only as loud as asked for',
+        detail: plainDetail('The quietest monitor that works is the safest one.', inEarsOnly ? 'Ask each musician. Nobody should need to turn their pack down.' : 'Stop at the first hint of ringing and back off 3 dB.'),
+        safety: 'rehearsalOnly',
+        refs: ['mixBusCount'],
+      }),
+    );
+    const ringOut = plan.soundcheck.find((entry) => entry.title.startsWith('Ring out'));
+    if (plan.monitorGuidance.ringOutRequired && ringOut !== undefined) {
+      steps.push(
+        makeStep(context, {
+          id: 'monitors:ring-out',
+          sectionId: 'monitors',
+          subject: 'When every send is set',
+          instruction: `${ringOut.title}. ${ringOut.detail}`,
+          detail: plainDetail('Finding each wedge\'s first ringing frequencies now means they do not find you during the service.', 'After two or three narrow cuts the wedge should get noticeably louder before it rings.'),
+          safety: 'rehearsalOnly',
+          refs: ['busEqBandCount'],
+        }),
+      );
+    }
+  }
+
+  const intro = inEarsOnly
+    ? 'Give each musician what they need to hear, starting low. In-ears sit inside the ear, so every level here comes up slowly.'
+    : 'Give each musician what they need to hear, starting low. Quiet monitors are the best protection against feedback.';
+
   return {
     id: 'monitors',
     title: 'Monitor sends',
-    intro: 'Give each musician what they need to hear, starting low. Quiet monitors are the best protection against feedback.',
+    intro,
     steps,
   };
 }

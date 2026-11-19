@@ -4,6 +4,7 @@ import {
   DEFAULT_CONNECTION_BY_ROLE,
   ENSEMBLE_RULES,
   findProfiles,
+  findRoleNotes,
   getMusicalLimit,
   INSTRUMENT_PROFILES,
   ROOM_MODIFIERS,
@@ -23,17 +24,20 @@ describe('knowledge base coverage', () => {
     }
   });
 
-  it('has beginner and advanced modifiers, each with a why and a coaching note, for every role', () => {
+  it('has beginner and advanced modifiers with a why, and one tip per role that does not depend on the rating', () => {
     for (const role of ROLES) {
       for (const level of ['beginner', 'advanced'] as const) {
         const modifier = SKILL_MODIFIERS.find((entry) => entry.role === role && entry.level === level);
         expect(modifier, `${role} ${level}`).toBeDefined();
         expect(modifier?.why.length).toBeGreaterThan(0);
-        expect(modifier?.coaching.length).toBeGreaterThan(0);
         for (const adjustment of modifier?.adjustments ?? []) {
           expect(adjustment.why.length).toBeGreaterThan(0);
         }
       }
+      expect(findRoleNotes(role).coaching.length, role).toBeGreaterThan(0);
+      const advanced = SKILL_MODIFIERS.find((entry) => entry.role === role && entry.level === 'advanced');
+      expect(advanced?.coaching, role).toBeUndefined();
+      expect(advanced?.mixerNotes, role).toBeUndefined();
     }
   });
 

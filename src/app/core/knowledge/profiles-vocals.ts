@@ -43,7 +43,7 @@ export const LEAD_VOCAL_PROFILE: InstrumentProfile = {
     compReleaseMs: num(120, 80, 200, 'ms', 'Lets go between phrases without pumping.', 'If you hear the level "breathing" between words, lengthen the release.'),
     compGainReductionDb: num(4, 3, 6, 'dB', 'About 4 dB on loud phrases keeps the vocal on top without lifting stage noise much.', 'Loud phrases should sit in the mix instead of jumping out. Quiet phrases should show little or no reduction.'),
     levelDb: num(0, -3, 3, 'dB', 'The lead vocal is the reference. Everything else is balanced under it.', 'Every word should be understood from the back row.'),
-    monitorSendDb: num(0, -10, 5, 'dB', 'Singers need themselves first in their own monitor.', 'Ask the singer, then raise in small steps. Loud wedges are the first cause of feedback.'),
+    monitorSendDb: num(0, -10, 5, 'dB', 'Singers need themselves first in their own monitor.', 'Ask the singer, then raise in small steps. Loud monitors are the first cause of feedback.'),
     'fxSend.vocalPlate': num(-12, -20, -6, 'dB', 'A little plate adds sustain without pushing the voice back.', 'You should miss it when you mute it, not notice it when it is on.'),
     'fxSend.tempoDelay': num(-20, -30, -12, 'dB', 'A quiet delay fills gaps between phrases on slower songs.', 'If you can clearly hear repeats during fast songs, turn it down or mute the delay.'),
   },

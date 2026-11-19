@@ -12,6 +12,7 @@ import {
   MUTE_GROUP_DEFINITIONS,
   ROOM_MODIFIERS,
   SEND_EFFECTS,
+  CLICK_WITH_WEDGES_WARNING,
   STREAM_DIFFERENCES,
   SUBWOOFER_RULES,
   NumDefault,
@@ -152,8 +153,16 @@ function buildMonitorSends(
   channel: ChannelDraft,
   ownSend: NumericSetting | null,
   mixes: { mix: MonitorMixPlan; memberIds: string[] }[],
+  wedgesOnStage: boolean,
 ): MonitorSendPlan[] {
   const sends: MonitorSendPlan[] = [];
+
+  // A click in a wedge is heard by the room, so with wedges on stage it gets no monitor sends at all.
+  const isClickIntoWedges = channel.memberRole.role === 'click' && wedgesOnStage;
+  if (isClickIntoWedges) {
+    return sends;
+  }
+
   const foldback = MONITOR_FOLDBACK_BY_ROLE[channel.memberRole.role];
 
   for (const entry of mixes) {
@@ -212,6 +221,7 @@ function finalizeChannel(
   mixes: { mix: MonitorMixPlan; memberIds: string[] }[],
   groupBusIds: string[],
   planWarnings: PlanWarning[],
+  wedgesOnStage: boolean,
 ): ChannelPlan {
   const warnings: string[] = [];
   const profile = channel.profile;
@@ -260,7 +270,7 @@ function finalizeChannel(
     level,
     pan: profile.pan,
     fxSends,
-    monitorSends: buildMonitorSends(channel, ownMonitorSend, mixes),
+    monitorSends: buildMonitorSends(channel, ownMonitorSend, mixes, wedgesOnStage),
     dcaIds: [...profile.dcas],
     inMultipleDcas: profile.dcas.length > 1,
     muteGroupIds,
@@ -460,7 +470,13 @@ export function buildMixPlan(band: BandMember[], room: Room, serviceSetup: Servi
   const groupBuses = buildGroupBusWishes(drafts, room);
   const groupBusIds = groupBuses.map((wish) => wish.id);
   const monitorMixEntries = buildMonitorMixes(band, serviceSetup);
-  const channels = drafts.map((draft) => finalizeChannel(draft, monitorMixEntries, groupBusIds, planWarnings));
+  const wedgesOnStage = serviceSetup.monitorType !== 'inEars';
+  const channels = drafts.map((draft) => finalizeChannel(draft, monitorMixEntries, groupBusIds, planWarnings, wedgesOnStage));
+
+  const hasClick = rolesInBand.includes('click');
+  if (hasClick && wedgesOnStage) {
+    planWarnings.push({ channelId: null, message: CLICK_WITH_WEDGES_WARNING });
+  }
 
   const monitorGuidance = buildMonitorGuidance(serviceSetup);
   const subSendChannelIds = channels.filter((channel) => channel.sendToSubBus).map((channel) => channel.id);
