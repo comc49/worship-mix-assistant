@@ -4,7 +4,8 @@
  * Saving the sheet as a PDF from the print dialog is how a sheet is sent to this week's mixer.
  */
 @media print {
-  :root {
+  /* html:root outranks the :root block in styles.scss, which comes later in the bundle. */
+  html:root {
     --bg: #fff;
     --surface: #fff;
     --surface-2: #fff;
@@ -85,6 +86,13 @@
 
   .sheet-step {
     break-inside: avoid;
+  }
+
+  /* A channel heading never sits alone at the bottom of a page. */
+  h2,
+  h3,
+  h4 {
+    break-after: avoid;
   }
 
   /* Tap-for-detail panels and their buttons stay off paper unless they are open. */

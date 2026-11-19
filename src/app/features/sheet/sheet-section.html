@@ -7,7 +7,7 @@
   <div class="sheet-section__header">
     <h2 class="sheet-section__title" [id]="headingId()">{{ section().title }}</h2>
     <span
-      class="badge"
+      class="badge no-print"
       [class.badge--ok]="doneCount() === totalCount()"
       data-testid="section-progress"
     >{{ doneCount() }} of {{ totalCount() }} done</span>
