@@ -1,0 +1,43 @@
+<div class="page">
+  <h1>What the knobs do</h1>
+  <p class="lead">A reminder for when you are standing at the desk. Each one says what you hear when you turn it each way.</p>
+
+  <nav class="knobs__jump no-print" aria-label="Jump to a group">
+    @for (view of groups(); track view.group.id) {
+      <a class="btn btn--small" [href]="'/knobs#' + view.group.id" data-testid="knob-jump">{{ view.group.title }}</a>
+    }
+  </nav>
+
+  @for (view of groups(); track view.group.id) {
+    <section class="card" [id]="view.group.id" data-testid="knob-group">
+      <h2>{{ view.group.title }}</h2>
+      <p class="dim">{{ view.group.intro }}</p>
+
+      @for (item of view.entries; track item.entry.id) {
+        <article class="knob" data-testid="knob-entry" [attr.data-knob-id]="item.entry.id">
+          <h3 class="knob__name">{{ item.entry.name }}</h3>
+          <p>{{ item.entry.whatItIs }}</p>
+          <dl class="knob__turns">
+            <div class="knob__turn">
+              <dt>{{ item.entry.moreLabel }}</dt>
+              <dd>{{ item.entry.more }}</dd>
+            </div>
+            <div class="knob__turn">
+              <dt>{{ item.entry.lessLabel }}</dt>
+              <dd>{{ item.entry.less }}</dd>
+            </div>
+          </dl>
+          <p class="knob__remember"><strong>Remember:</strong> {{ item.entry.remember }}</p>
+          @if (item.consoleName; as name) {
+            <p class="dim knob__console" data-testid="knob-console-name">
+              On the {{ consoleName() }}: {{ name }}
+              @if (item.checkOnConsole) {
+                <span class="badge badge--warn">Check on your console</span>
+              }
+            </p>
+          }
+        </article>
+      }
+    </section>
+  }
+</div>

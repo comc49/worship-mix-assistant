@@ -38,6 +38,7 @@ export class App {
     { path: '/overview', label: 'Overview' },
     { path: '/soundcheck', label: 'Soundcheck' },
     { path: '/troubleshoot', label: 'Fix a problem' },
+    { path: '/knobs', label: 'Knobs' },
     { path: '/backup', label: 'Backup' },
   ];
 
