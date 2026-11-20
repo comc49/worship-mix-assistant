@@ -1,43 +1,62 @@
-<div class="page">
+<div class="page knobs">
   <h1>What the knobs do</h1>
-  <p class="lead">A reminder for when you are standing at the desk. Each one says what you hear when you turn it each way.</p>
 
-  <nav class="knobs__jump no-print" aria-label="Jump to a group">
+  <div class="knobs__tabs" role="group" aria-label="Kind of control">
     @for (view of groups(); track view.group.id) {
-      <a class="btn btn--small" [href]="'/knobs#' + view.group.id" data-testid="knob-jump">{{ view.group.title }}</a>
+      <button
+        type="button"
+        class="btn btn--small"
+        data-testid="knob-group-tab"
+        [attr.data-group-id]="view.group.id"
+        [attr.aria-pressed]="view.group.id === selectedGroup().group.id"
+        (click)="selectGroup(view.group.id)"
+      >
+        {{ view.group.title }}
+      </button>
     }
-  </nav>
+  </div>
 
-  @for (view of groups(); track view.group.id) {
-    <section class="card" [id]="view.group.id" data-testid="knob-group">
-      <h2>{{ view.group.title }}</h2>
-      <p class="dim">{{ view.group.intro }}</p>
+  <p class="dim knobs__intro">{{ selectedGroup().group.intro }} Tap a tile to see what it does.</p>
 
-      @for (item of view.entries; track item.entry.id) {
-        <article class="knob" data-testid="knob-entry" [attr.data-knob-id]="item.entry.id">
-          <h3 class="knob__name">{{ item.entry.name }}</h3>
-          <p>{{ item.entry.whatItIs }}</p>
-          <dl class="knob__turns">
-            <div class="knob__turn">
-              <dt>{{ item.entry.moreLabel }}</dt>
-              <dd>{{ item.entry.more }}</dd>
-            </div>
-            <div class="knob__turn">
-              <dt>{{ item.entry.lessLabel }}</dt>
-              <dd>{{ item.entry.less }}</dd>
-            </div>
-          </dl>
-          <p class="knob__remember"><strong>Remember:</strong> {{ item.entry.remember }}</p>
-          @if (item.consoleName; as name) {
-            <p class="dim knob__console" data-testid="knob-console-name">
-              On the {{ consoleName() }}: {{ name }}
-              @if (item.checkOnConsole) {
-                <span class="badge badge--warn">Check on your console</span>
-              }
-            </p>
-          }
-        </article>
-      }
-    </section>
-  }
+  <div class="bento" data-testid="knob-grid">
+    @for (item of selectedGroup().entries; track item.entry.id; let index = $index) {
+      <button
+        type="button"
+        class="bento__tile"
+        data-testid="knob-tile"
+        [class.bento__tile--wide]="index < wideTileCount()"
+        [class.is-selected]="item.entry.id === selectedEntry().entry.id"
+        [attr.data-knob-id]="item.entry.id"
+        [attr.aria-pressed]="item.entry.id === selectedEntry().entry.id"
+        (click)="selectEntry(item.entry.id)"
+      >
+        <span class="bento__name">{{ item.entry.name }}</span>
+        <span class="bento__headline">{{ item.entry.remember }}</span>
+      </button>
+    }
+  </div>
+
+  <section class="knob-detail card" aria-live="polite" data-testid="knob-detail" [attr.data-knob-id]="selectedEntry().entry.id">
+    <h2 class="knob-detail__name">{{ selectedEntry().entry.name }}</h2>
+    <p>{{ selectedEntry().entry.whatItIs }}</p>
+    <dl class="knob-detail__turns">
+      <div class="knob-detail__turn">
+        <dt>{{ selectedEntry().entry.moreLabel }}</dt>
+        <dd>{{ selectedEntry().entry.more }}</dd>
+      </div>
+      <div class="knob-detail__turn">
+        <dt>{{ selectedEntry().entry.lessLabel }}</dt>
+        <dd>{{ selectedEntry().entry.less }}</dd>
+      </div>
+    </dl>
+    <p class="knob-detail__remember"><strong>Remember:</strong> {{ selectedEntry().entry.remember }}</p>
+    @if (selectedEntry().consoleName; as name) {
+      <p class="dim knob-detail__console" data-testid="knob-console-name">
+        On the {{ consoleName() }}: {{ name }}
+        @if (selectedEntry().checkOnConsole) {
+          <span class="badge badge--warn">Check on your console</span>
+        }
+      </p>
+    }
+  </section>
 </div>

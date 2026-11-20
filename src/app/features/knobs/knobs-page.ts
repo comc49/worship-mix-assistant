@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { ConsoleProfile } from '../../core/consoles';
 import { KNOB_GUIDE, KnobConsoleName, KnobEntry, KnobGroup } from '../../core/knowledge/knob-guide';
 import { MixStore } from '../../state/mix-store';
@@ -61,7 +61,29 @@ function lookUpConsoleName(profile: ConsoleProfile, key: KnobConsoleName): Conso
   }
 }
 
-/** A reminder of what the common knobs do, with the selected console's name for each. */
+const GRID_COLUMNS = 4;
+
+/**
+ * How many tiles of a group are double width, so the bento grid has no holes:
+ * the tiles plus the extra cells of the wide ones must fill whole rows of four.
+ */
+function countWideTiles(tileCount: number): number {
+  for (let wide = 0; wide <= tileCount; wide = wide + 1) {
+    const cells = tileCount + wide;
+    const fillsWholeRows = cells % GRID_COLUMNS === 0;
+    // A single row of four small tiles is too flat to read, so four tiles become a two-by-two.
+    const isSingleFlatRow = cells === GRID_COLUMNS;
+    if (fillsWholeRows && !isSingleFlatRow) {
+      return wide;
+    }
+  }
+  return 0;
+}
+
+/**
+ * A reminder of what the common knobs do, as a bento grid: one group at a time, every control
+ * of the group visible as a tile, and one detail panel for the tile that is selected.
+ */
 @Component({
   selector: 'app-knobs-page',
   templateUrl: './knobs-page.html',
@@ -79,6 +101,37 @@ export class KnobsPage {
       entries: group.entries.map((entry) => this.buildEntryView(entry, profile)),
     }));
   });
+
+  protected readonly selectedGroupId = signal<string>(KNOB_GUIDE[0].id);
+  protected readonly selectedEntryId = signal<string>(KNOB_GUIDE[0].entries[0].id);
+
+  protected readonly selectedGroup = computed<KnobGroupView>(() => {
+    const groups = this.groups();
+    const found = groups.find((view) => view.group.id === this.selectedGroupId());
+    return found ?? groups[0];
+  });
+
+  /** The first tiles of a group are double width; how many depends on the group's size. */
+  protected readonly wideTileCount = computed(() => countWideTiles(this.selectedGroup().entries.length));
+
+  protected readonly selectedEntry = computed<KnobEntryView>(() => {
+    const entries = this.selectedGroup().entries;
+    const found = entries.find((item) => item.entry.id === this.selectedEntryId());
+    return found ?? entries[0];
+  });
+
+  protected selectGroup(groupId: string): void {
+    const group = KNOB_GUIDE.find((entry) => entry.id === groupId);
+    if (group === undefined) {
+      return;
+    }
+    this.selectedGroupId.set(groupId);
+    this.selectedEntryId.set(group.entries[0].id);
+  }
+
+  protected selectEntry(entryId: string): void {
+    this.selectedEntryId.set(entryId);
+  }
 
   private buildEntryView(entry: KnobEntry, profile: ConsoleProfile): KnobEntryView {
     if (entry.consoleName === null) {
