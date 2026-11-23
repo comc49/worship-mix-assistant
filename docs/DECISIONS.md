@@ -76,3 +76,10 @@ Still open from the review, by choice: the on-screen value trail still shows the
 51. **Sound lab has four processors:** compressor, gate, low cut and EQ, and dynamic EQ. They share one description shape (`lab-processors.ts`), so the screen has no per-processor code.
 52. **Low cut and EQ** follow the WING EQ layout in the manual (LO CUT with 6, 12, 18 or 24 dB per octave, shelves L and H, parametric bands with GAIN, FREQ, Q), with two of the WING's four parametric bands. The picture is the EQ curve.
 53. **Dynamic EQ** follows the manual's Triple DEQ definitions (Threshold, Ratio, Gain as the maximum change, Attack, Release, Above/Below; four behaviours). The detector listens only to the band's own range. The eight-step learning guide lives in `core/knowledge/dynamic-eq-lesson.ts`; the two steps the manual does not spell out (how to load it into the slot, Band Solo) are flagged "check on your console".
+
+## 2026-11-23: your own songs in the Sound lab (asked for by Brian)
+
+54. **The Sound lab reads songs from a file host** (Brian chose Vercel Blob on the free plan: 1 GB, 10 GB of downloads a month). The app stores only the address of one `library.json`, which lists songs and their tracks. Any host that allows cross-origin reads works; there is still no backend.
+55. **A song is used one short section at a time** (5, 10 or 15 seconds), looped. This keeps decision 49: the section is reprocessed on every control change with the same tested functions. Only the downloaded files and the loaded section of each track are kept in memory, because a whole decoded song is hundreds of megabytes.
+56. **One track is processed; the other tracks play untouched,** or the track is soloed. Tracks are mono. The mix is turned down by one fixed amount per section when it would clip, so moving a control never changes that amount.
+57. **Recordings are never committed** (`library/` is gitignored) and the screen and README say the address is public. The end-to-end test uses generated tones behind a pretend host.

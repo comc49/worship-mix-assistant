@@ -28,6 +28,8 @@ export interface StoredState {
   storageNoticeDismissed: boolean;
   installPromptDismissed: boolean;
   lastBackupIso: string | null;
+  /** Address of the Sound lab's song library file (library.json on a file host). Empty when none. */
+  labLibraryUrl: string;
 }
 
 export function createDefaultState(): StoredState {
@@ -45,5 +47,6 @@ export function createDefaultState(): StoredState {
     storageNoticeDismissed: false,
     installPromptDismissed: false,
     lastBackupIso: null,
+    labLibraryUrl: '',
   };
 }

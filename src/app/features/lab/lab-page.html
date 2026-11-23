@@ -18,15 +18,131 @@
         }
       </div>
 
-      <div class="field lab__row">
-        <label for="lab-sound">Sound</label>
-        <select id="lab-sound" class="input" data-testid="lab-sound" (change)="chooseSound($event)">
-          @for (sound of sounds; track sound.id) {
-            <option [value]="sound.id" [selected]="sound.id === soundId()">{{ sound.label }}</option>
-          }
-        </select>
-        <p class="dim lab__small">{{ selectedSound().description }}</p>
+      <div class="row lab__row" role="group" aria-label="Where the sound comes from">
+        <span class="lab-slider__label">Sound</span>
+        <button type="button" class="btn btn--small" data-testid="lab-source-practice" [attr.aria-pressed]="source() === 'practice'" (click)="chooseSource('practice')">Practice sounds</button>
+        <button type="button" class="btn btn--small" data-testid="lab-source-song" [attr.aria-pressed]="source() === 'song'" (click)="chooseSource('song')">Your songs</button>
       </div>
+
+      @if (source() === 'practice') {
+        <div class="field lab__row">
+          <label for="lab-sound">Practice sound</label>
+          <select id="lab-sound" class="input" data-testid="lab-sound" (change)="chooseSound($event)">
+            @for (sound of sounds; track sound.id) {
+              <option [value]="sound.id" [selected]="sound.id === soundId()">{{ sound.label }}</option>
+            }
+          </select>
+          <p class="dim lab__small">{{ selectedSound().description }}</p>
+        </div>
+      } @else {
+        <div class="lab-songs lab__row" data-testid="lab-songs">
+          <div class="field">
+            <label for="lab-library-url">Address of your song library (library.json)</label>
+            <div class="row">
+              <input
+                id="lab-library-url"
+                class="input lab-songs__url"
+                type="url"
+                inputmode="url"
+                autocomplete="off"
+                spellcheck="false"
+                placeholder="https://.../library.json"
+                data-testid="lab-library-url"
+                [value]="libraryUrlText()"
+                [attr.aria-describedby]="libraryUrlError() !== null ? 'lab-library-url-error' : null"
+                [attr.aria-invalid]="libraryUrlError() !== null ? 'true' : null"
+                (input)="onLibraryUrlInput($event)"
+                (keydown.enter)="loadLibrary()"
+              />
+              <button type="button" class="btn btn--small" data-testid="lab-library-load" [disabled]="songIsWorking()" (click)="loadLibrary()">Load</button>
+            </div>
+            @if (libraryUrlError(); as urlError) {
+              <p id="lab-library-url-error" class="lab-songs__error lab__small" role="alert">{{ urlError }}</p>
+            }
+            <p class="dim lab__small">Tracks are downloaded from this address and play in mono. The README explains how to upload them. Anyone with the address can listen, so upload only recordings you may share.</p>
+          </div>
+
+          @if (songs.library(); as library) {
+            <div class="field">
+              <label for="lab-song">Song</label>
+              <select id="lab-song" class="input" data-testid="lab-song" [disabled]="songIsWorking()" (change)="chooseSong($event)">
+                <option value="" [selected]="songs.songId() === null">Choose a song</option>
+                @for (song of library.songs; track song.id) {
+                  <option [value]="song.id" [selected]="song.id === songs.songId()">{{ song.title }} ({{ song.tracks.length }} tracks)</option>
+                }
+              </select>
+            </div>
+          }
+
+          @if (songs.song(); as song) {
+            <div class="field">
+              <label for="lab-track">Track to work on</label>
+              <select id="lab-track" class="input" data-testid="lab-track" (change)="chooseTrack($event)">
+                @for (track of song.tracks; track track.id) {
+                  <option [value]="track.id" [selected]="track.id === songs.trackId()">{{ track.label }}</option>
+                }
+              </select>
+            </div>
+
+            @if (songs.durationSeconds() !== null) {
+              <div class="lab-slider">
+                <div class="lab-slider__top">
+                  <label class="lab-slider__label" for="lab-section-start">Section of the song</label>
+                  <output class="lab-slider__value" data-testid="lab-section-text">{{ sectionText() }} of {{ songLengthText() }}</output>
+                </div>
+                <input
+                  id="lab-section-start"
+                  type="range"
+                  class="lab-slider__range"
+                  min="0"
+                  step="1"
+                  [max]="songs.latestStartSeconds()"
+                  [value]="songs.startSeconds()"
+                  [attr.aria-valuetext]="sectionText()"
+                  data-testid="lab-section-start"
+                  (input)="onSectionStartInput($event)"
+                />
+              </div>
+
+              <div class="row" role="group" aria-label="Section length">
+                <span class="lab-slider__label">Length</span>
+                @for (seconds of sectionLengths; track seconds) {
+                  <button type="button" class="btn btn--small" [attr.aria-pressed]="seconds === songs.lengthSeconds()" (click)="chooseSectionLength(seconds)">{{ seconds }} s</button>
+                }
+                <button type="button" class="btn btn--small btn--primary" data-testid="lab-section-load" [disabled]="songIsWorking() || !songs.sectionChanged()" (click)="loadSection()">Load this section</button>
+              </div>
+
+              <div class="row" role="group" aria-label="What plays">
+                <button type="button" class="btn btn--small" data-testid="lab-with-band" [attr.aria-pressed]="withBand()" [disabled]="song.tracks.length < 2" (click)="toggleWithBand()">
+                  {{ withBand() ? 'With the rest of the band' : 'This track alone (solo)' }}
+                </button>
+                <span class="dim lab__small">The other tracks play untouched. The picture and the numbers are for your track only.</span>
+              </div>
+            }
+          }
+
+          <p class="lab__small" aria-live="polite" data-testid="lab-song-status">
+            @switch (songStatus().kind) {
+              @case ('working') {
+                <span>{{ songStatusMessage() }}</span>
+              }
+              @case ('ready') {
+                <span>Loaded. Press Play.</span>
+              }
+              @case ('idle') {
+                @if (songs.library() === null) {
+                  <span class="dim">Until a song is loaded, you hear the practice sound.</span>
+                } @else {
+                  <span class="dim">Choose a song. All of its tracks are downloaded, which can take a moment.</span>
+                }
+              }
+            }
+          </p>
+          @if (songStatus().kind === 'error') {
+            <p class="lab-songs__error lab__small" role="alert" data-testid="lab-song-error">{{ songStatusMessage() }}</p>
+          }
+        </div>
+      }
 
       @for (choice of choices(); track choice.key) {
         <div class="row lab__row" role="group" [attr.aria-label]="choice.label">

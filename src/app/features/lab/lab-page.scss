@@ -236,3 +236,19 @@
 .lesson__parameters dd {
   margin: 0;
 }
+
+// --- Your songs ---------------------------------------------------------------
+
+.lab-songs {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.lab-songs__url {
+  flex: 1 1 14rem;
+  min-width: 0;
+}
+
+.lab-songs__error {
+  color: var(--danger);
+}

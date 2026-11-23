@@ -48,7 +48,15 @@ export class LoopPlayer {
     if (context === null || previous === null) {
       return;
     }
-    const offset = this.positionSeconds() ?? 0;
+    const newDurationSeconds = samples.length / sampleRate;
+    const sameLength = Math.abs(newDurationSeconds - this.durationSeconds) < 0.001;
+    // Same length: the same sound with different settings, so keep the place.
+    // Different length: a different sound, so start it from the beginning.
+    const offset = sameLength ? (this.positionSeconds() ?? 0) : 0;
+    if (!sameLength) {
+      this.durationSeconds = newDurationSeconds;
+      this.startedAt = context.currentTime;
+    }
     this.current = this.startLoop(context, samples, sampleRate, offset);
     this.fadeOutAndStop(context, previous);
   }

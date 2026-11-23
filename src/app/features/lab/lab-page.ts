@@ -1,5 +1,6 @@
-import { Component, computed, effect, ElementRef, OnDestroy, signal, viewChild } from '@angular/core';
+import { Component, computed, effect, ElementRef, inject, OnDestroy, signal, viewChild } from '@angular/core';
 import { findMaximum, measureRmsDb } from '../../core/audio/dynamics';
+import { formatSongTime, isLibraryUrl, mixWithBand } from '../../core/audio/song-library';
 import { generatePracticeSound, PRACTICE_SAMPLE_RATE, PRACTICE_SOUNDS, PracticeSoundId } from '../../core/audio/practice-sounds';
 import {
   DYNAMIC_EQ_MISTAKES,
@@ -9,10 +10,12 @@ import {
   DYNAMIC_EQ_SUMMARY,
   DYNAMIC_EQ_WHERE,
 } from '../../core/knowledge/dynamic-eq-lesson';
+import { MixStore } from '../../state/mix-store';
 import { ControlSpec, formatControlValue, positionToValue, SLIDER_STEPS, valueToPosition } from './lab-controls';
 import { buildCurveFrequencies, CurveColors, drawEqCurve, drawLabPicture, LabColors } from './lab-drawing';
 import { findProcessor, LAB_PROCESSORS, LabProcessor, LabRun, LabValues, ProcessorId } from './lab-processors';
 import { LoopPlayer } from './loop-player';
+import { SECTION_LENGTHS, SectionLength, SongSession } from './song-session';
 
 interface SliderView {
   key: string;
@@ -28,6 +31,9 @@ interface ChoiceView {
   label: string;
   options: { value: string; label: string; selected: boolean }[];
 }
+
+/** Where the sound comes from: a generated practice sound, or a track of a song from the library. */
+type SoundSource = 'practice' | 'song';
 
 const DEFAULT_LISTEN_FOR = 'Press Play, then move one slider at a time. Use Bypass to compare with the untouched sound.';
 const MAKEUP_MIN_DB = -6;
@@ -55,6 +61,7 @@ function buildStartingValues(): Record<ProcessorId, LabValues> {
   styleUrl: './lab-page.scss',
 })
 export class LabPage implements OnDestroy {
+  private readonly store = inject(MixStore);
   private readonly canvas = viewChild<ElementRef<HTMLCanvasElement>>('picture');
   private readonly player = new LoopPlayer();
   private readonly soundCache = new Map<PracticeSoundId, Float32Array>();
@@ -65,6 +72,15 @@ export class LabPage implements OnDestroy {
   protected readonly sounds = PRACTICE_SOUNDS;
   protected readonly processors = LAB_PROCESSORS;
   protected readonly audioSupported = LoopPlayer.isSupported();
+  protected readonly sectionLengths = SECTION_LENGTHS;
+
+  /** "Your songs": a track of a real song from the library, with the rest of the band around it. */
+  protected readonly songs = new SongSession(PRACTICE_SAMPLE_RATE);
+  protected readonly source = signal<SoundSource>('practice');
+  protected readonly libraryUrlText = signal(this.store.labLibraryUrl());
+  protected readonly libraryUrlError = signal<string | null>(null);
+  /** On: the other tracks of the song play along, untouched. Off: the track alone (solo). */
+  protected readonly withBand = signal(true);
 
   protected readonly lessonSummary = DYNAMIC_EQ_SUMMARY;
   protected readonly lessonWhere = DYNAMIC_EQ_WHERE;
@@ -92,12 +108,43 @@ export class LabPage implements OnDestroy {
     return found ?? PRACTICE_SOUNDS[0];
   });
 
-  private readonly input = computed<Float32Array>(() => this.loadSound(this.soundId()));
+  /** The track section from the library, when "Your songs" is chosen and a section is loaded. */
+  private readonly songInput = computed<Float32Array | null>(() => (this.source() === 'song' ? this.songs.trackSamples() : null));
+
+  private readonly input = computed<Float32Array>(() => this.songInput() ?? this.loadSound(this.soundId()));
 
   private readonly result = computed<LabRun>(() => this.processor().run(this.input(), PRACTICE_SAMPLE_RATE, this.values()));
 
   /** What the speakers get: the untouched sound when bypassed, the processed one otherwise. */
-  private readonly audible = computed<Float32Array>(() => (this.bypassed() ? this.input() : this.result().output));
+  private readonly audible = computed<Float32Array>(() => {
+    const track = this.bypassed() ? this.input() : this.result().output;
+    const restOfBand = this.songs.restOfBand();
+    const playsWithBand = this.songInput() !== null && this.withBand() && restOfBand !== null;
+    if (!playsWithBand) {
+      return track;
+    }
+    return mixWithBand(track, restOfBand, this.songs.mixGain());
+  });
+
+  protected readonly songStatus = computed(() => this.songs.status());
+  /** The progress or error text. Empty for the states that have none. */
+  protected readonly songStatusMessage = computed(() => {
+    const status = this.songs.status();
+    if (status.kind === 'working' || status.kind === 'error') {
+      return status.message;
+    }
+    return '';
+  });
+  protected readonly songIsWorking = computed(() => this.songs.status().kind === 'working');
+  protected readonly sectionText = computed(() => {
+    const start = this.songs.startSeconds();
+    const end = start + this.songs.lengthSeconds();
+    return `${formatSongTime(start)} to ${formatSongTime(end)}`;
+  });
+  protected readonly songLengthText = computed(() => {
+    const duration = this.songs.durationSeconds();
+    return duration === null ? '' : formatSongTime(duration);
+  });
 
   protected readonly showsWaveform = computed(() => this.processor().picture === 'waveform');
   protected readonly changeName = computed(() => this.processor().changeName);
@@ -177,7 +224,10 @@ export class LabPage implements OnDestroy {
       return;
     }
     this.setValues({ ...preset.values });
-    this.soundId.set(preset.sound);
+    // With one of your own songs loaded, a preset changes the controls and leaves the song alone.
+    if (this.source() === 'practice') {
+      this.soundId.set(preset.sound);
+    }
     this.listenFor.set(preset.listenFor);
     this.selectedPresetId.set(presetId);
     this.bypassed.set(false);
@@ -188,6 +238,59 @@ export class LabPage implements OnDestroy {
     if (makeupKey !== null && preset.values[makeupKey] === 0) {
       this.matchLoudness();
     }
+  }
+
+  // --- Your songs ------------------------------------------------------------
+
+  protected chooseSource(source: SoundSource): void {
+    this.source.set(source);
+  }
+
+  protected onLibraryUrlInput(event: Event): void {
+    this.libraryUrlText.set((event.target as HTMLInputElement).value);
+    this.libraryUrlError.set(null);
+  }
+
+  protected async loadLibrary(): Promise<void> {
+    const url = this.libraryUrlText().trim();
+    if (!isLibraryUrl(url)) {
+      this.libraryUrlError.set('Enter the full address of your library.json, starting with https://');
+      return;
+    }
+    this.libraryUrlError.set(null);
+    const loaded = await this.songs.loadLibrary(url);
+    if (loaded) {
+      // Remembered on this device, so the address is typed once.
+      this.store.setLabLibraryUrl(url);
+    }
+  }
+
+  protected chooseSong(event: Event): void {
+    const songId = (event.target as HTMLSelectElement).value;
+    if (songId.length === 0) {
+      return;
+    }
+    void this.songs.chooseSong(songId);
+  }
+
+  protected chooseTrack(event: Event): void {
+    this.songs.chooseTrack((event.target as HTMLSelectElement).value);
+  }
+
+  protected onSectionStartInput(event: Event): void {
+    this.songs.setStart(Number((event.target as HTMLInputElement).value));
+  }
+
+  protected chooseSectionLength(seconds: SectionLength): void {
+    this.songs.setLength(seconds);
+  }
+
+  protected loadSection(): void {
+    void this.songs.loadSection();
+  }
+
+  protected toggleWithBand(): void {
+    this.withBand.update((current) => !current);
   }
 
   // --- Controls ----------------------------------------------------------------

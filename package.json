@@ -12,6 +12,7 @@
     "print:plan": "tsx scripts/print-plan.ts",
     "print:sheet": "tsx scripts/print-sheet.ts",
     "docs": "tsx scripts/generate-docs.ts",
+    "library:build": "tsx scripts/build-library.ts",
     "e2e:offline": "playwright test -c playwright.offline.config.ts"
   },
   "private": true,

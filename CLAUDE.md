@@ -77,6 +77,7 @@ e2e/                      Playwright tests
 scripts/                  tsx scripts that print plans, sheets and review docs
 docs/                     ROADMAP, DECISIONS, console-sources, review docs, screenshots
 docs/manuals/             Console manuals (gitignored, never commit)
+library/                  Sound lab songs before upload (gitignored, never commit)
 ```
 
 ## Commands

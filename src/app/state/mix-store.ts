@@ -25,6 +25,7 @@ export class MixStore {
   readonly storageNoticeDismissed = computed(() => this.state().storageNoticeDismissed);
   readonly installPromptDismissed = computed(() => this.state().installPromptDismissed);
   readonly lastBackupIso = computed(() => this.state().lastBackupIso);
+  readonly labLibraryUrl = computed(() => this.state().labLibraryUrl);
 
   readonly room = computed<Room>(() => {
     const current = this.state();
@@ -169,6 +170,10 @@ export class MixStore {
     this.state.set(result.state);
     this.storage.save(result.state);
     return null;
+  }
+
+  setLabLibraryUrl(url: string): void {
+    this.patch({ labLibraryUrl: url });
   }
 
   resetEverything(): void {

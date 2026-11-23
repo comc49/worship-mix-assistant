@@ -49,3 +49,6 @@ Thumbs.db
 # Playwright
 /test-results/
 /playwright-report/
+
+# Sound lab song library (recordings): never commit
+/library/
