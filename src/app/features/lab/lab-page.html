@@ -10,9 +10,12 @@
 
   <div class="lab__grid">
     <section class="card lab__controls" aria-label="Controls">
-      <div class="row lab__row">
-        <button type="button" class="btn" data-testid="lab-processor-compressor" [attr.aria-pressed]="processor() === 'compressor'" (click)="chooseProcessor('compressor')">Compressor</button>
-        <button type="button" class="btn" data-testid="lab-processor-gate" [attr.aria-pressed]="processor() === 'gate'" (click)="chooseProcessor('gate')">Gate</button>
+      <div class="row lab__row" role="group" aria-label="Processor">
+        @for (item of processors; track item.id) {
+          <button type="button" class="btn btn--small" [attr.data-testid]="'lab-processor-' + item.id" [attr.aria-pressed]="item.id === processorId()" (click)="chooseProcessor(item.id)">
+            {{ item.label }}
+          </button>
+        }
       </div>
 
       <div class="field lab__row">
@@ -25,37 +28,42 @@
         <p class="dim lab__small">{{ selectedSound().description }}</p>
       </div>
 
-      <div class="lab__sliders">
-      @for (slider of sliders(); track slider.key) {
-        <div class="lab-slider">
-          <div class="lab-slider__top">
-            <label class="lab-slider__label" [attr.for]="'lab-' + slider.key">{{ slider.label }}</label>
-            <output class="lab-slider__value" [attr.data-testid]="'lab-value-' + slider.key">{{ slider.valueText }}</output>
-          </div>
-          <input
-            type="range"
-            class="lab-slider__range"
-            min="0"
-            [max]="sliderSteps"
-            step="1"
-            [id]="'lab-' + slider.key"
-            [value]="slider.position"
-            [attr.data-control]="slider.key"
-            [attr.aria-valuetext]="slider.valueText"
-            (input)="onSliderInput(slider.key, $event)"
-          />
-          <p class="dim lab__small">{{ slider.hint }}</p>
+      @for (choice of choices(); track choice.key) {
+        <div class="row lab__row" role="group" [attr.aria-label]="choice.label">
+          <span class="lab-slider__label">{{ choice.label }}</span>
+          @for (option of choice.options; track option.value) {
+            <button type="button" class="btn btn--small" [attr.data-testid]="'lab-choice-' + choice.key + '-' + option.value" [attr.aria-pressed]="option.selected" (click)="choose(choice.key, option.value)">
+              {{ option.label }}
+            </button>
+          }
         </div>
       }
-      </div>
 
-      @if (processor() === 'compressor') {
-        <div class="row lab__row" role="group" aria-label="DETECTOR">
-          <span class="lab-slider__label">DETECTOR</span>
-          <button type="button" class="btn btn--small" [attr.aria-pressed]="compressor().detector === 'peak'" (click)="chooseDetector('peak')">PEAK</button>
-          <button type="button" class="btn btn--small" [attr.aria-pressed]="compressor().detector === 'rms'" (click)="chooseDetector('rms')">RMS</button>
-        </div>
-      }
+      <div class="lab__sliders">
+        @for (slider of sliders(); track slider.key) {
+          <div class="lab-slider" [style.grid-column]="'span ' + slider.span">
+            <div class="lab-slider__top">
+              <label class="lab-slider__label" [attr.for]="'lab-' + slider.key">{{ slider.label }}</label>
+              <output class="lab-slider__value" [attr.data-testid]="'lab-value-' + slider.key">{{ slider.valueText }}</output>
+            </div>
+            <input
+              type="range"
+              class="lab-slider__range"
+              min="0"
+              [max]="sliderSteps"
+              step="1"
+              [id]="'lab-' + slider.key"
+              [value]="slider.position"
+              [attr.data-control]="slider.key"
+              [attr.aria-valuetext]="slider.valueText"
+              (input)="onSliderInput(slider.key, $event)"
+            />
+            @if (slider.hint.length > 0) {
+              <p class="dim lab__small">{{ slider.hint }}</p>
+            }
+          </div>
+        }
+      </div>
 
       <button type="button" class="btn btn--small" data-testid="lab-reset" (click)="reset()">Reset the controls</button>
     </section>
@@ -69,33 +77,40 @@
           <button type="button" class="btn" data-testid="lab-bypass" [attr.aria-pressed]="bypassed()" (click)="toggleBypass()">
             {{ bypassed() ? 'Bypassed (untouched sound)' : 'Bypass' }}
           </button>
-          @if (processor() === 'compressor') {
+          @if (processor().makeupKey !== null) {
             <button type="button" class="btn" data-testid="lab-match" (click)="matchLoudness()">Match loudness</button>
           }
         </div>
 
         <div class="lab__picture-row">
-          <canvas #picture class="lab__picture" data-testid="lab-picture" role="img" aria-label="The sound before and after, with the gain reduction drawn from the top"></canvas>
-          <div class="lab-meter" aria-hidden="true">
-            <div class="lab-meter__fill" [style.height.%]="meterPercent()"></div>
-          </div>
+          <canvas #picture class="lab__picture" data-testid="lab-picture" role="img" [attr.aria-label]="showsWaveform() ? 'The sound before and after, with the change drawn from the top' : 'The EQ curve'"></canvas>
+          @if (changeName() !== null) {
+            <div class="lab-meter" aria-hidden="true">
+              <div class="lab-meter__fill" [style.height.%]="meterPercent()"></div>
+            </div>
+          }
         </div>
-        <p class="dim lab__small lab__legend">
-          <span class="lab__key lab__key--input"></span> before
-          <span class="lab__key lab__key--output"></span> after
-          <span class="lab__key lab__key--reduction"></span> gain reduction (hangs from the top; the bar on the right is the meter)
-          <span class="lab__key lab__key--threshold"></span> threshold
-        </p>
+        @if (showsWaveform()) {
+          <p class="dim lab__small lab__legend">
+            <span class="lab__key lab__key--input"></span> before
+            <span class="lab__key lab__key--output"></span> after
+            <span class="lab__key lab__key--reduction"></span> {{ changeName() }} (hangs from the top; the bar on the right is the meter)
+          </p>
+        } @else {
+          <p class="dim lab__small lab__legend">The curve shows what the EQ does to each frequency: below the middle line is a cut, above it is a boost. Low notes are on the left.</p>
+        }
 
         <dl class="lab__stats">
-          <div class="lab__stat">
-            <dt>Most gain reduction</dt>
-            <dd data-testid="lab-max-reduction">{{ maxReductionDb().toFixed(1) }} dB</dd>
-          </div>
-          <div class="lab__stat">
-            <dt>Right now</dt>
-            <dd data-testid="lab-live-reduction">{{ isPlaying() && !bypassed() ? liveReductionDb().toFixed(1) + ' dB' : '-' }}</dd>
-          </div>
+          @if (changeName(); as name) {
+            <div class="lab__stat">
+              <dt>Most {{ name }}</dt>
+              <dd data-testid="lab-max-reduction">{{ maxChangeDb().toFixed(1) }} dB</dd>
+            </div>
+            <div class="lab__stat">
+              <dt>Right now</dt>
+              <dd data-testid="lab-live-reduction">{{ isPlaying() && !bypassed() ? liveChangeDb().toFixed(1) + ' dB' : '-' }}</dd>
+            </div>
+          }
           <div class="lab__stat">
             <dt>Loudness against bypass</dt>
             <dd data-testid="lab-loudness-change">{{ loudnessChangeDb() >= 0 ? '+' : '' }}{{ loudnessChangeDb().toFixed(1) }} dB</dd>
@@ -106,7 +121,7 @@
       <section class="card" aria-label="Things to try">
         <h2>Things to try</h2>
         <div class="lab__presets">
-          @for (preset of presets(); track preset.id) {
+          @for (preset of processor().presets; track preset.id) {
             <button type="button" class="btn btn--small" data-testid="lab-preset" [attr.data-preset-id]="preset.id" [attr.aria-pressed]="preset.id === selectedPresetId()" (click)="applyPreset(preset.id)">
               {{ preset.label }}
             </button>
@@ -114,6 +129,71 @@
         </div>
         <p class="lab__listen" aria-live="polite" data-testid="lab-listen-for"><strong>Listen for:</strong> {{ listenFor() }}</p>
       </section>
+
+      @if (processorId() === 'dynamicEq') {
+        <section class="card lesson" aria-label="Learning the Dynamic EQ" data-testid="lab-lesson">
+          <h2>Learning the Dynamic EQ on the WING</h2>
+          <p>{{ lessonSummary }}</p>
+          <p class="dim">{{ lessonWhere }}</p>
+
+          <details class="lesson__part" open>
+            <summary>Learn it in eight steps</summary>
+            <ol class="lesson__steps">
+              @for (step of lessonSteps; track step.title) {
+                <li data-testid="lab-lesson-step">
+                  <strong>{{ step.title }}.</strong> {{ step.text }}
+                  @if (step.checkOnConsole) {
+                    <span class="badge badge--warn">Check on your console</span>
+                  }
+                </li>
+              }
+            </ol>
+          </details>
+
+          <details class="lesson__part">
+            <summary>The four things it can do</summary>
+            <table class="lesson__table">
+              <thead>
+                <tr>
+                  <th scope="col">Setting</th>
+                  <th scope="col">What it does</th>
+                  <th scope="col">Use it for</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (mode of lessonModes; track mode.setting) {
+                  <tr>
+                    <th scope="row">{{ mode.setting }}</th>
+                    <td>{{ mode.whatItDoes }}</td>
+                    <td>{{ mode.useItFor }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </details>
+
+          <details class="lesson__part">
+            <summary>What each control means</summary>
+            <dl class="lesson__parameters">
+              @for (parameter of lessonParameters; track parameter.name) {
+                <div>
+                  <dt>{{ parameter.name }}</dt>
+                  <dd>{{ parameter.meaning }}</dd>
+                </div>
+              }
+            </dl>
+          </details>
+
+          <details class="lesson__part">
+            <summary>Common mistakes</summary>
+            <ul>
+              @for (mistake of lessonMistakes; track mistake) {
+                <li>{{ mistake }}</li>
+              }
+            </ul>
+          </details>
+        </section>
+      }
     </div>
   </div>
 </div>

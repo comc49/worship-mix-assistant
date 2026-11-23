@@ -33,7 +33,8 @@
 /* Two sliders side by side, so every control is on screen at once on a laptop. */
 .lab__sliders {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* Six columns, so a slider can take a half (3), a third (2) or the whole row (6). */
+  grid-template-columns: repeat(6, 1fr);
   gap: var(--space-2) var(--space-4);
   margin-bottom: var(--space-3);
 }
@@ -126,9 +127,6 @@
   background: var(--warn);
 }
 
-.lab__key--threshold {
-  background: var(--text-dim);
-}
 
 .lab__stats {
   display: grid;
@@ -176,7 +174,7 @@
   }
 
   .lab__sliders {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(6, 1fr);
   }
 
   .lab__picture {
@@ -186,4 +184,55 @@
   .lab__stats {
     grid-template-columns: 1fr;
   }
+}
+
+/* The Dynamic EQ guide. */
+.lesson__part {
+  border-top: 1px solid var(--border);
+  padding: var(--space-3) 0;
+}
+
+.lesson__part > summary {
+  cursor: pointer;
+  font-weight: 700;
+  min-height: 32px;
+}
+
+.lesson__steps {
+  padding-left: var(--space-5);
+  margin: var(--space-3) 0 0;
+}
+
+.lesson__steps li {
+  margin-bottom: var(--space-3);
+}
+
+.lesson__table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: var(--space-3);
+  font-size: 0.92rem;
+}
+
+.lesson__table th,
+.lesson__table td {
+  text-align: left;
+  vertical-align: top;
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--border);
+}
+
+.lesson__parameters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  margin: var(--space-3) 0 0;
+}
+
+.lesson__parameters dt {
+  font-weight: 700;
+}
+
+.lesson__parameters dd {
+  margin: 0;
 }

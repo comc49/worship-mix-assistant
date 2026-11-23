@@ -38,6 +38,23 @@ test('the Sound lab plays, responds to a slider, and compares against bypass', a
   await page.waitForTimeout(400);
   await page.screenshot({ path: 'docs/screenshots/lab-gate-laptop.png', fullPage: true });
 
+  // Low cut and EQ: a curve instead of a meter.
+  await page.getByTestId('lab-processor-eq').click();
+  await page.locator('[data-preset-id="findTheMud"]').click();
+  await expect(page.getByTestId('lab-listen-for')).toContainText('sweep a cut');
+  await page.locator('[data-control="mid1Hz"]').fill('390');
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: 'docs/screenshots/lab-eq-laptop.png', fullPage: true });
+
+  // Dynamic EQ: the band moves only on the loud phrase, and the guide is shown.
+  await page.getByTestId('lab-processor-dynamicEq').click();
+  await page.locator('[data-preset-id="harshWhenLoud"]').click();
+  await expect(page.getByTestId('lab-lesson-step')).toHaveCount(8);
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: 'docs/screenshots/lab-dynamic-eq-laptop.png', fullPage: true });
+
   await page.getByTestId('lab-play').click();
   await expect(page.getByTestId('lab-play')).toHaveText('Play');
 });

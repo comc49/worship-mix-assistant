@@ -22,9 +22,24 @@ export interface ControlSpec<Key extends string> {
   /** Values are rounded to a multiple of this. */
   step: number;
   unit: string;
+  /** How many of the grid's six columns the slider takes. 3 is half the width. Left out means 3. */
+  span?: 2 | 3 | 6;
 }
 
 export type CompressorControlKey = 'thresholdDb' | 'ratio' | 'kneeDb' | 'attackMs' | 'holdMs' | 'releaseMs' | 'makeupGainDb';
+export type EqControlKey =
+  | 'lowCutHz'
+  | 'lowShelfHz'
+  | 'lowShelfGainDb'
+  | 'mid1Hz'
+  | 'mid1GainDb'
+  | 'mid1Q'
+  | 'mid2Hz'
+  | 'mid2GainDb'
+  | 'mid2Q'
+  | 'highShelfHz'
+  | 'highShelfGainDb';
+export type DynamicEqControlKey = 'frequencyHz' | 'q' | 'gainDb' | 'thresholdDb' | 'ratio' | 'attackMs' | 'releaseMs';
 export type GateControlKey = 'thresholdDb' | 'ratio' | 'rangeDb' | 'attackMs' | 'holdMs' | 'releaseMs' | 'accentPercent';
 
 export const COMPRESSOR_CONTROLS: ControlSpec<CompressorControlKey>[] = [
@@ -45,6 +60,31 @@ export const GATE_CONTROLS: ControlSpec<GateControlKey>[] = [
   { key: 'holdMs', label: 'HOLD', hint: 'How long it stays open after the hit drops away.', min: 0, max: 500, scale: 'linear', step: 5, unit: 'ms' },
   { key: 'releaseMs', label: 'RELEASE', hint: 'How slowly it closes after the hold time.', min: 5, max: 2000, scale: 'logarithmic', step: 1, unit: 'ms' },
   { key: 'accentPercent', label: 'ACCENT', hint: 'A brief boost as it opens, to restore the start of the hit.', min: 0, max: 100, scale: 'linear', step: 5, unit: '%' },
+];
+
+/** Laid out like the EQ itself: the low cut on top, then one row per band. */
+export const EQ_CONTROLS: ControlSpec<EqControlKey>[] = [
+  { key: 'lowCutHz', label: 'LO CUT FREQ', hint: 'Everything below this is removed. Raise it until the sound just starts to thin, then back off.', min: 20, max: 1000, scale: 'logarithmic', step: 5, unit: 'Hz', span: 6 },
+  { key: 'lowShelfHz', label: 'L (low shelf)', hint: '', min: 40, max: 500, scale: 'logarithmic', step: 5, unit: 'Hz', span: 3 },
+  { key: 'lowShelfGainDb', label: 'GAIN', hint: '', min: -15, max: 15, scale: 'linear', step: 0.5, unit: 'dB', span: 3 },
+  { key: 'mid1Hz', label: 'MID 1', hint: '', min: 80, max: 2000, scale: 'logarithmic', step: 5, unit: 'Hz', span: 2 },
+  { key: 'mid1GainDb', label: 'GAIN', hint: '', min: -15, max: 15, scale: 'linear', step: 0.5, unit: 'dB', span: 2 },
+  { key: 'mid1Q', label: 'Q', hint: '', min: 0.3, max: 10, scale: 'logarithmic', step: 0.1, unit: '', span: 2 },
+  { key: 'mid2Hz', label: 'MID 2', hint: '', min: 500, max: 12000, scale: 'logarithmic', step: 10, unit: 'Hz', span: 2 },
+  { key: 'mid2GainDb', label: 'GAIN', hint: '', min: -15, max: 15, scale: 'linear', step: 0.5, unit: 'dB', span: 2 },
+  { key: 'mid2Q', label: 'Q', hint: '', min: 0.3, max: 10, scale: 'logarithmic', step: 0.1, unit: '', span: 2 },
+  { key: 'highShelfHz', label: 'H (high shelf)', hint: '', min: 2000, max: 16000, scale: 'logarithmic', step: 50, unit: 'Hz', span: 3 },
+  { key: 'highShelfGainDb', label: 'GAIN', hint: '', min: -15, max: 15, scale: 'linear', step: 0.5, unit: 'dB', span: 3 },
+];
+
+export const DYNAMIC_EQ_CONTROLS: ControlSpec<DynamicEqControlKey>[] = [
+  { key: 'frequencyHz', label: 'FREQ', hint: 'Where the problem is.', min: 60, max: 12000, scale: 'logarithmic', step: 10, unit: 'Hz' },
+  { key: 'q', label: 'Q', hint: 'Higher is a narrower band.', min: 0.3, max: 10, scale: 'logarithmic', step: 0.1, unit: '' },
+  { key: 'gainDb', label: 'GAIN', hint: 'The most it will ever cut (negative) or boost (positive).', min: -18, max: 18, scale: 'linear', step: 0.5, unit: 'dB' },
+  { key: 'thresholdDb', label: 'THRESHOLD', hint: 'How loud the band must get before it acts.', min: -60, max: 0, scale: 'linear', step: 0.5, unit: 'dB' },
+  { key: 'ratio', label: 'RATIO', hint: 'How quickly the change grows past the threshold.', min: 1.1, max: 20, scale: 'logarithmic', step: 0.1, unit: ':1' },
+  { key: 'attackMs', label: 'ATTACK', hint: 'How fast the change is applied.', min: 0.1, max: 200, scale: 'logarithmic', step: 0.1, unit: 'ms' },
+  { key: 'releaseMs', label: 'RELEASE', hint: 'How fast the band goes back to flat.', min: 5, max: 2000, scale: 'logarithmic', step: 1, unit: 'ms', span: 6 },
 ];
 
 function roundToStep(value: number, step: number): number {
@@ -85,6 +125,12 @@ export function formatControlValue(value: number, spec: ControlSpec<string>): st
   }
   if (spec.unit === ':1') {
     return `${value}:1`;
+  }
+  if (spec.unit === '') {
+    return `${value}`;
+  }
+  if (spec.unit === 'Hz' && value >= 1000) {
+    return `${Math.round(value / 10) / 100} kHz`;
   }
   return `${value} ${spec.unit}`;
 }

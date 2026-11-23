@@ -1,6 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 import { GATE_RATIO } from '../../core/audio/dynamics';
-import { COMPRESSOR_CONTROLS, formatControlValue, GATE_CONTROLS, positionToValue, SLIDER_STEPS, valueToPosition } from './lab-controls';
+import {
+  COMPRESSOR_CONTROLS,
+  DYNAMIC_EQ_CONTROLS,
+  EQ_CONTROLS,
+  formatControlValue,
+  GATE_CONTROLS,
+  positionToValue,
+  SLIDER_STEPS,
+  valueToPosition,
+} from './lab-controls';
+import { LAB_PROCESSORS } from './lab-processors';
 import { LabPage } from './lab-page';
 
 function readout(element: HTMLElement, testId: string): string {
@@ -18,7 +28,7 @@ function moveSlider(element: HTMLElement, control: string, position: number): vo
 
 describe('lab controls', () => {
   it('map a slider position to a value and back, on linear and logarithmic scales', () => {
-    for (const spec of [...COMPRESSOR_CONTROLS, ...GATE_CONTROLS]) {
+    for (const spec of [...COMPRESSOR_CONTROLS, ...GATE_CONTROLS, ...EQ_CONTROLS, ...DYNAMIC_EQ_CONTROLS]) {
       expect(positionToValue(0, spec), spec.key).toBe(spec.min);
       expect(positionToValue(SLIDER_STEPS, spec), spec.key).toBe(spec.max);
       const middle = positionToValue(SLIDER_STEPS / 2, spec);
@@ -96,5 +106,61 @@ describe('LabPage', () => {
     expect(element.querySelector('[data-control="kneeDb"]')).toBeNull();
     expect(readout(element, 'lab-value-ratio')).toBe('GATE');
     expect(element.querySelector<HTMLSelectElement>('[data-testid="lab-sound"]')?.value).toBe('snareWithBleed');
+  });
+
+  it('low cut and EQ: shows an EQ curve instead of a meter, and a low cut makes the rumble sound quieter', async () => {
+    const fixture = TestBed.createComponent(LabPage);
+    await fixture.whenStable();
+    const element = fixture.nativeElement as HTMLElement;
+    element.querySelector<HTMLButtonElement>('[data-testid="lab-processor-eq"]')?.click();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(element.querySelector('[data-testid="lab-max-reduction"]')).toBeNull();
+    expect(element.querySelector('[data-control="lowCutHz"]')).not.toBeNull();
+    expect(element.querySelector('[data-control="mid1Q"]')).not.toBeNull();
+    // Flat EQ: no change in loudness.
+    expect(Number.parseFloat(readout(element, 'lab-loudness-change'))).toBeCloseTo(0, 1);
+
+    element.querySelector<HTMLButtonElement>('[data-testid="lab-choice-lowCutOn-on"]')?.click();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(Number.parseFloat(readout(element, 'lab-loudness-change'))).toBeLessThan(-0.5);
+    expect(readout(element, 'lab-value-lowCutHz')).toBe('100 Hz');
+  });
+
+  it('dynamic EQ: has its own controls, the Above/Below switch and the learning guide', async () => {
+    const fixture = TestBed.createComponent(LabPage);
+    await fixture.whenStable();
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('[data-testid="lab-lesson"]')).toBeNull();
+
+    element.querySelector<HTMLButtonElement>('[data-testid="lab-processor-dynamicEq"]')?.click();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(element.querySelector('[data-testid="lab-choice-mode-below"]')).not.toBeNull();
+    expect(readout(element, 'lab-value-frequencyHz')).toBe('3 kHz');
+    expect(element.querySelectorAll('[data-testid="lab-lesson-step"]').length).toBe(8);
+    expect(element.querySelector('[data-testid="lab-lesson"]')?.textContent).toContain('Gate and Comp slots');
+    // With the default settings on the "harsh when loud" voice, the band really cuts.
+    expect(Number.parseFloat(readout(element, 'lab-max-reduction'))).toBeGreaterThan(5);
+  });
+
+  it('every preset of every processor runs and says what to listen for', async () => {
+    const fixture = TestBed.createComponent(LabPage);
+    await fixture.whenStable();
+    const element = fixture.nativeElement as HTMLElement;
+    for (const processor of LAB_PROCESSORS) {
+      element.querySelector<HTMLButtonElement>(`[data-testid="lab-processor-${processor.id}"]`)?.click();
+      await fixture.whenStable();
+      fixture.detectChanges();
+      expect(processor.presets.length, processor.id).toBeGreaterThan(2);
+      for (const preset of processor.presets) {
+        element.querySelector<HTMLButtonElement>(`[data-preset-id="${preset.id}"]`)?.click();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(readout(element, 'lab-listen-for'), preset.id).toContain(preset.listenFor.slice(0, 30));
+        expect(Number.isFinite(Number.parseFloat(readout(element, 'lab-loudness-change'))), preset.id).toBe(true);
+      }
+    }
   });
 });
