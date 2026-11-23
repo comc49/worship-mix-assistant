@@ -16,6 +16,7 @@
     "e2e:offline": "playwright test -c playwright.offline.config.ts"
   },
   "private": true,
+  "license": "MIT",
   "packageManager": "npm@11.19.0",
   "dependencies": {
     "@angular/common": "^22.2.0",

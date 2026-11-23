@@ -94,3 +94,7 @@ To add a song later: add its folder, run `npm run library:build`, upload the new
 ## Manuals
 
 `docs/manuals/` is gitignored. Put the X32 and WING series user manual PDFs there (from the product pages on behringer.com) as `x32-user-manual.pdf` and `wing-series-user-manual.pdf` so `npm run docs` can re-check quotes.
+
+## Licence
+
+MIT. See [LICENSE](LICENSE). The console manuals quoted in the knowledge base belong to their publishers and are not covered by it.
