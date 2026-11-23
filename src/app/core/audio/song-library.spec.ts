@@ -3,6 +3,8 @@ import {
   findMixGain,
   formatSongTime,
   isLibraryUrl,
+  MAX_LIBRARY_TEXT_LENGTH,
+  MAX_SONGS,
   MAX_TRACKS_PER_SONG,
   mixToMono,
   mixWithBand,
@@ -59,7 +61,23 @@ describe('parseSongLibrary', () => {
   it('rejects a file that is not a web address', () => {
     const library = validLibrary();
     library['songs'] = [{ id: 'song-a', title: 'Song A', tracks: [{ id: 'bass', label: 'Bass', file: 'javascript:alert(1)' }] }];
-    expect(errorOf(library)).toContain('not a usable web address');
+    expect(errorOf(library)).toContain('not an https web address');
+  });
+
+  it('rejects plain http files, overlong text and too many songs', () => {
+    const plainHttp = validLibrary();
+    plainHttp['songs'] = [{ id: 'song-a', title: 'Song A', tracks: [{ id: 'bass', label: 'Bass', file: 'http://192.168.1.1/bass.mp3' }] }];
+    expect(errorOf(plainHttp)).toContain('not an https web address');
+
+    const longTitle = validLibrary();
+    longTitle['songs'] = [{ id: 'song-a', title: 'x'.repeat(MAX_LIBRARY_TEXT_LENGTH + 1), tracks: [] }];
+    expect(errorOf(longTitle)).toContain('at most');
+
+    const songs = [];
+    for (let index = 0; index <= MAX_SONGS; index = index + 1) {
+      songs.push({ id: `s${index}`, title: `Song ${index}`, tracks: [{ id: 't', label: 'Track', file: 't.mp3' }] });
+    }
+    expect(errorOf({ version: 1, songs })).toContain('The most the lab reads');
   });
 
   it('rejects repeated ids and too many tracks', () => {
@@ -78,9 +96,10 @@ describe('parseSongLibrary', () => {
 });
 
 describe('isLibraryUrl', () => {
-  it('accepts http and https addresses only', () => {
+  it('accepts https addresses, and http only on this computer', () => {
     expect(isLibraryUrl('https://store.example.com/library.json')).toBe(true);
     expect(isLibraryUrl('  http://localhost:4200/library.json ')).toBe(true);
+    expect(isLibraryUrl('http://store.example.com/library.json')).toBe(false);
     expect(isLibraryUrl('library.json')).toBe(false);
     expect(isLibraryUrl('file:///tmp/library.json')).toBe(false);
     expect(isLibraryUrl('')).toBe(false);

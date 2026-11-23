@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { createDefaultState, CURRENT_SCHEMA_VERSION, StoredState } from './stored-state';
+import { findStoredStateProblem } from './stored-state-validation';
 
 const STORAGE_KEY = 'worship-mix-assistant.state';
+/** Where a saved state that could not be read is kept, so the next save does not destroy it. */
+const UNREADABLE_KEY = 'worship-mix-assistant.unreadable-state';
 
 export type ImportResult = { ok: true; state: StoredState } | { ok: false; error: string };
 
@@ -29,6 +32,8 @@ export class StorageService {
     }
     const parsed = this.parseAndMigrate(raw);
     if (!parsed.ok) {
+      // The app starts fresh, but the unreadable data is set aside instead of being overwritten.
+      this.setAsideUnreadable(raw);
       return createDefaultState();
     }
     return parsed.state;
@@ -58,6 +63,14 @@ export class StorageService {
   /** Reads a backup file's text. Older schema versions are migrated forward. */
   importJson(text: string): ImportResult {
     return this.parseAndMigrate(text);
+  }
+
+  private setAsideUnreadable(raw: string): void {
+    try {
+      localStorage.setItem(UNREADABLE_KEY, raw);
+    } catch {
+      // Storage is full or blocked; nothing more can be done.
+    }
   }
 
   private readRaw(): string | null {
@@ -100,7 +113,14 @@ export class StorageService {
     }
 
     // Fields added later fall back to their defaults.
-    const merged = { ...createDefaultState(), ...current } as StoredState;
-    return { ok: true, state: merged };
+    const merged: Record<string, unknown> = { ...createDefaultState(), ...current };
+
+    // Every value is checked before anything is loaded or saved: a wrong shape would make the
+    // app fail on every start.
+    const problem = findStoredStateProblem(merged);
+    if (problem !== null) {
+      return { ok: false, error: `This backup cannot be used: ${problem}.` };
+    }
+    return { ok: true, state: merged as unknown as StoredState };
   }
 }

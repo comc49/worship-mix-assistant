@@ -11,7 +11,7 @@ A web app for volunteer sound mixers at a church. Most are not trained engineers
 3. **Console sheets:** the same mix plan rendered as step-by-step settings for the Behringer X32 and the Behringer WING Compact, in each console's own names.
 4. **Troubleshooter:** pick a symptom, get ordered checks and fixes that reference the current band and console.
 
-## Design decisions (do not revisit without asking Brian)
+## Design decisions (do not revisit without asking the owner)
 
 - **Deterministic rules engine over a typed knowledge base. No LLM calls at runtime.** Same input, same output. Works offline.
 - **Three layers, kept separate:**
@@ -33,7 +33,7 @@ Angular 22 (standalone components, signals), TypeScript strict, SCSS. Unit tests
 
 ## Code style
 
-- Brian is a senior Angular developer and reads all of this code. Favor verbose, step-by-step code: named intermediate variables, early returns, no nested ternaries, no clever one-liners.
+- The owner is a senior Angular developer and reads all of this code. Favor verbose, step-by-step code: named intermediate variables, early returns, no nested ternaries, no clever one-liners.
 - The engine and the adapters are pure functions with no Angular imports.
 - No `any`. Domain values are union types.
 
@@ -96,5 +96,5 @@ Unit tests pass, lint passes, no `any`, Playwright screenshots of the affected s
 
 ## Working agreement
 
-- One roadmap phase per session. Show the plan and wait for "go" unless Brian has said otherwise for that session.
+- One roadmap phase per session. Show the plan and wait for "go" unless the owner has said otherwise for that session.
 - Append every approved decision, with its reason, to `docs/DECISIONS.md`.

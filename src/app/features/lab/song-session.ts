@@ -26,6 +26,8 @@ export type SongStatus =
 export class SongSession {
   /** Bumped whenever a new load starts, so an older load that finishes late is ignored. */
   private loadToken = 0;
+  /** Cancels the downloads of the load in progress when a newer one starts. */
+  private downloads = new AbortController();
   private readonly bytesByTrackId = new Map<string, ArrayBuffer>();
 
   readonly library = signal<SongLibrary | null>(null);
@@ -125,7 +127,7 @@ export class SongSession {
     this.clearSong();
     this.library.set(null);
 
-    const result = await fetchSongLibrary(libraryUrl);
+    const result = await fetchSongLibrary(libraryUrl, this.downloads.signal);
     if (token !== this.loadToken) {
       return false;
     }
@@ -153,7 +155,7 @@ export class SongSession {
     for (let index = 0; index < song.tracks.length; index = index + 1) {
       const track = song.tracks[index];
       this.status.set({ kind: 'working', message: `Downloading track ${index + 1} of ${song.tracks.length} (${track.label})...` });
-      const result = await fetchTrackBytes(track.url);
+      const result = await fetchTrackBytes(track.url, this.downloads.signal);
       if (token !== this.loadToken) {
         return;
       }
@@ -235,6 +237,9 @@ export class SongSession {
 
   private startLoad(message: string): number {
     this.loadToken = this.loadToken + 1;
+    // Whatever the previous load was still downloading is no longer wanted.
+    this.downloads.abort();
+    this.downloads = new AbortController();
     this.status.set({ kind: 'working', message });
     return this.loadToken;
   }

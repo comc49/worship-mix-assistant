@@ -50,5 +50,11 @@ Thumbs.db
 /test-results/
 /playwright-report/
 
+# Secrets and Vercel's local project link: never commit
+.env
+.env.*
+!.env.example
+.vercel/
+
 # Sound lab song library (recordings): never commit
 /library/

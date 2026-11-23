@@ -1,6 +1,6 @@
 # Decisions
 
-Append-only. Each entry: the decision, the reason, the date. Later sessions do not reopen these without asking Brian.
+Append-only. Each entry: the decision, the reason, the date. Later sessions do not reopen these without asking the owner.
 
 ## 2026-11-18: from the brief
 
@@ -14,13 +14,13 @@ Append-only. Each entry: the decision, the reason, the date. Later sessions do n
 8. Angular, TypeScript strict, no backend, localStorage through one storage service.
 9. Privacy: no skill label next to a name on any output; placeholder names in every committed file.
 
-## 2026-11-18: session choices made by Brian
+## 2026-11-18: session choices made by the owner
 
-10. Build all phases 0 to 8 in one run with no per-phase plan stops. Brian reviews audio values and console facts afterwards. Phase 9 (accuracy review) is still a separate session.
+10. Build all phases 0 to 8 in one run with no per-phase plan stops. The owner reviews audio values and console facts afterwards. Phase 9 (accuracy review) is still a separate session.
 11. Unfilled brackets use assumed defaults (listed in CLAUDE.md under "Our setup" and the fixture band). They are assumptions, not facts about the church, and are editable in the app.
 12. Console manuals were downloaded from the links on Behringer's own product pages into `docs/manuals/` (gitignored).
 
-## 2026-11-18: decisions made while building (not yet reviewed by Brian)
+## 2026-11-18: decisions made while building (not yet reviewed by the owner)
 
 These were needed to proceed and are flagged for review.
 
@@ -41,7 +41,7 @@ These were needed to proceed and are flagged for review.
 27. **State is saved on every change, synchronously.** An earlier version saved on a later tick and lost a change made just before a reload.
 28. **Troubleshooter:** trees are typed data with conditions and text tokens; console control names come only from profile facts. During a service, rehearsal-only checks are skipped and rehearsal-only fixes are replaced by a safe alternative or an "after the service" note. Frequencies and amounts in the trees are typical starting values written for the trees, not taken from the knowledge base.
 
-## 2026-11-19: fixes approved by Brian after the phase 9 accuracy review
+## 2026-11-19: fixes approved by the owner after the phase 9 accuracy review
 
 29. **A click never gets a monitor send when wedges are on stage** (wedges or mixed), and the plan carries a warning. The room would hear it.
 30. **X32 buses are allocated by odd/even pair.** The manual (p49) sets the send tap for two buses at once, so a pair is never shared between monitor (pre-fader), effect (post-fader) and group use. Two mono groups may share a pair; the group step then says which sends to switch on and off. Whether a send is on or off by default in Sub-Group mode is UNVERIFIED, so those steps are flagged "check on your console".
@@ -52,7 +52,7 @@ These were needed to proceed and are flagged for review.
 35. **Tips and mixer notes are per role, not per rating,** and every channel gets a tip. This changes decision 5: skill no longer changes coaching notes, because a note that appears only for some ratings reveals the rating of a named person on the printed sheet. The praise lines for the highest rating were removed.
 36. **The value trail never prints,** even when a detail panel is open. It stays on screen, where the mixer who entered the ratings is the reader.
 
-## 2026-11-19: second round of review fixes, approved by Brian
+## 2026-11-19: second round of review fixes, approved by the owner
 
 37. **"No sound" in a service looks at phantom power and gain** (look-only steps are safe). Changing either is still rehearsal only; in a service the tree ends in "tell the tech lead" instead.
 38. **Headphone solo steps carry a solo-in-place caution** and the console's own description, and are flagged "check on your console" unless a profile verifies the console has no such mode.
@@ -66,7 +66,7 @@ These were needed to proceed and are flagged for review.
 
 Still open from the review, by choice: the on-screen value trail still shows the reason for a player adjustment under a named channel; two named people in one role still get visibly different numbers (inherent in the design); monitor and effect-feed buses are not explicitly taken off the main mix on the sheet; several sheet steps name a setting without the full path to it; X32 ratio steps are not snapped because the list is unverified; lower-priority wording items in the troubleshooting trees.
 
-## 2026-11-23: Knobs tab and Sound lab (asked for by Brian)
+## 2026-11-23: Knobs tab and Sound lab (asked for by the owner)
 
 46. **Knobs tab** is a bento grid: group tabs, one tile per control, one detail panel. Its explanations are plain-language and were not part of the accuracy review.
 47. **Sound lab**: a compressor and a gate/expander written to the WING manual's parameter definitions (section 11.2: ATTACK and RELEASE as the time to cover about two-thirds of the change, HOLD before release, gate RANGE, RATIO and ACCENT). It is a teaching model, not Behringer's algorithm, and the slider ranges are the lab's own because the manual gives none. The screen says so.
@@ -77,9 +77,16 @@ Still open from the review, by choice: the on-screen value trail still shows the
 52. **Low cut and EQ** follow the WING EQ layout in the manual (LO CUT with 6, 12, 18 or 24 dB per octave, shelves L and H, parametric bands with GAIN, FREQ, Q), with two of the WING's four parametric bands. The picture is the EQ curve.
 53. **Dynamic EQ** follows the manual's Triple DEQ definitions (Threshold, Ratio, Gain as the maximum change, Attack, Release, Above/Below; four behaviours). The detector listens only to the band's own range. The eight-step learning guide lives in `core/knowledge/dynamic-eq-lesson.ts`; the two steps the manual does not spell out (how to load it into the slot, Band Solo) are flagged "check on your console".
 
-## 2026-11-23: your own songs in the Sound lab (asked for by Brian)
+## 2026-11-23: your own songs in the Sound lab (asked for by the owner)
 
-54. **The Sound lab reads songs from a file host** (Brian chose Vercel Blob on the free plan: 1 GB, 10 GB of downloads a month). The app stores only the address of one `library.json`, which lists songs and their tracks. Any host that allows cross-origin reads works; there is still no backend.
+54. **The Sound lab reads songs from a file host** (the owner chose Vercel Blob on the free plan: 1 GB, 10 GB of downloads a month). The app stores only the address of one `library.json`, which lists songs and their tracks. Any host that allows cross-origin reads works; there is still no backend.
 55. **A song is used one short section at a time** (5, 10 or 15 seconds), looped. This keeps decision 49: the section is reprocessed on every control change with the same tested functions. Only the downloaded files and the loaded section of each track are kept in memory, because a whole decoded song is hundreds of megabytes.
 56. **One track is processed; the other tracks play untouched,** or the track is soloed. Tracks are mono. The mix is turned down by one fixed amount per section when it would clip, so moving a control never changes that amount.
 57. **Recordings are never committed** (`library/` is gitignored) and the screen and README say the address is public. The end-to-end test uses generated tones behind a pretend host.
+
+## 2026-11-23: fixes before making the repository public (approved by the owner)
+
+58. **A backup or saved state is checked value by value before it is loaded** (`stored-state-validation.ts`). A file with a wrong shape is refused with a reason; saved data that cannot be read is set aside under a second storage key instead of being overwritten.
+59. **Song library limits:** https addresses only (plain http on this computer only), at most 200 songs and 32 tracks a song, 100 MB and 15 minutes a track, 1 MB for `library.json`. A newer load cancels the downloads of the older one.
+60. **Security headers in `vercel.json`:** a content security policy (scripts from the app only; connections to any https host, because the library host is the user's choice), no referrer, no sniffing. Critical-CSS inlining is off in the production build because it needs an inline script the policy forbids. The offline test serves the same headers and fails on anything the policy blocks.
+61. **`.env*` and `.vercel/` are gitignored**, and the owner is not named in committed files.

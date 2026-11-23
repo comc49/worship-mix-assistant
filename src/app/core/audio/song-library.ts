@@ -25,6 +25,9 @@ export const SONG_LIBRARY_VERSION = 1;
 
 /** More stems than this is too much to download and hold in a browser tab. */
 export const MAX_TRACKS_PER_SONG = 32;
+export const MAX_SONGS = 200;
+/** Longest id, title or label. The list comes from the internet, so its text is not trusted. */
+export const MAX_LIBRARY_TEXT_LENGTH = 120;
 
 export interface LibraryTrack {
   id: string;
@@ -58,7 +61,29 @@ function readText(record: Record<string, unknown>, key: string): string | null {
   return trimmed.length > 0 ? trimmed : null;
 }
 
-/** Turns a track's "file" into a full URL. null when it cannot be one, or is not http(s). */
+/** Like readText, for the texts that are shown on screen: also refuses an overlong one. */
+function readShortText(record: Record<string, unknown>, key: string): string | null {
+  const text = readText(record, key);
+  if (text === null || text.length > MAX_LIBRARY_TEXT_LENGTH) {
+    return null;
+  }
+  return text;
+}
+
+/**
+ * Only https addresses are accepted: the deployed app is served over https and the browser
+ * blocks anything else, and a list must not be able to point the app at plain-http hosts on
+ * the local network. Plain http is allowed for this computer only, for trying things out.
+ */
+function isAllowedAddress(address: URL): boolean {
+  if (address.protocol === 'https:') {
+    return true;
+  }
+  const isThisComputer = address.hostname === 'localhost' || address.hostname === '127.0.0.1';
+  return address.protocol === 'http:' && isThisComputer;
+}
+
+/** Turns a track's "file" into a full URL. null when it cannot be one, or is not an allowed address. */
 function resolveFileUrl(file: string, libraryUrl: string): string | null {
   let resolved: URL;
   try {
@@ -66,23 +91,22 @@ function resolveFileUrl(file: string, libraryUrl: string): string | null {
   } catch {
     return null;
   }
-  const isWebAddress = resolved.protocol === 'https:' || resolved.protocol === 'http:';
-  return isWebAddress ? resolved.toString() : null;
+  return isAllowedAddress(resolved) ? resolved.toString() : null;
 }
 
 function parseTrack(value: unknown, songTitle: string, libraryUrl: string): LibraryTrack | string {
   if (!isRecord(value)) {
     return `A track in "${songTitle}" is not an object.`;
   }
-  const id = readText(value, 'id');
-  const label = readText(value, 'label');
+  const id = readShortText(value, 'id');
+  const label = readShortText(value, 'label');
   const file = readText(value, 'file');
   if (id === null || label === null || file === null) {
-    return `Every track in "${songTitle}" needs an "id", a "label" and a "file".`;
+    return `Every track in "${songTitle}" needs an "id", a "label" and a "file", each at most ${MAX_LIBRARY_TEXT_LENGTH} characters.`;
   }
   const url = resolveFileUrl(file, libraryUrl);
   if (url === null) {
-    return `The file "${file}" in "${songTitle}" is not a usable web address.`;
+    return `A file in "${songTitle}" is not an https web address.`;
   }
   return { id, label, url };
 }
@@ -91,10 +115,10 @@ function parseSong(value: unknown, libraryUrl: string): LibrarySong | string {
   if (!isRecord(value)) {
     return 'A song in the list is not an object.';
   }
-  const id = readText(value, 'id');
-  const title = readText(value, 'title');
+  const id = readShortText(value, 'id');
+  const title = readShortText(value, 'title');
   if (id === null || title === null) {
-    return 'Every song needs an "id" and a "title".';
+    return `Every song needs an "id" and a "title", each at most ${MAX_LIBRARY_TEXT_LENGTH} characters.`;
   }
   const rawTracks = value['tracks'];
   if (!Array.isArray(rawTracks) || rawTracks.length === 0) {
@@ -135,6 +159,9 @@ export function parseSongLibrary(value: unknown, libraryUrl: string): LibraryPar
   if (!Array.isArray(rawSongs) || rawSongs.length === 0) {
     return { ok: false, error: 'The library file lists no songs.' };
   }
+  if (rawSongs.length > MAX_SONGS) {
+    return { ok: false, error: `The library file lists ${rawSongs.length} songs. The most the lab reads is ${MAX_SONGS}.` };
+  }
 
   const songs: LibrarySong[] = [];
   const seenIds = new Set<string>();
@@ -152,7 +179,7 @@ export function parseSongLibrary(value: unknown, libraryUrl: string): LibraryPar
   return { ok: true, library: { songs } };
 }
 
-/** true when the text is an http(s) address the lab can fetch. */
+/** true when the text is an address the lab may fetch: https, or http on this computer. */
 export function isLibraryUrl(text: string): boolean {
   return resolveFileUrl(text.trim(), 'invalid:') !== null;
 }
