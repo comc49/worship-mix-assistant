@@ -1,0 +1,119 @@
+<div class="lab">
+  <header class="lab__header">
+    <h1>Sound lab</h1>
+    <p class="dim">Move a control and hear what it does. These follow the way the WING manual defines each control; they are a practice model, not the console itself, so the same numbers will not sound identical on the desk. Use headphones.</p>
+  </header>
+
+  @if (!audioSupported) {
+    <div class="notice notice--error" role="alert">This browser cannot play audio here. The picture and the numbers still work.</div>
+  }
+
+  <div class="lab__grid">
+    <section class="card lab__controls" aria-label="Controls">
+      <div class="row lab__row">
+        <button type="button" class="btn" data-testid="lab-processor-compressor" [attr.aria-pressed]="processor() === 'compressor'" (click)="chooseProcessor('compressor')">Compressor</button>
+        <button type="button" class="btn" data-testid="lab-processor-gate" [attr.aria-pressed]="processor() === 'gate'" (click)="chooseProcessor('gate')">Gate</button>
+      </div>
+
+      <div class="field lab__row">
+        <label for="lab-sound">Sound</label>
+        <select id="lab-sound" class="input" data-testid="lab-sound" (change)="chooseSound($event)">
+          @for (sound of sounds; track sound.id) {
+            <option [value]="sound.id" [selected]="sound.id === soundId()">{{ sound.label }}</option>
+          }
+        </select>
+        <p class="dim lab__small">{{ selectedSound().description }}</p>
+      </div>
+
+      <div class="lab__sliders">
+      @for (slider of sliders(); track slider.key) {
+        <div class="lab-slider">
+          <div class="lab-slider__top">
+            <label class="lab-slider__label" [attr.for]="'lab-' + slider.key">{{ slider.label }}</label>
+            <output class="lab-slider__value" [attr.data-testid]="'lab-value-' + slider.key">{{ slider.valueText }}</output>
+          </div>
+          <input
+            type="range"
+            class="lab-slider__range"
+            min="0"
+            [max]="sliderSteps"
+            step="1"
+            [id]="'lab-' + slider.key"
+            [value]="slider.position"
+            [attr.data-control]="slider.key"
+            [attr.aria-valuetext]="slider.valueText"
+            (input)="onSliderInput(slider.key, $event)"
+          />
+          <p class="dim lab__small">{{ slider.hint }}</p>
+        </div>
+      }
+      </div>
+
+      @if (processor() === 'compressor') {
+        <div class="row lab__row" role="group" aria-label="DETECTOR">
+          <span class="lab-slider__label">DETECTOR</span>
+          <button type="button" class="btn btn--small" [attr.aria-pressed]="compressor().detector === 'peak'" (click)="chooseDetector('peak')">PEAK</button>
+          <button type="button" class="btn btn--small" [attr.aria-pressed]="compressor().detector === 'rms'" (click)="chooseDetector('rms')">RMS</button>
+        </div>
+      }
+
+      <button type="button" class="btn btn--small" data-testid="lab-reset" (click)="reset()">Reset the controls</button>
+    </section>
+
+    <div class="lab__display">
+      <section class="card" aria-label="Listen">
+        <div class="row lab__transport">
+          <button type="button" class="btn btn--primary lab__play" data-testid="lab-play" [disabled]="!audioSupported" (click)="togglePlay()">
+            {{ isPlaying() ? 'Stop' : 'Play' }}
+          </button>
+          <button type="button" class="btn" data-testid="lab-bypass" [attr.aria-pressed]="bypassed()" (click)="toggleBypass()">
+            {{ bypassed() ? 'Bypassed (untouched sound)' : 'Bypass' }}
+          </button>
+          @if (processor() === 'compressor') {
+            <button type="button" class="btn" data-testid="lab-match" (click)="matchLoudness()">Match loudness</button>
+          }
+        </div>
+
+        <div class="lab__picture-row">
+          <canvas #picture class="lab__picture" data-testid="lab-picture" role="img" aria-label="The sound before and after, with the gain reduction drawn from the top"></canvas>
+          <div class="lab-meter" aria-hidden="true">
+            <div class="lab-meter__fill" [style.height.%]="meterPercent()"></div>
+          </div>
+        </div>
+        <p class="dim lab__small lab__legend">
+          <span class="lab__key lab__key--input"></span> before
+          <span class="lab__key lab__key--output"></span> after
+          <span class="lab__key lab__key--reduction"></span> gain reduction (hangs from the top; the bar on the right is the meter)
+          <span class="lab__key lab__key--threshold"></span> threshold
+        </p>
+
+        <dl class="lab__stats">
+          <div class="lab__stat">
+            <dt>Most gain reduction</dt>
+            <dd data-testid="lab-max-reduction">{{ maxReductionDb().toFixed(1) }} dB</dd>
+          </div>
+          <div class="lab__stat">
+            <dt>Right now</dt>
+            <dd data-testid="lab-live-reduction">{{ isPlaying() && !bypassed() ? liveReductionDb().toFixed(1) + ' dB' : '-' }}</dd>
+          </div>
+          <div class="lab__stat">
+            <dt>Loudness against bypass</dt>
+            <dd data-testid="lab-loudness-change">{{ loudnessChangeDb() >= 0 ? '+' : '' }}{{ loudnessChangeDb().toFixed(1) }} dB</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="card" aria-label="Things to try">
+        <h2>Things to try</h2>
+        <div class="lab__presets">
+          @for (preset of presets(); track preset.id) {
+            <button type="button" class="btn btn--small" data-testid="lab-preset" [attr.data-preset-id]="preset.id" [attr.aria-pressed]="preset.id === selectedPresetId()" (click)="applyPreset(preset.id)">
+              {{ preset.label }}
+            </button>
+          }
+        </div>
+        <p class="lab__listen" aria-live="polite" data-testid="lab-listen-for"><strong>Listen for:</strong> {{ listenFor() }}</p>
+      </section>
+    </div>
+  </div>
+</div>

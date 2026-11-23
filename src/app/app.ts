@@ -39,6 +39,7 @@ export class App {
     { path: '/soundcheck', label: 'Soundcheck' },
     { path: '/troubleshoot', label: 'Fix a problem' },
     { path: '/knobs', label: 'Knobs' },
+    { path: '/lab', label: 'Sound lab' },
     { path: '/backup', label: 'Backup' },
   ];
 

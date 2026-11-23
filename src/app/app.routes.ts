@@ -9,6 +9,7 @@ export const routes: Routes = [
   { path: 'soundcheck', title: 'Soundcheck', loadComponent: () => import('./features/soundcheck/soundcheck-page').then((m) => m.SoundcheckPage) },
   { path: 'troubleshoot', title: 'Fix a problem', loadComponent: () => import('./features/troubleshoot/troubleshoot-page').then((m) => m.TroubleshootPage) },
   { path: 'knobs', title: 'What the knobs do', loadComponent: () => import('./features/knobs/knobs-page').then((m) => m.KnobsPage) },
+  { path: 'lab', title: 'Sound lab', loadComponent: () => import('./features/lab/lab-page').then((m) => m.LabPage) },
   { path: 'backup', title: 'Backup', loadComponent: () => import('./features/backup/backup-page').then((m) => m.BackupPage) },
   { path: '**', redirectTo: 'setup' },
 ];

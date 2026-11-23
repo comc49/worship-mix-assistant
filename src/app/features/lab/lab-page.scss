@@ -1,0 +1,189 @@
+/* Wider than the other pages: this screen is meant for a laptop. */
+.lab {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: var(--space-4);
+}
+
+.lab__header h1 {
+  margin-bottom: var(--space-2);
+}
+
+.lab__grid {
+  display: grid;
+  grid-template-columns: minmax(340px, 500px) 1fr;
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.lab__controls,
+.lab__display .card {
+  border-radius: 20px;
+}
+
+.lab__row {
+  margin-bottom: var(--space-3);
+}
+
+.lab__small {
+  font-size: 0.82rem;
+  margin: 0;
+}
+
+/* Two sliders side by side, so every control is on screen at once on a laptop. */
+.lab__sliders {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2) var(--space-4);
+  margin-bottom: var(--space-3);
+}
+
+.lab-slider {
+  min-width: 0;
+}
+
+.lab-slider__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.lab-slider__label {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.lab-slider__value {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.lab-slider__range {
+  width: 100%;
+  height: 26px;
+  accent-color: var(--accent);
+}
+
+.lab__transport {
+  margin-bottom: var(--space-3);
+}
+
+.lab__play {
+  min-width: 110px;
+}
+
+.lab__picture-row {
+  display: flex;
+  gap: var(--space-2);
+  align-items: stretch;
+}
+
+.lab__picture {
+  flex: 1 1 auto;
+  width: 100%;
+  height: 260px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.lab-meter {
+  flex: 0 0 18px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.lab-meter__fill {
+  width: 100%;
+  background: var(--warn);
+}
+
+.lab__legend {
+  margin: var(--space-2) 0 var(--space-3);
+}
+
+.lab__key {
+  display: inline-block;
+  width: 14px;
+  height: 4px;
+  margin: 0 4px 3px 10px;
+  vertical-align: middle;
+}
+
+.lab__key--input {
+  background: var(--border);
+  margin-left: 0;
+}
+
+.lab__key--output {
+  background: var(--accent);
+}
+
+.lab__key--reduction {
+  background: var(--warn);
+}
+
+.lab__key--threshold {
+  background: var(--text-dim);
+}
+
+.lab__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.lab__stat {
+  background: var(--surface-2);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+}
+
+.lab__stat dt {
+  color: var(--text-dim);
+  font-size: 0.82rem;
+}
+
+.lab__stat dd {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.lab__presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.lab__listen {
+  margin: 0;
+}
+
+@media (max-width: 880px) {
+  .lab__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lab__display {
+    order: -1;
+  }
+
+  .lab__sliders {
+    grid-template-columns: 1fr;
+  }
+
+  .lab__picture {
+    height: 180px;
+  }
+
+  .lab__stats {
+    grid-template-columns: 1fr;
+  }
+}

@@ -17,7 +17,7 @@ test('the production build loads and works with the network disabled', async ({ 
   await expect(page.getByText('Worship Mix Assistant')).toBeVisible();
 
   // Every screen is reachable offline, including the lazily loaded ones.
-  for (const path of ['/band', '/sheet', '/overview', '/soundcheck', '/troubleshoot', '/knobs', '/backup', '/setup']) {
+  for (const path of ['/band', '/sheet', '/overview', '/soundcheck', '/troubleshoot', '/knobs', '/lab', '/backup', '/setup']) {
     await page.goto(path);
     await expect(page.locator('main h1').first()).toBeVisible();
   }

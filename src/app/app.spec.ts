@@ -16,7 +16,7 @@ describe('App', () => {
     await fixture.whenStable();
     const element = fixture.nativeElement as HTMLElement;
     expect(element.textContent).toContain('Worship Mix Assistant');
-    expect(element.querySelectorAll('nav a').length).toBe(8);
+    expect(element.querySelectorAll('nav a').length).toBe(9);
     expect(element.querySelector('[data-testid="storage-notice"]')).not.toBeNull();
   });
 });
